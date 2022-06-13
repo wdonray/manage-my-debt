@@ -1,3 +1,41 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "next"
+  ],
+  "plugins": [
+    "react"
+  ],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true,
+      "tsx": true
+    }
+  },
+  "rules": {
+    "arrow-parens": ["error", "always"],
+    "comma-dangle": ["error", "always-multiline"],
+    "curly": ["error", "all"] ,
+    "indent": ["error", 2, { "SwitchCase": 1 }],
+    "keyword-spacing": [1],
+    "object-curly-spacing": ["error", "always"],
+    "one-var": ["error", "never"],
+    "padded-blocks": ["error", { "blocks": "never" }],
+    "padding-line-between-statements": ["error",
+      // vars
+      { "blankLine": "always", "prev": ["const", "let", "var"], "next": "*" },
+      { "blankLine": "any", "prev": ["const", "let", "var"], "next": ["const", "let", "var"] },
+      // members in a block
+      { "blankLine": "always", "prev": "*", "next": "block" },
+      { "blankLine": "always", "prev": "block", "next": "*" },
+      { "blankLine": "always", "prev": "*", "next": "block-like" },
+      { "blankLine": "always", "prev": "block-like", "next": "*" }
+    ],
+    "quotes": ["error", "single"],
+    "semi": ["error", "always"],
+    "prefer-promise-reject-errors": ["error"],
+    "no-throw-literal": ["error"],
+    "no-useless-catch": ["error"]
+  }
 }
