@@ -30,7 +30,11 @@
     ],
     "aliasAttributes": [],
     "userpoolClientGenerateSecret": false,
+<<<<<<< HEAD
     "userpoolClientRefreshTokenValidity": "60",
+=======
+    "userpoolClientRefreshTokenValidity": 30,
+>>>>>>> 9529e78 (DEBT-22 | Scaffold Amplify Backend)
     "userpoolClientWriteAttributes": [],
     "userpoolClientReadAttributes": [],
     "userpoolClientLambdaRole": "debtref9bae03c_userpoolclient_lambda_role",
@@ -49,6 +53,7 @@
     "thirdPartyAuth": false,
     "authProviders": [],
     "hostedUI": true,
+<<<<<<< HEAD
     "usernameCaseSensitive": false,
     "useEnabledMfas": true,
     "authRoleArn": {
@@ -73,11 +78,20 @@
     },
     "permissions": [],
     "hostedUIDomainName": "t9dj86hnkl09",
+=======
+    "hostedUIDomainName": "lvmo6gwtjxew",
+>>>>>>> 9529e78 (DEBT-22 | Scaffold Amplify Backend)
     "authProvidersUserPool": [
       "Facebook",
       "Google"
     ],
     "hostedUIProviderMeta": "[{\"ProviderName\":\"Facebook\",\"authorize_scopes\":\"email,public_profile\",\"AttributeMapping\":{\"email\":\"email\",\"name\":\"name\",\"username\":\"id\"}},{\"ProviderName\":\"Google\",\"authorize_scopes\":\"openid email profile\",\"AttributeMapping\":{\"email\":\"email\",\"name\":\"name\",\"username\":\"sub\"}}]",
+<<<<<<< HEAD
     "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:3000/\"],\"LogoutURLs\":[\"http://localhost:3000/\"]}"
+=======
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:3000/\"],\"LogoutURLs\":[\"http://localhost:3000/\"]}",
+    "usernameCaseSensitive": false,
+    "useEnabledMfas": true
+>>>>>>> 9529e78 (DEBT-22 | Scaffold Amplify Backend)
   }
 }
