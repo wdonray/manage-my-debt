@@ -1,7 +1,9 @@
 import type { ReactElement, ReactNode } from 'react';
 import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
+import { useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
+import '@aws-amplify/ui-react/styles.css';
 import '../styles/globals.css';
 
 type NextPageWithLayout = NextPage & {
@@ -16,6 +18,12 @@ type AppPropsWithLayout = AppProps & {
 export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   // Use the layout defined at the page level, if available
   const getLayout = Component.getLayout ?? ((page) => page);
+
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      require('bootstrap/dist/js/bootstrap');
+    }
+  }, []);
 
   return getLayout(<Component {...pageProps} />);
 }

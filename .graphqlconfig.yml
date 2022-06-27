@@ -1,0 +1,15 @@
+projects:
+  debtrepayment:
+    schemaPath: graphql/schema.json
+    includes:
+      - src/graphql/**/*.ts
+    excludes:
+      - ./amplify/**
+    extensions:
+      amplify:
+        codeGenTarget: typescript
+        generatedFileName: ./amplify/backend/api.ts
+        docsFilePath: graphql
+extensions:
+  amplify:
+    version: 3

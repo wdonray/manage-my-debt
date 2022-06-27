@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "serviceConfiguration": {
+    "apiName": "debtrepayment",
+    "serviceName": "AppSync",
+    "gqlSchemaPath": "/Users/donray.williams/Documents/repos/debt-repayment/amplify/backend/api/debtrepayment/schema.graphql",
+    "defaultAuthType": {
+      "mode": "AMAZON_COGNITO_USER_POOLS",
+      "cognitoUserPoolId": "authdebtrepayment"
+    },
+    "conflictResolution": {
+      "defaultResolutionStrategy": {
+        "type": "AUTOMERGE"
+      }
+    },
+    "additionalAuthTypes": [
+      {
+        "mode": "API_KEY",
+        "expirationTime": 365,
+        "apiKeyExpirationDate": "2023-06-17T23:22:48.871Z",
+        "keyDescription": "debt repayment db"
+      },
+      {
+        "mode": "AWS_IAM"
+      }
+    ]
+  }
+}

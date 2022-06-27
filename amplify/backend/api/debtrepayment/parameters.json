@@ -1,0 +1,11 @@
+{
+  "AppSyncApiName": "debtrepayment",
+  "DynamoDBBillingMode": "PAY_PER_REQUEST",
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authdebtrepayment",
+      "Outputs.UserPoolId"
+    ]
+  }
+}
