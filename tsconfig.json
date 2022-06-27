@@ -16,9 +16,11 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@/components": ["components/index.js"]
+      "@/components": ["components/index.js"],
+      "@/graphql": ["graphql/index.js"],
+      "@/util": ["util/index.js"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "components/Header/index.js"],
-  "exclude": ["node_modules"]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "components/Header/index.js", "components/index.js"],
+  "exclude": ["node_modules", "amplify"]
 }

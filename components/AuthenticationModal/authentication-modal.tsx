@@ -1,7 +1,19 @@
 import './authentication-modal.module.scss';
-import { Authenticator } from '@aws-amplify/ui-react';
+import { Authenticator, useAuthenticator } from '@aws-amplify/ui-react';
+import { onAuthEvents, onCleanUp } from '@/util';
+import { useEffect } from 'react';
 
 export default function AuthenticationModal() {
+  const { user } = useAuthenticator((context) => [context.user]);
+
+  useEffect(() => {
+    onAuthEvents(user);
+
+    return () => {
+      onCleanUp();
+    };
+  }, [user]);
+
   return (
     <div id='authentication-modal' className='modal'>
       <div className='modal-dialog modal-lg'>
