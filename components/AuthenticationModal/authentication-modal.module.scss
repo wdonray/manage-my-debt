@@ -1,5 +1,93 @@
-#authentication-modal {
-  .modal-header {
-    border-bottom: 0;
+@import "/node_modules/bootstrap/scss/functions";
+@import "/node_modules/bootstrap/scss/variables";
+@import "/node_modules/bootstrap/scss/mixins";
+
+@mixin center-content($direction) {
+  display: flex;
+  flex-direction: $direction;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin wrapper-style {
+  @include center-content(column);
+
+  form {
+    @include center-content(column);
+    width: 100%;
+    padding: 10px;
+
+    .input-wrapper {
+      margin-bottom: 10px;
+      width: 100%;
+      padding: 0 30px;
+    }
+  }
+
+
+
+  .sub-header {
+    font-weight: lighter;
+
+    a {
+      margin-left: 5px;
+    }
+  }
+
+  .social-split-wrapper {
+    width: 100%;
+    @include center-content(row);
+    padding: 0 20px;
+
+    hr {
+      border: 1px solid rgb(186, 186, 186);
+      flex-grow: 2;
+      border-radius: 30px;
+    }
+
+    span {
+      padding: 0 20px;
+      font-weight: lighter;
+    }
+  }
+
+  .social-wrapper {
+    @include center-content(row);
+
+    .icon-wrapper {
+      @include center-content(column);
+
+      width: 120px;
+      cursor: pointer;
+      padding: 20px;
+      margin: 10px;
+      border-radius: 10px;
+
+      span {
+        font-size: 25px;
+      }
+    }
+  }
+}
+
+.modal-wrapper {
+  .modal-content-wrapper {
+    border-radius: 1rem;
+  }
+
+  .sign-in-wrapper {
+    @include wrapper-style();
+  }
+  
+  .create-account-wrapper {
+    @include wrapper-style();
+  }
+  
+  .confirm-code-wrapper {
+    @include wrapper-style();
+
+    a {
+      margin-top: 10px;
+    }
   }
 }
