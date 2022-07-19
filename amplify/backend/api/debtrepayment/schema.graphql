@@ -1,4 +1,7 @@
-type Debt @model @aws_iam @auth(rules: [{ allow: owner }]) {
+type Debt
+  @model
+  @aws_iam
+  @auth(rules: [{ allow: public, operations: [read, create], provider: iam }, { allow: owner }]) {
   id: ID!
   name: String!
   type: String!

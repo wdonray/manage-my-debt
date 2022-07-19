@@ -9,8 +9,7 @@
       "UnauthRoleName": "amplify-amplify2707ba08ea044-staging-10319-unauthRole",
       "StackName": "amplify-amplify2707ba08ea044-staging-10319",
       "StackId": "arn:aws:cloudformation:us-east-1:873097943690:stack/amplify-amplify2707ba08ea044-staging-10319/1cc73640-ed10-11ec-acde-0e8abe1bfeef",
-      "AmplifyAppId": "d18lmerev3dtz0",
-      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-amplify2707ba08ea044-staging-10319-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
+      "AmplifyAppId": "d18lmerev3dtz0"
     },
     "categories": {
       "auth": {
@@ -23,9 +22,22 @@
       "function": {
         "AdminQueries32b36a56": {
           "deploymentBucketName": "amplify-amplify2707ba08ea044-staging-10319-deployment",
-          "s3Key": "amplify-builds/AdminQueries32b36a56-4632786b7a786c577432-build.zip"
+          "s3Key": "amplify-builds/AdminQueries32b36a56-644c777a4f32724b6249-build.zip"
         }
       }
+    }
+  },
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-debtrepayment-dev-191407-authRole",
+      "UnauthRoleArn": "arn:aws:iam::873097943690:role/amplify-debtrepayment-dev-191407-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::873097943690:role/amplify-debtrepayment-dev-191407-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-debtrepayment-dev-191407-deployment",
+      "UnauthRoleName": "amplify-debtrepayment-dev-191407-unauthRole",
+      "StackName": "amplify-debtrepayment-dev-191407",
+      "StackId": "arn:aws:cloudformation:us-east-1:873097943690:stack/amplify-debtrepayment-dev-191407/ba684920-f8d2-11ec-920a-0e9c020fd085",
+      "AmplifyAppId": "d18lmerev3dtz0"
     }
   }
 }
