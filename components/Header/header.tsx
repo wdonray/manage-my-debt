@@ -7,13 +7,13 @@ import {
 } from 'react';
 import styles from './header.module.scss';
 import { AuthenticationModal } from '@/components';
-import { UserContext, handleSignOut, raiseError, fetchDBUser, createDebt } from '@/util';
+import { UserContext, handleSignOut, raiseError, fetchDBUser } from '@/util';
 import { Hub, Auth } from 'aws-amplify';
 
 export const siteTitle = 'Manage My Debt';
 
 export default function Header() {
-  const { handleUser, user } = useContext(UserContext);
+  const { handleUser } = useContext(UserContext);
   const [authenticated, setAuthenticated] = useState(false);
 
   const buttonText = useMemo(() => authenticated ? 'Sign Out' : 'Sign In', [authenticated]);
