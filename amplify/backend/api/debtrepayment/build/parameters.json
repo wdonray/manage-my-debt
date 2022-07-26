@@ -8,6 +8,12 @@
             "Outputs.UserPoolId"
         ]
     },
+    "authRoleName": {
+        "Ref": "AuthRoleName"
+    },
+    "unauthRoleName": {
+        "Ref": "UnauthRoleName"
+    },
     "S3DeploymentBucket": "amplify-amplify2707ba08ea044-staging-10319-deployment",
     "S3DeploymentRootKey": "amplify-appsync-files/c6eebf4be4ec216de54bc80f86fb9a5b37f1e2d9"
 }

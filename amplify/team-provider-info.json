@@ -18,6 +18,12 @@
           "googleClientId": "16617727262-em84u69f57gu9ji09i5lotauovgvnmon.apps.googleusercontent.com"
         },
         "userPoolGroups": {}
+      },
+      "function": {
+        "AdminQueries7614a6f3": {
+          "deploymentBucketName": "amplify-amplify2707ba08ea044-staging-10319-deployment",
+          "s3Key": "amplify-builds/AdminQueries7614a6f3-6f387155316a5a565166-build.zip"
+        }
       }
     }
   },

@@ -2,7 +2,7 @@
   "version": "1",
   "cognitoConfig": {
     "identityPoolName": "testAuthIdentityPool",
-    "allowUnauthenticatedIdentities": true,
+    "allowUnauthenticatedIdentities": false,
     "resourceNameTruncated": "debtref9bae03c",
     "userPoolName": "debtrepayment",
     "autoVerifiedAttributes": [
@@ -14,23 +14,18 @@
     ],
     "smsAuthenticationMessage": "Your authentication code is {####}",
     "smsVerificationMessage": "Your verification code is {####}",
-    "emailVerificationSubject": "Verification code: {####}",
-    "emailVerificationMessage": "Verification code: {####}",
+    "emailVerificationSubject": "Your verification code",
+    "emailVerificationMessage": "Your verification code is {####}",
     "defaultPasswordPolicy": false,
     "passwordPolicyMinLength": 8,
-    "passwordPolicyCharacters": [
-      "Requires Lowercase",
-      "Requires Numbers",
-      "Requires Symbols",
-      "Requires Uppercase"
-    ],
+    "passwordPolicyCharacters": [],
     "requiredAttributes": [
       "email",
       "name"
     ],
     "aliasAttributes": [],
     "userpoolClientGenerateSecret": false,
-    "userpoolClientRefreshTokenValidity": "60",
+    "userpoolClientRefreshTokenValidity": 30,
     "userpoolClientWriteAttributes": [],
     "userpoolClientReadAttributes": [],
     "userpoolClientLambdaRole": "debtref9bae03c_userpoolclient_lambda_role",
@@ -42,7 +37,7 @@
     "usernameAttributes": [
       "email"
     ],
-    "useDefault": "manual",
+    "useDefault": "defaultSocial",
     "userPoolGroups": false,
     "userPoolGroupList": [
       "admin",
@@ -50,11 +45,6 @@
       "unauthenticated"
     ],
     "adminQueries": false,
-    "thirdPartyAuth": true,
-    "authProviders": [
-      "graph.facebook.com",
-      "accounts.google.com"
-    ],
     "hostedUI": true,
     "usernameCaseSensitive": false,
     "useEnabledMfas": true,
@@ -79,12 +69,13 @@
       "Ref": "AWS::StackId"
     },
     "permissions": [],
-    "hostedUIDomainName": "t9dj86hnkl09",
+    "hostedUIDomainName": "manage-my-debt",
     "authProvidersUserPool": [
       "Facebook",
       "Google"
     ],
     "hostedUIProviderMeta": "[{\"ProviderName\":\"Facebook\",\"authorize_scopes\":\"email,public_profile\",\"AttributeMapping\":{\"email\":\"email\",\"name\":\"name\",\"username\":\"id\"}},{\"ProviderName\":\"Google\",\"authorize_scopes\":\"openid email profile\",\"AttributeMapping\":{\"email\":\"email\",\"name\":\"name\",\"username\":\"sub\"}}]",
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:3000/\"],\"LogoutURLs\":[\"http://localhost:3000/\"]}"
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"https://www.manage-my-debt.com/oauth2/idpresponse/\",\"https://www.manage-my-debt.com/oauth2/idpresponse/\"],\"LogoutURLs\":[\"https://www.manage-my-debt.com/oauth2/idpresponse/\",\"https://www.manage-my-debt.com/oauth2/idpresponse/\"]}",
+    "authProviders": []
   }
 }

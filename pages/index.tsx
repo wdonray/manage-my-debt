@@ -1,6 +1,6 @@
 import { Amplify } from 'aws-amplify';
 import { Authenticator, View } from '@aws-amplify/ui-react';
-import { Layout } from '@/components';
+import { DebtCards, Layout } from '@/components';
 import config from 'aws-exports';
 import type { NextPage } from 'next';
 import { ToastContainer } from 'react-toastify';
@@ -20,7 +20,9 @@ const Home: NextPage = (props) => {
       />
       <View {...props}>
         <Layout>
-          <main> Debt Repayment </main>
+          <main>
+            <DebtCards />
+          </main>
         </Layout>
       </View>
     </Authenticator.Provider>
