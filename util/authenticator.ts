@@ -3,7 +3,7 @@ import { API, Auth } from 'aws-amplify';
 import { CognitoUserAmplify } from '@aws-amplify/ui';
 import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth';
 
-async function fetchDBUser(userDataKey: string, authMode?: 'AWS_IAM') {
+export async function fetchDBUser(userDataKey: string, authMode?: 'AWS_IAM') {
   const getUserResponse = (await API.graphql({
     query: query.getUser,
     variables: { id: userDataKey },

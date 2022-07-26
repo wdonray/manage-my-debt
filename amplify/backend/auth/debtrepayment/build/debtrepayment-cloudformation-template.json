@@ -98,12 +98,6 @@
     "adminQueries": {
       "Type": "String"
     },
-    "thirdPartyAuth": {
-      "Type": "String"
-    },
-    "authProviders": {
-      "Type": "CommaDelimitedList"
-    },
     "hostedUI": {
       "Type": "String"
     },
@@ -151,6 +145,9 @@
     },
     "oAuthMetadata": {
       "Type": "String"
+    },
+    "authProviders": {
+      "Type": "CommaDelimitedList"
     },
     "hostedUIProviderCreds": {
       "Type": "String"
@@ -247,10 +244,10 @@
             "MinimumLength": {
               "Ref": "passwordPolicyMinLength"
             },
-            "RequireLowercase": true,
-            "RequireNumbers": true,
-            "RequireSymbols": true,
-            "RequireUppercase": true
+            "RequireLowercase": false,
+            "RequireNumbers": false,
+            "RequireSymbols": false,
+            "RequireUppercase": false
           }
         },
         "Schema": [
@@ -1017,14 +1014,6 @@
               ]
             }
           ]
-        },
-        "SupportedLoginProviders": {
-          "graph.facebook.com": {
-            "Ref": "facebookAppId"
-          },
-          "accounts.google.com": {
-            "Ref": "googleClientId"
-          }
         }
       },
       "DependsOn": [

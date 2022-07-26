@@ -2,7 +2,7 @@ import { CognitoUserAmplify } from '@aws-amplify/ui';
 import { createContext } from 'react';
 
 export interface UserContextInterface {
-  user: CognitoUserAmplify | null
+  user: CognitoUserAmplify | null | any
   isUserConfirmed: boolean | null
   forgotPasswordEmail: string | null
   handleUser: (value: CognitoUserAmplify | null) => void

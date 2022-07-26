@@ -10,9 +10,8 @@ import {
   handleConfirmCode,
   handleForgotPassword,
   handleForgotPasswordSubmit,
+  fetchDBUser,
 } from './authenticator';
-import { UserContext, UserContextInterface } from './context/user-context';
-import { raiseError } from './error-handler';
 
 export {
   handleSignIn,
@@ -24,9 +23,22 @@ export {
   handleConfirmCode,
   handleForgotPassword,
   handleForgotPasswordSubmit,
-  UserContext,
-  UserContextInterface,
-  raiseError,
   setUserConfirmation,
   isUserConfirmed,
+  fetchDBUser,
 };
+
+import { raiseError } from './error-handler';
+export { raiseError };
+
+import { UserContext, UserContextInterface } from './context';
+export { UserContext, UserContextInterface };
+
+import { createDebt, fetchDebt, updateDebt } from './debt-handler';
+export { createDebt, fetchDebt, updateDebt };
+
+import { difference, removeProperties } from './object-util';
+export { difference, removeProperties };
+
+import { TargetActiveElement } from './hooks';
+export { TargetActiveElement };

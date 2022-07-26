@@ -67,8 +67,8 @@ export default function AuthenticationModal() {
     if (isAuthenticationState(AuthenticationState.Loading)) {
       return (
         <div className='d-flex justify-content-center'>
-          <div className="spinner-border text-info m-5 p-3" role="status">
-            <span className="visually-hidden">Loading...</span>
+          <div className='spinner-border text-info m-5 p-3' role='status'>
+            <span className='visually-hidden'>Loading...</span>
           </div>
         </div>
       );
