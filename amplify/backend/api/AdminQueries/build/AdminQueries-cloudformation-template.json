@@ -291,7 +291,7 @@
         "Name": "AdminQueries"
       }
     },
-    "DeploymentAPIGWAdminQueries1c637df8": {
+    "DeploymentAPIGWAdminQueriesa1de2c92": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
