@@ -69,7 +69,7 @@
     "Google"
   ],
   "hostedUIProviderMeta": "[{\"ProviderName\":\"Facebook\",\"authorize_scopes\":\"email,public_profile\",\"AttributeMapping\":{\"email\":\"email\",\"name\":\"name\",\"username\":\"id\"}},{\"ProviderName\":\"Google\",\"authorize_scopes\":\"openid email profile\",\"AttributeMapping\":{\"email\":\"email\",\"name\":\"name\",\"username\":\"sub\"}}]",
-  "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"https://www.manage-my-debt.com/oauth2/idpresponse/\",\"https://manage-my-debt-staging.auth.us-east-1.amazoncognito.com/oauth2/idpresponse/\",\"https://localhost:3000/\",\"https://www.manage-my-debt.com/\"],\"LogoutURLs\":[\"https://www.manage-my-debt.com/oauth2/idpresponse/\",\"https://manage-my-debt-staging.auth.us-east-1.amazoncognito.com/oauth2/idpresponse/\",\"https://localhost:3000/\",\"https://www.manage-my-debt.com/\"]}",
+  "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"https://www.manage-my-debt.com/\"],\"LogoutURLs\":[\"https://www.manage-my-debt.com/\"]}",
   "authProviders": [],
   "thirdPartyAuth": false
 }
