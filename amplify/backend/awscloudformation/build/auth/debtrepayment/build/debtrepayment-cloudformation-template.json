@@ -149,13 +149,10 @@
     "authProviders": {
       "Type": "CommaDelimitedList"
     },
+    "thirdPartyAuth": {
+      "Type": "String"
+    },
     "hostedUIProviderCreds": {
-      "Type": "String"
-    },
-    "facebookAppId": {
-      "Type": "String"
-    },
-    "googleClientId": {
       "Type": "String"
     }
   },
@@ -1132,16 +1129,6 @@
         ]
       },
       "Condition": "ShouldOutputAppClientSecrets"
-    },
-    "GoogleWebClient": {
-      "Value": {
-        "Ref": "googleClientId"
-      }
-    },
-    "FacebookWebClient": {
-      "Value": {
-        "Ref": "facebookAppId"
-      }
     }
   }
 }

@@ -37,13 +37,9 @@
     "usernameAttributes": [
       "email"
     ],
-    "useDefault": "defaultSocial",
+    "useDefault": "manual",
     "userPoolGroups": false,
-    "userPoolGroupList": [
-      "admin",
-      "authenticated",
-      "unauthenticated"
-    ],
+    "userPoolGroupList": [],
     "adminQueries": false,
     "hostedUI": true,
     "usernameCaseSensitive": false,
@@ -75,7 +71,8 @@
       "Google"
     ],
     "hostedUIProviderMeta": "[{\"ProviderName\":\"Facebook\",\"authorize_scopes\":\"email,public_profile\",\"AttributeMapping\":{\"email\":\"email\",\"name\":\"name\",\"username\":\"id\"}},{\"ProviderName\":\"Google\",\"authorize_scopes\":\"openid email profile\",\"AttributeMapping\":{\"email\":\"email\",\"name\":\"name\",\"username\":\"sub\"}}]",
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"https://www.manage-my-debt.com/oauth2/idpresponse/\",\"https://www.manage-my-debt.com/oauth2/idpresponse/\"],\"LogoutURLs\":[\"https://www.manage-my-debt.com/oauth2/idpresponse/\",\"https://www.manage-my-debt.com/oauth2/idpresponse/\"]}",
-    "authProviders": []
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"https://www.manage-my-debt.com/oauth2/idpresponse/\",\"https://manage-my-debt-staging.auth.us-east-1.amazoncognito.com/oauth2/idpresponse/\",\"https://localhost:3000/\"],\"LogoutURLs\":[\"https://www.manage-my-debt.com/oauth2/idpresponse/\",\"https://manage-my-debt-staging.auth.us-east-1.amazoncognito.com/oauth2/idpresponse/\",\"https://localhost:3000/\"]}",
+    "authProviders": [],
+    "thirdPartyAuth": false
   }
 }

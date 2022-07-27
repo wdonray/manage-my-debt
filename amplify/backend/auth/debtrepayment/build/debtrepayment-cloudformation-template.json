@@ -149,6 +149,9 @@
     "authProviders": {
       "Type": "CommaDelimitedList"
     },
+    "thirdPartyAuth": {
+      "Type": "String"
+    },
     "hostedUIProviderCreds": {
       "Type": "String"
     },

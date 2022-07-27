@@ -184,9 +184,9 @@
           "authSelections": "identityPoolAndUserPool",
           "serviceName": "Cognito",
           "usernameAttributes": "email",
-          "useDefault": "defaultSocial",
+          "useDefault": "manual",
           "userPoolGroups": false,
-          "userPoolGroupList": "admin,authenticated,unauthenticated",
+          "userPoolGroupList": "",
           "adminQueries": false,
           "hostedUI": true,
           "usernameCaseSensitive": false,
@@ -215,11 +215,10 @@
           "hostedUIDomainName": "manage-my-debt",
           "authProvidersUserPool": "Facebook,Google",
           "hostedUIProviderMeta": "[{\"ProviderName\":\"Facebook\",\"authorize_scopes\":\"email,public_profile\",\"AttributeMapping\":{\"email\":\"email\",\"name\":\"name\",\"username\":\"id\"}},{\"ProviderName\":\"Google\",\"authorize_scopes\":\"openid email profile\",\"AttributeMapping\":{\"email\":\"email\",\"name\":\"name\",\"username\":\"sub\"}}]",
-          "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"https://www.manage-my-debt.com/oauth2/idpresponse/\",\"https://www.manage-my-debt.com/oauth2/idpresponse/\"],\"LogoutURLs\":[\"https://www.manage-my-debt.com/oauth2/idpresponse/\",\"https://www.manage-my-debt.com/oauth2/idpresponse/\"]}",
+          "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"https://www.manage-my-debt.com/oauth2/idpresponse/\",\"https://manage-my-debt-staging.auth.us-east-1.amazoncognito.com/oauth2/idpresponse/\",\"https://localhost:3000/\"],\"LogoutURLs\":[\"https://www.manage-my-debt.com/oauth2/idpresponse/\",\"https://manage-my-debt-staging.auth.us-east-1.amazoncognito.com/oauth2/idpresponse/\",\"https://localhost:3000/\"]}",
           "authProviders": "",
+          "thirdPartyAuth": false,
           "hostedUIProviderCreds": "[{\"ProviderName\":\"Facebook\",\"client_id\":\"1067555550826909\",\"client_secret\":\"6edaa64c785ed88f50fb86286db6f737\"},{\"ProviderName\":\"Google\",\"client_id\":\"16617727262-em84u69f57gu9ji09i5lotauovgvnmon.apps.googleusercontent.com\",\"client_secret\":\"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\"}]",
-          "facebookAppId": "1067555550826909",
-          "googleClientId": "16617727262-em84u69f57gu9ji09i5lotauovgvnmon.apps.googleusercontent.com",
           "env": "staging"
         }
       }
@@ -290,7 +289,7 @@
             "Ref": "UnauthRoleName"
           },
           "S3DeploymentBucket": "amplify-amplify2707ba08ea044-staging-10319-deployment",
-          "S3DeploymentRootKey": "amplify-appsync-files/c6eebf4be4ec216de54bc80f86fb9a5b37f1e2d9",
+          "S3DeploymentRootKey": "amplify-appsync-files/32739b3747b3bb76c446b57ae64086b7d34f7822",
           "env": "staging"
         }
       }
@@ -328,7 +327,7 @@
         "TemplateURL": "https://s3.amazonaws.com/amplify-amplify2707ba08ea044-staging-10319-deployment/amplify-cfn-templates/function/AdminQueries7614a6f3-cloudformation-template.json",
         "Parameters": {
           "deploymentBucketName": "amplify-amplify2707ba08ea044-staging-10319-deployment",
-          "s3Key": "amplify-builds/AdminQueries7614a6f3-6f387155316a5a565166-build.zip",
+          "s3Key": "amplify-builds/AdminQueries7614a6f3-424a4446756559355858-build.zip",
           "authdebtrepaymentUserPoolId": {
             "Fn::GetAtt": [
               "authdebtrepayment",
