@@ -1,4 +1,4 @@
-import { ICreateDebtInput, IDebt } from '@/types';
+import { ICreateDebtInput } from '@/types';
 import { createDebt, raiseError } from '@/util';
 import { ChangeEvent, FormEvent, useCallback, useMemo, useState } from 'react';
 import styles from './new-debt-area.module.scss';
