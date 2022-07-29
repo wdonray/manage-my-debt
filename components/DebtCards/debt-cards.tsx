@@ -1,13 +1,11 @@
-import { UserContext } from '@/util';
-import { useContext, useMemo } from 'react';
 import { IDebt } from 'types/debt';
 import { DebtCard } from './index';
 
-export default function DebtCards() {
-  const { user } = useContext(UserContext);
+interface DebtCardsProps {
+  debtList: IDebt[]
+}
 
-  const debtList = useMemo(() => user?.debt.items ?? [], [user]);
-
+export default function DebtCards({ debtList }: DebtCardsProps) {
   if (!debtList.length) {
     return (
       <div>Nothing Here!</div>
@@ -15,9 +13,9 @@ export default function DebtCards() {
   }
 
   return (
-    <div className='d-flex justify-content-center align-items-center px-3 py-2'>
+    <div className='row g-3'>
       {debtList.map((debt: IDebt) => (
-        <div className='mx-2' key={debt.id}>
+        <div className='col-4 mr-0' key={debt.id}>
           <DebtCard debt={debt} />
         </div>
       ))}
