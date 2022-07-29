@@ -1,11 +1,14 @@
 import { Header } from './Header';
-import { Layout } from './Layout';
-import { AuthenticationModal } from './AuthenticationModal';
-import { DebtCard, DebtCards } from './DebtCards';
+export { Header };
 
-export {
-  Header,
-  Layout,
-  AuthenticationModal,
-  DebtCards,
-};
+import { Layout } from './Layout';
+export { Layout };
+
+import { AuthenticationModal } from './AuthenticationModal';
+export { AuthenticationModal };
+
+import { DebtCard, DebtCards } from './DebtCards';
+export { DebtCard, DebtCards };
+
+import { NewDebtArea } from './NewDebtArea';
+export { NewDebtArea };

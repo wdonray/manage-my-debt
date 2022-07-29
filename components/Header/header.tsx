@@ -34,23 +34,6 @@ export default function Header() {
     }
   }, [handleUser, authenticated]);
 
-  const handleAddDebt = useCallback(async () => {
-    try {
-      // const createDebtResponse = await createDebt({
-      //   name: 'MOHELA - Student Loan',
-      //   type: 'Loan',
-      //   balance: 20000,
-      //   apr: 12,
-      //   payment: 250,
-      //   userDebtId: user.id,
-      // });
-
-      // console.log(createDebtResponse);
-    } catch (err: any) {
-      raiseError(err);
-    }
-  }, []);
-
   useEffect(() => {
     const authCheck = async () => {
       const response = await Auth.currentAuthenticatedUser();
@@ -85,9 +68,6 @@ export default function Header() {
     <>
       <header className={styles.header}>
         <h2>Manage My Debt</h2>
-        <button type='button' className='btn btn-success' onClick={handleAddDebt}>
-          Add
-        </button>
         <button
           type='button'
           className='btn btn-info'

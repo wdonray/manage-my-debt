@@ -1,0 +1,11 @@
+.new-debt-container {
+  border: 1px solid plum;
+  border-radius: 6px;
+
+  margin: 20px 0px;
+  padding: 20px;
+
+  .action-button:first-of-type {
+    margin-right: 10px;
+  }
+}
