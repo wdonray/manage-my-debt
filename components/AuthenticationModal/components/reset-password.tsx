@@ -57,8 +57,8 @@ export default function ForgotPassword({ styles, handleBackToSignIn, handleBackT
     try {
       await handleForgotPasswordSubmit(forgotPasswordEmail, code, confirmPassword);
       handleBackToSignIn();
-    } catch (error: any) {
-      raiseError(error);
+    } catch (err) {
+      raiseError(err);
     }
 
     setIsLoading(false);

@@ -3,7 +3,7 @@ import VerificationInput from 'react-verification-input';
 import { handleSendSignUpCode, handleConfirmCode, raiseError, handleSignIn } from '@/util';
 interface ConfirmCodeProps {
   styles: { readonly [key: string]: string }
-  handleSignInSuccess: (user: any) => void
+  handleSignInSuccess: (user: unknown) => void
 }
 
 export default function ConfirmCode({ styles, handleSignInSuccess }: ConfirmCodeProps) {
@@ -44,7 +44,7 @@ export default function ConfirmCode({ styles, handleSignInSuccess }: ConfirmCode
       handleSignInSuccess(userSignIn);
 
       localStorage.removeItem('user');
-    } catch (err: any) {
+    } catch (err) {
       raiseError(err);
     }
   }, [user, handleSignInSuccess]);
@@ -60,7 +60,7 @@ export default function ConfirmCode({ styles, handleSignInSuccess }: ConfirmCode
   }, [handleCodeCheck]);
 
   useEffect(() => {
-    let timer: any = null;
+    let timer: NodeJS.Timer;
 
     if (codeSent) {
       timer = startTimer();

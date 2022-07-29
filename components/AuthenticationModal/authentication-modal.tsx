@@ -53,7 +53,7 @@ export default function AuthenticationModal() {
     handleStateChange(AuthenticationState.SignIn);
   }, [handleIsUserConfirmed, handleStateChange]);
 
-  const handleSignInSuccess = useCallback((user: any) => {
+  const handleSignInSuccess = useCallback((user: unknown) => {
     if (!user) {
       return;
     }

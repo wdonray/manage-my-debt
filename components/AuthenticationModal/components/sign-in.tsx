@@ -9,6 +9,7 @@ import {
   raiseError,
 } from '@/util';
 import SocialSignIn from './social-sign-in';
+import { IUser } from 'types/user';
 
 interface AuthField {
   email: string
@@ -19,7 +20,7 @@ interface SignInProps {
   styles: { readonly [key: string]: string }
   handleCreateAccount: () => void
   handleForgotPassword: () => void
-  handleSignInSuccess: (user: any) => void
+  handleSignInSuccess: (user: IUser) => void
 }
 
 export default function SignIn({ styles, handleCreateAccount, handleForgotPassword, handleSignInSuccess }: SignInProps) {
@@ -35,8 +36,8 @@ export default function SignIn({ styles, handleCreateAccount, handleForgotPasswo
       const user = await handleSignIn(email, password);
 
       handleSignInSuccess(user);
-    } catch (error: any) {
-      raiseError(error);
+    } catch (err) {
+      raiseError(err);
     }
 
     setIsLoading(false);

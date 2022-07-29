@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { transform, isEqual, isArray, isObject } from 'lodash';
 
 /**
@@ -6,13 +8,13 @@ import { transform, isEqual, isArray, isObject } from 'lodash';
  * @param  {object} newObj  - New object with potential changes
  * @return {object} differences
  */
-export function difference(origObj: any, newObj: any) {
+export function difference(origObj: any, newObj: any): object {
   function changes(newObj: any, origObj: any) {
     let arrayIndexCounter = 0;
 
     return transform(newObj, function (result: any, value, key) {
       if (!isEqual(value, origObj[key])) {
-        let resultKey = isArray(origObj) ? arrayIndexCounter++ : key;
+        const resultKey = isArray(origObj) ? arrayIndexCounter++ : key;
 
         result[resultKey] = (isObject(value) && isObject(origObj[key])) ? changes(value, origObj[key]) : value;
       }

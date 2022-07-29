@@ -1,5 +1,3 @@
-import { IUser } from '@/types';
-
 export interface IDebt {
   id: string;
   name: string;
@@ -11,7 +9,7 @@ export interface IDebt {
   userDebtId: string;
   createdAt?: string | null;
   updatedAt?: string | null;
-  _deleted: any;
+  _deleted: unknown;
   _lastChangedAt: number;
   _version: number;
 }
@@ -28,8 +26,8 @@ export interface ICreateDebtInput {
 
 export interface IUpdateDebtInput {
   id: string
-  name?: String
-  type?: String
+  name?: string
+  type?: string
   balance?: number
   apr?: number
   payment?: number

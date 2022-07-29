@@ -45,7 +45,7 @@ export default function NewDebtArea({
 
     try {
       await createDebt({ ...createDebtFields, userDebtId: userId });
-    } catch (err: any) {
+    } catch (err) {
       raiseError(err);
     } finally {
       setIsLoading(false);

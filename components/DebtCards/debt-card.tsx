@@ -30,7 +30,7 @@ export default function DebtCard({ debt }: DebtCardProps) {
 
     try {
       await updateDebt({ ...updatePayload });
-    } catch (err: any) {
+    } catch (err) {
       raiseError(err);
     }
   }, [cardFields, debt]);

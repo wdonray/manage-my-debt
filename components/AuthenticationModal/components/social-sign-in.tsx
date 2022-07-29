@@ -1,9 +1,10 @@
 import { useEffect, useCallback, MouseEvent, useContext } from 'react';
 import { Hub } from 'aws-amplify';
 import { handleDBUserCreation, handleSocialSignIn, raiseError, UserContext } from '@/util';
+import { IUser } from 'types/user';
 
 interface SocialSignInProps {
-  callback: any
+  callback: (user: IUser) => void
   styles: { readonly [key: string]: string }
 }
 
@@ -17,7 +18,7 @@ export default function SocialSignIn({ callback, styles }: SocialSignInProps) {
 
     try {
       await handleSocialSignIn(type);
-    } catch (error: any) {
+    } catch (error) {
       raiseError(error);
     }
   }, []);
@@ -26,9 +27,7 @@ export default function SocialSignIn({ callback, styles }: SocialSignInProps) {
     const socialSignIn = Hub.listen('auth', async ({ payload: { event, data } }) => {
       switch (event) {
         case 'signIn': {
-          let dbUser = await handleDBUserCreation(data);
-
-          console.log(user);
+          const dbUser = await handleDBUserCreation(data);
 
           if (!user) {
             callback(dbUser);

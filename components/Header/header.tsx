@@ -29,7 +29,7 @@ export default function Header() {
 
       handleUser(null);
       setAuthenticated(false);
-    } catch (error: any) {
+    } catch (error) {
       raiseError(error);
     }
   }, [handleUser, authenticated]);

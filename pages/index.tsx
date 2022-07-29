@@ -6,17 +6,16 @@ import type { NextPage } from 'next';
 import { ToastContainer } from 'react-toastify';
 import { useCallback, useMemo, useState } from 'react';
 import { UserContext, UserContextInterface } from 'util/context';
-import { ICreateDebtInput } from '@/types';
-import { CognitoUserAmplify } from '@aws-amplify/ui';
+import { ICreateDebtInput, IUser } from '@/types';
 
 Amplify.configure(config);
 
 const Home: NextPage = (props) => {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<IUser | null>(null);
   const [isUserConfirmed, setIsUserConfirmed] = useState<boolean | null>(null);
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState<string | null>(null);
 
-  const handleUser = useCallback((value: CognitoUserAmplify | null) => setUser(value), []);
+  const handleUser = useCallback((value: IUser | null) => setUser(value), []);
   const handleIsUserConfirmed = useCallback((value: boolean | null) => setIsUserConfirmed(value), []);
   const handleForgotPasswordEmail = useCallback((value: string | null) => setForgotPasswordEmail(value), []);
 
@@ -31,15 +30,13 @@ const Home: NextPage = (props) => {
     handleForgotPasswordEmail,
   };
 
-  const debtList = useMemo(() => user?.debt.items ?? localDebtList, [user, localDebtList]);
+  const debtList = useMemo(() => user != null ? user.debt?.items : localDebtList, [user, localDebtList]);
 
   const handleAddLocalDebt = useCallback((createDebtInput: ICreateDebtInput) => {
     const updatedList = [...localDebtList, createDebtInput];
 
     setLocalDebtList(updatedList);
   }, [localDebtList]);
-
-  console.log(user);
 
   return ( 
     <Authenticator.Provider>

@@ -30,8 +30,8 @@ export default function ForgotPassword({ styles, handleBackToSignIn, handleReset
       await handleForgotPassword(email);
       handleForgotPasswordEmail(email);
       handleResetPassword();
-    } catch (error: any) {
-      raiseError(error);
+    } catch (err) {
+      raiseError(err);
     }
 
     setIsLoading(false);

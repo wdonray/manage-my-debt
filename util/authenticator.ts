@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { mutation, query } from '@/graphql';
 import { API, Auth } from 'aws-amplify';
-import { CognitoUserAmplify } from '@aws-amplify/ui';
 import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth';
 
 export async function fetchDBUser(userDataKey: string, authMode?: 'AWS_IAM') {
@@ -10,7 +10,7 @@ export async function fetchDBUser(userDataKey: string, authMode?: 'AWS_IAM') {
     authMode,
   })) as any;
 
-  return getUserResponse.data.getUser as CognitoUserAmplify;
+  return getUserResponse.data.getUser;
 }
 
 async function createDBUser(createUserInput: { id: string, name: string }, authMode?: 'AWS_IAM') {
@@ -22,7 +22,7 @@ async function createDBUser(createUserInput: { id: string, name: string }, authM
     authMode,
   }) as any;
 
-  return createUserResponse.data.createUser as CognitoUserAmplify;
+  return createUserResponse.data.createUser;
 }
 
 export async function handleDBUserCreation(signInResponse: any) {

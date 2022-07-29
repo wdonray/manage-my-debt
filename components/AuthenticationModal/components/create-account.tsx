@@ -13,6 +13,7 @@ import {
 } from '@/util';
 import SocialSignIn from './social-sign-in';
 import { isEmpty } from 'lodash';
+import { IUser } from '@/types';
 
 interface AuthField {
   email: string
@@ -40,7 +41,7 @@ export default function CreateAccount({ styles, handleSignIn }: CreateAccountPro
 
   const passwordClassNames = useMemo(() => `form-control ${!isEmpty(errorMessage) && 'border-danger'}`, [errorMessage]);
 
-  const handleSignUpSuccess = useCallback((user) => {
+  const handleSignUpSuccess = useCallback((user: IUser) => {
     if (!user) {
       return;
     }
@@ -73,8 +74,8 @@ export default function CreateAccount({ styles, handleSignIn }: CreateAccountPro
       const user = await handleSignUp(email, name, password);
 
       handleSignUpSuccess(user);
-    } catch (error: any) {
-      raiseError(error);
+    } catch (err) {
+      raiseError(err);
     }
 
     setIsLoading(false);
