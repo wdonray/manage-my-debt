@@ -3,6 +3,7 @@ import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { SignIn, CreateAccount, ConfirmCode, ForgotPassword, ResetPassword } from './components';
 import { UserContext } from '@/util';
 import { toast } from 'react-toastify';
+import { IUser } from 'types/user';
 
 enum AuthenticationState {
   Loading,
@@ -53,7 +54,7 @@ export default function AuthenticationModal() {
     handleStateChange(AuthenticationState.SignIn);
   }, [handleIsUserConfirmed, handleStateChange]);
 
-  const handleSignInSuccess = useCallback((user: unknown) => {
+  const handleSignInSuccess = useCallback((user: IUser) => {
     if (!user) {
       return;
     }

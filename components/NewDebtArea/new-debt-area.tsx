@@ -1,19 +1,12 @@
-import { ICreateDebtInput } from '@/types';
+import { IDebt } from '@/types';
 import { createDebt, raiseError } from '@/util';
-import { ChangeEvent, FormEvent, useCallback, useMemo, useState } from 'react';
+import { ChangeEvent, FormEvent, useCallback, useContext, useMemo, useState } from 'react';
 import styles from './new-debt-area.module.scss';
+import { uniqueId } from 'lodash';
+import { DebtContext } from '@/util';
 
-interface NewDebtAreaProps {
-  userId: string
-  isUserAuthenticated: boolean
-  handleAddLocalDebt: (debt: ICreateDebtInput) => void
-}
-
-export default function NewDebtArea({
-  userId,
-  isUserAuthenticated,
-  handleAddLocalDebt,
-}: NewDebtAreaProps) {
+export default function NewDebtArea() {
+  const { userId, isUserAuthenticated, handleAddLocalDebt, handleDebtList } = useContext(DebtContext);
   const [isLoading, setIsLoading] = useState(false);
 
   const initialState = useMemo(() => ({
@@ -25,7 +18,7 @@ export default function NewDebtArea({
     userDebtId: '',
   }), []);
 
-  const [createDebtFields, setCreateDebtFields] = useState<ICreateDebtInput>(initialState);
+  const [createDebtFields, setCreateDebtFields] = useState<IDebt>(initialState);
 
   const handleInput = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -37,26 +30,34 @@ export default function NewDebtArea({
     event.preventDefault();
     setIsLoading(true);
 
-    if (!isUserAuthenticated) {
-      handleAddLocalDebt(createDebtFields);
-      setIsLoading(false);
+    if (userId == null) {
       return;
     }
 
     try {
-      await createDebt({ ...createDebtFields, userDebtId: userId });
+      const debt = await createDebt({ ...createDebtFields, userDebtId: userId });
+
+      handleDebtList(debt);
     } catch (err) {
       raiseError(err);
     } finally {
       setIsLoading(false);
     }
-  }, [createDebtFields, handleAddLocalDebt, isUserAuthenticated, userId]);
+  }, [createDebtFields, handleDebtList, userId]);
+
+  const handleLocalAddDebt = useCallback((event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    setIsLoading(true);
+    handleAddLocalDebt({ ...createDebtFields, id: uniqueId() });
+    setIsLoading(false);
+  }, [createDebtFields, handleAddLocalDebt]);
 
   const handleResetFilters = useCallback(() => setCreateDebtFields(initialState), [initialState]);
 
   return (
     <div className={styles['new-debt-container']}>
-      <form onSubmit={handleAddDebt}>
+      <form onSubmit={!isUserAuthenticated ? handleLocalAddDebt : handleAddDebt}>
         <fieldset disabled={isLoading} className='row'>
           <div className='col-4'>
             <label htmlFor='new-debt-card-name'>Name</label>
@@ -131,8 +132,8 @@ export default function NewDebtArea({
           <div className='d-flex flex-row justify-content-end align-items-center'>
             <div className={styles['action-button']}>
               <button
-                type="button"
-                className="btn btn-outline-secondary"
+                type='button'
+                className='btn btn-outline-secondary'
                 onClick={handleResetFilters}
               >
                 Reset
@@ -140,8 +141,8 @@ export default function NewDebtArea({
             </div>
             <div className={styles['action-button']}>
               <button
-                type="submit"
-                className="btn btn-success"
+                type='submit'
+                className='btn btn-success'
               >
                 Add
               </button>

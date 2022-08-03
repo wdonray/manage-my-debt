@@ -1,9 +1,10 @@
 import { useState, useCallback, MouseEvent, useEffect, useMemo } from 'react';
 import VerificationInput from 'react-verification-input';
 import { handleSendSignUpCode, handleConfirmCode, raiseError, handleSignIn } from '@/util';
+import { IUser } from '@/types';
 interface ConfirmCodeProps {
   styles: { readonly [key: string]: string }
-  handleSignInSuccess: (user: unknown) => void
+  handleSignInSuccess: (user: IUser) => void
 }
 
 export default function ConfirmCode({ styles, handleSignInSuccess }: ConfirmCodeProps) {

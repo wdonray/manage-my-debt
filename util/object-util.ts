@@ -24,7 +24,11 @@ export function difference(origObj: any, newObj: any): object {
   return changes(newObj, origObj);
 }
 
-const removeProperty = (propKey: string, { [propKey]: propValue, ...rest }) => rest;
+const removeProperty = (object: any, propKey: string) => {
+  const { [propKey]: propValue, ...rest } = object;
+
+  return rest;
+};
 
 /**
  * Remove properties from any object
@@ -32,6 +36,12 @@ const removeProperty = (propKey: string, { [propKey]: propValue, ...rest }) => r
  * @param  {strings} keys  - Keys to remove
  * @return {object} updated object
  */
-export function removeProperties(object: any, ...keys: any): any {
-  return (keys.length ? removeProperties(removeProperty(keys.pop(), object), ...keys) : object);
+export function removeProperties(object: any, keys: string[]): any {
+  let objectToBeUpdated = object;
+
+  keys.forEach((key) => {
+    objectToBeUpdated = removeProperty(objectToBeUpdated, key);
+  });
+
+  return objectToBeUpdated;
 }

@@ -31,14 +31,17 @@ export {
 import { raiseError } from './error-handler';
 export { raiseError };
 
-import { UserContext, UserContextInterface } from './context';
-export { UserContext, UserContextInterface };
+import { UserContext, UserContextInterface, DebtContext, DebtContextInterface, UpdateDebtValue } from './context';
+export { UserContext, UserContextInterface, DebtContext, DebtContextInterface, UpdateDebtValue };
 
-import { createDebt, fetchDebt, updateDebt } from './debt-handler';
-export { createDebt, fetchDebt, updateDebt };
+import { createDebt, fetchDebt, updateDebt, deleteDebt } from './debt-handler';
+export { createDebt, fetchDebt, updateDebt, deleteDebt };
 
 import { difference, removeProperties } from './object-util';
 export { difference, removeProperties };
 
 import { TargetActiveElement } from './hooks';
 export { TargetActiveElement };
+
+import { SearchEnum } from './search-enum';
+export { SearchEnum };

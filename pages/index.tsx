@@ -4,9 +4,9 @@ import { DebtCards, Layout, NewDebtArea } from '@/components';
 import config from 'aws-exports';
 import type { NextPage } from 'next';
 import { ToastContainer } from 'react-toastify';
-import { useCallback, useMemo, useState } from 'react';
-import { UserContext, UserContextInterface } from 'util/context';
-import { ICreateDebtInput, IUser } from '@/types';
+import { useCallback, useEffect, useState } from 'react';
+import { DebtContext, DebtContextInterface, UpdateDebtValue, UserContext, UserContextInterface } from '@/util';
+import { IDebt, IUser } from '@/types';
 
 Amplify.configure(config);
 
@@ -14,12 +14,46 @@ const Home: NextPage = (props) => {
   const [user, setUser] = useState<IUser | null>(null);
   const [isUserConfirmed, setIsUserConfirmed] = useState<boolean | null>(null);
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState<string | null>(null);
+  const [debtList, setDebtList] = useState<IDebt[]>([]);
+  const [localDebtList, setLocalDebtList] = useState<IDebt[]>([]);
+  const [selectedDebt, setSelectedDebt] = useState<IDebt | null>(null);
+  const [valueToUpdate, setValueToUpdate] = useState(UpdateDebtValue.name);
 
+  const handleValueToUpdate = useCallback((value: UpdateDebtValue) => setValueToUpdate(value), []);
+  const handleSelectedDebt = useCallback((value: IDebt | null) => setSelectedDebt(value), []);
   const handleUser = useCallback((value: IUser | null) => setUser(value), []);
   const handleIsUserConfirmed = useCallback((value: boolean | null) => setIsUserConfirmed(value), []);
   const handleForgotPasswordEmail = useCallback((value: string | null) => setForgotPasswordEmail(value), []);
 
-  const [localDebtList, setLocalDebtList] = useState<ICreateDebtInput[]>([]);
+  const handleDebtList = useCallback((debt: IDebt) => {
+    const updatedList = [...debtList];
+
+    const existingIndex = updatedList.findIndex((item) => item.id === debt.id);
+
+    if (existingIndex != -1) {
+      updatedList.splice(existingIndex, 1, debt);
+    } else {
+      updatedList.push(debt);
+    }
+
+    setDebtList(updatedList.filter(((item) => !item._deleted)));
+  }, [debtList]);
+
+  const handleAddLocalDebt = useCallback((debt: IDebt) => {
+    const updatedList = [...localDebtList, debt];
+
+    setLocalDebtList(updatedList);
+  }, [localDebtList]);
+
+  const handleUpdateLocalDebt = useCallback((debt: IDebt) => {
+    const updatedList = localDebtList.map((item) => item.id === debt.id ? debt : item);
+
+    setLocalDebtList(updatedList);
+  }, [localDebtList]);
+
+  const handleDeleteLocalDebt = useCallback((id: string) => {
+    setLocalDebtList(localDebtList.filter((item) => item.id != id));
+  }, [localDebtList]);
 
   const userContextValue: UserContextInterface = {
     user,
@@ -30,39 +64,50 @@ const Home: NextPage = (props) => {
     handleForgotPasswordEmail,
   };
 
-  const debtList = useMemo(() => user != null ? user.debt?.items : localDebtList, [user, localDebtList]);
+  const debtContextValue: DebtContextInterface = {
+    selectedDebt,
+    isUserAuthenticated: user != null,
+    userId: user?.id,
+    debtList,
+    localDebtList,
+    valueToUpdate,
+    handleValueToUpdate,
+    handleAddLocalDebt,
+    handleUpdateLocalDebt,
+    handleDeleteLocalDebt,
+    handleSelectedDebt,
+    handleDebtList,
+  };
 
-  const handleAddLocalDebt = useCallback((createDebtInput: ICreateDebtInput) => {
-    const updatedList = [...localDebtList, createDebtInput];
+  useEffect(() => {
+    if (user !== null && debtList.length === 0) {
+      const userDebt = user.debt?.items.filter((item) => !item._deleted) ?? [];
 
-    setLocalDebtList(updatedList);
-  }, [localDebtList]);
+      setDebtList(userDebt);
+    }
+  }, [user, debtList.length]);
 
   return ( 
     <Authenticator.Provider>
       <UserContext.Provider value={userContextValue}>
-        <ToastContainer
-          position='top-center'
-          autoClose={5000}
-          hideProgressBar={false}
-          closeOnClick
-          draggable
-          pauseOnHover
-        />
-        <View {...props}>
-          <Layout>
-            <main>
-              <div>
-                <NewDebtArea
-                  handleAddLocalDebt={handleAddLocalDebt}
-                  isUserAuthenticated={user != null}
-                  userId={user?.id}
-                />
-                <DebtCards debtList={debtList} />
-              </div>
-            </main>
-          </Layout>
-        </View>
+        <DebtContext.Provider value={debtContextValue}>
+          <ToastContainer
+            position='top-center'
+            autoClose={5000}
+            hideProgressBar={false}
+            closeOnClick
+            draggable
+            pauseOnHover
+          />
+          <View {...props}>
+            <Layout>
+              <main>
+                <NewDebtArea />
+                <DebtCards />
+              </main>
+            </Layout>
+          </View>
+        </DebtContext.Provider>
       </UserContext.Provider>
     </Authenticator.Provider>
   );

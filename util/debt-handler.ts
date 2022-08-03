@@ -1,15 +1,25 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { mutation, query } from '@/graphql';
-import { ICreateDebtInput, IUpdateDebtInput } from '@/types';
+import { ICreateDebtInput, IDebt, IDeleteDebtInput } from '@/types';
 import { API } from 'aws-amplify';
-
+import { removeProperties } from '@/util';
 
 export async function createDebt(payload: ICreateDebtInput) {
-  const createDebtResponse = await API.graphql({
+  const { data } = await API.graphql({
     query: mutation.createDebt,
     variables: { input: payload },
-  });
+  }) as any;
 
-  return createDebtResponse;
+  return data.createDebt;
+}
+
+export async function deleteDebt(payload: IDeleteDebtInput) {
+  const { data } = await API.graphql({
+    query: mutation.deleteDebt,
+    variables: { input: payload },
+  }) as any;
+
+  return data.deleteDebt;
 }
 
 export async function fetchDebt() {
@@ -20,11 +30,19 @@ export async function fetchDebt() {
   return fetchDebtResponse;
 }
 
-export async function updateDebt(payload: IUpdateDebtInput) {
-  const updateDebtResponse = await API.graphql({
-    query: mutation.updateDebt,
-    variables: { input: payload },
-  });
+export async function updateDebt(payload: IDebt, extraFieldsToRemove?: string[]) {
+  const propertiesToRemove = ['owner', 'createdAt', 'updatedAt', '_deleted', '_lastChangedAt', 'user'];
 
-  return updateDebtResponse;
+  if (extraFieldsToRemove) {
+    propertiesToRemove.concat(extraFieldsToRemove);
+  }
+
+  const updatePayload = removeProperties(payload, propertiesToRemove);
+
+  const { data } = await API.graphql({
+    query: mutation.updateDebt,
+    variables: { input: updatePayload },
+  }) as any;
+
+  return data.updateDebt;
 }
