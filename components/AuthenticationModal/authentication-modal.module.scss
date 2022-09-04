@@ -21,10 +21,12 @@
       margin-bottom: 10px;
       width: 100%;
       padding: 0 30px;
+
+      @media (max-width: 768px) { 
+        padding: 0;
+      }
     }
   }
-
-
 
   .sub-header {
     font-weight: lighter;

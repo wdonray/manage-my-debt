@@ -1,8 +1,16 @@
-import { isEqual, keys } from 'lodash';
-import { ChangeEvent, FocusEvent, useCallback, useContext, useEffect, useState } from 'react';
-import { updateDebt, raiseError, deleteDebt, DebtContext, UpdateDebtValue } from '@/util';
+import { isEqual, some } from 'lodash';
+import { ChangeEvent, FocusEvent, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import {
+  updateDebt,
+  raiseError,
+  deleteDebt,
+  DebtContext,
+  UpdateDebtValue,
+  ConvertAPRToMonthlyPayment,
+  InputValidation,
+  FormatFields,
+} from '@/util';
 import styles from './debt-card.module.scss';
-import { TargetActiveElement } from 'util/hooks/active-element';
 import { IDebt } from '@/types';
 
 interface DebtCardProps {
@@ -10,29 +18,55 @@ interface DebtCardProps {
 }
 
 export default function DebtCard({ debt }: DebtCardProps) {
-  const { handleSelectedDebt, isUserAuthenticated, handleDeleteLocalDebt, handleUpdateLocalDebt, handleValueToUpdate, handleDebtList } = useContext(DebtContext);
+  const {
+    selectedDebt,
+    handleSelectedDebt,
+    isUserAuthenticated,
+    handleDeleteLocalDebt,
+    handleUpdateLocalDebt,
+    handleValueToUpdate,
+    handleDebtList,
+  } = useContext(DebtContext);
+
   const [cardFields, setCardFields] = useState({ balance: debt.balance, apr: debt.apr, payment: debt.payment });
   const [isLoading, setIsLoading] = useState(false);
-  const targetedInput = TargetActiveElement() as HTMLInputElement;
+
+  const recommendedMonthlyPayment = useMemo(() => ConvertAPRToMonthlyPayment(cardFields.apr, cardFields.balance), [cardFields.apr, cardFields.balance]);
+
+  const validation = useMemo(() => ({
+    fieldsUpdated: { valid: !isEqual(cardFields, { balance: debt.balance, apr: debt.apr, payment: debt.payment }) },
+    balance: InputValidation(cardFields.balance, 'balance'),
+    apr: InputValidation(cardFields.apr, 'apr'),
+    payment: InputValidation(cardFields.payment, 'payment', cardFields.balance),
+  }), [cardFields, debt]);
 
   const handleInput = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
 
-    setCardFields({ ...cardFields, [name]: value } as IDebt);
+    setCardFields({ ...cardFields, [name]: parseFloat(value) } as IDebt);
+  }, [cardFields]);
+
+  const resetFields = useCallback(() => {
+    setCardFields({ balance: debt.balance, apr: debt.apr, payment: debt.payment });
+  }, [debt]);
+
+  const formatLocalFields = useCallback(() => {
+    const localFields = FormatFields(cardFields, 'string');
+
+    setCardFields({ ...localFields });
   }, [cardFields]);
 
   const submitCardUpdate = useCallback(async (event: FocusEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (
-      !keys(cardFields).includes(targetedInput.name) ||
-      cardFields == null ||
-      isEqual(cardFields, { balance: debt.balance, apr: debt.apr, payment: debt.payment })
-    ) {
+    if (some(validation, ['valid', false]) || selectedDebt != debt) {
+      resetFields();
       return;
     }
 
-    const updatedDebt = { ...debt, ...cardFields };
+    const updatedDebt = { ...debt, ...FormatFields(cardFields, 'number') };
+
+    formatLocalFields();
 
     if (!isUserAuthenticated) {
       handleUpdateLocalDebt(updatedDebt);
@@ -45,8 +79,10 @@ export default function DebtCard({ debt }: DebtCardProps) {
       handleDebtList(debt);
     } catch (err) {
       raiseError(err);
+    } finally {
+      handleSelectedDebt(null);
     }
-  }, [cardFields, debt, handleDebtList, handleUpdateLocalDebt, isUserAuthenticated, targetedInput.name]);
+  }, [validation, selectedDebt, debt, cardFields, formatLocalFields, isUserAuthenticated, resetFields, handleUpdateLocalDebt, handleDebtList, handleSelectedDebt]);
 
   const handleDelete = useCallback(async () => {
     if (!debt._version || debt?.id == null) {
@@ -77,8 +113,13 @@ export default function DebtCard({ debt }: DebtCardProps) {
   }, [debt.id, handleDeleteLocalDebt]);
 
   useEffect(() => {
-    window.onbeforeunload = () => keys(cardFields).includes(targetedInput.name);
-  }, [cardFields, targetedInput]);
+    window.onbeforeunload = () => selectedDebt != null;
+  }, [selectedDebt]);
+
+  useEffect(() => {
+    formatLocalFields();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (debt == null || cardFields == null) {
     return null;
@@ -89,12 +130,11 @@ export default function DebtCard({ debt }: DebtCardProps) {
       className={styles.card}
       id={debt.id}
       onBlur={submitCardUpdate}
-      onClick={() => handleSelectedDebt(debt)}
     >
       {
         isLoading && (
           <div className={styles.loading}>
-            <div className='spinner-border text-info' role='status'>
+            <div className='spinner-border text-warning' role='status'>
               <span className='visually-hidden'>Loading...</span>
             </div>
           </div>
@@ -154,36 +194,68 @@ export default function DebtCard({ debt }: DebtCardProps) {
           <span className='input-group-text'>$</span>
           <input
             id={`${debt.id}-card-balance`}
-            className='form-control'
+            className={`form-control ${!validation.balance.valid && 'is-invalid'}`}
+            min={1}
+            step={0.01}
             type='number'
             name='balance'
-            value={cardFields.balance}
+            required
+            value={isNaN(cardFields.balance) ? '' : cardFields.balance}
             onChange={handleInput}
+            onClick={() => handleSelectedDebt(debt)}
           />
+          <div className='invalid-feedback'>
+            {validation.balance.message}
+          </div>
         </div>
         <label htmlFor={`${debt.id}-interest-rate`}>Interest Rate (APR)</label>
         <div className='input-group mb-2'>
           <input
             id={`${debt.id}-interest-rate`}
-            className='form-control'
+            className={`form-control ${!validation.apr.valid && 'is-invalid'}`}
             type='number'
             name='apr'
-            value={cardFields.apr}
+            max={100}
+            min={0}
+            step={0.001}
+            required
+            value={isNaN(cardFields.apr) ? '' : cardFields.apr}
             onChange={handleInput}
+            onClick={() => handleSelectedDebt(debt)}
           />
+          <span className='input-group-text'>%</span>
+          <div className='invalid-feedback'>
+            {InputValidation(cardFields.apr, 'apr').message}
+          </div>
         </div>
         <label htmlFor={`${debt.id}-monthly-payment`}>Monthly Payment</label>
-        <div className='input-group'>
+        <div className='input-group mb-1'>
           <span className='input-group-text'>$</span>
           <input
             id={`${debt.id}-monthly-payment`}
-            className='form-control'
+            className={`form-control ${!validation.payment.valid && 'is-invalid'}`}
             type='number'
+            min={0}
+            step={0.01}
             name='payment'
-            value={cardFields.payment}
+            required
+            value={isNaN(cardFields.payment) ? '' : cardFields.payment}
             onChange={handleInput}
+            onClick={() => handleSelectedDebt(debt)}
           />
+          <div className='invalid-feedback'>
+            {validation.payment.message}
+          </div>
         </div>
+        <label
+          className={styles.caption}
+          htmlFor={`${debt.id}-monthly-payment`}
+        >
+          <div>
+            Monthly interest rate: {recommendedMonthlyPayment.monthlyInterestRatePercentage}
+          </div>
+          Recommended minimum payment: <strong>{recommendedMonthlyPayment.monthlyPayment}</strong>
+        </label>
       </div>
     </form >
   );

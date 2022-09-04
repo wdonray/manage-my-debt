@@ -1,35 +1,40 @@
 import { IDebt } from '@/types';
-import { ChangeEvent, useCallback, useContext, useEffect, useMemo, useState, MouseEvent } from 'react';
+import { ChangeEvent, useCallback, useContext, useEffect, useMemo, useState, MouseEvent, useRef } from 'react';
 import { DebtContext, SearchEnum } from '@/util';
 import { UpdateDebtModal } from './components';
 import { DebtCard } from './components';
-import { orderBy, upperFirst } from 'lodash';
+import { orderBy, difference, isEqual } from 'lodash';
+import FilterDebt from './components/filter-debt';
 
-enum SortDebt {
+export enum SortDebt {
   none = 'none',
   balance = 'balance',
   apr = 'apr',
   payment = 'payment',
 }
 
-enum SortDirection {
+export enum SortDirection {
   none = 'none',
   asc = 'asc',
   desc = 'desc',
 }
 
-enum SearchType {
+export enum SearchType {
   name = 'name',
   type = 'type',
 }
 
 export default function DebtCards() {
   const { debtList, localDebtList, isUserAuthenticated } = useContext(DebtContext);
+  const prevDebtList = useRef({ debtList, localDebtList }).current;
 
   const [searchByValue, setSearchByValue] = useState('');
   const [searchByType, setSearchByType] = useState<SearchType>(SearchType.name);
   const [currentDirection, setCurrentDirection] = useState<SortDirection>(SortDirection.none);
   const [currentSort, setCurrentSortDebt] = useState<SortDebt>(SortDebt.none);
+  const [recentDebt, setRecentDebt] = useState<IDebt | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [pageLoadedOnce, setPageLoadedOnce] = useState(false);
 
   const handleSearchValue = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
@@ -46,31 +51,67 @@ export default function DebtCards() {
     setSearchByType(SearchEnum(SearchType, name) as SearchType);
   }, []);
 
-  const handleSelect = useCallback((event: ChangeEvent<HTMLSelectElement>) => {
-    const { name, value } = event.target;
+  const handleSortSelect = useCallback((event: ChangeEvent<HTMLSelectElement>) => {
+    const { value } = event.target;
 
-    if (name === 'SortDebt') {
-      setCurrentSortDebt(SearchEnum(SortDebt, value) as SortDebt);
-    } else {
-      setCurrentDirection(SearchEnum(SortDirection, value) as SortDirection);
-    }
+    setCurrentSortDebt(SearchEnum(SortDebt, value) as SortDebt);
   }, []);
 
+  const handleSortDirection = useCallback((event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+
+    setCurrentDirection(currentDirection === SortDirection.asc ? SortDirection.desc : SortDirection.asc);
+  }, [currentDirection]);
+
+  const findRecentDebt = useCallback(() => {
+    let updatedDebt = null;
+    const listToCheck = isUserAuthenticated ? debtList : localDebtList;
+    const prevListToCheck = isUserAuthenticated ? prevDebtList.debtList : prevDebtList.localDebtList;
+
+    if (!prevListToCheck || !listToCheck) {
+      return;
+    }
+
+    if (!isEqual(prevListToCheck, listToCheck)) {
+      updatedDebt = difference(prevListToCheck, listToCheck).pop();
+
+      if (!updatedDebt) {
+        updatedDebt = difference(listToCheck, prevListToCheck).pop();
+      }
+    } else {
+      updatedDebt = listToCheck.map((item) => item).pop();
+    }
+
+    if (updatedDebt) {
+      setRecentDebt(updatedDebt);
+
+      setTimeout(() => {
+        setRecentDebt(null);
+      }, 2000);
+    }
+  }, [debtList, isUserAuthenticated, localDebtList, prevDebtList.debtList, prevDebtList.localDebtList]);
+
   const currentDebtList = useMemo(() => {
+    setLoading(true);
+
     let list = isUserAuthenticated ? debtList : localDebtList;
 
     if (searchByValue != '') {
-      list = list?.filter((item) => item[searchByType].includes(searchByValue));
+      list = list?.filter((item) => item[searchByType].toLocaleLowerCase().includes(searchByValue.toLocaleLowerCase()));
     }
 
     if (currentDirection != SortDirection.none) {
       list = orderBy(list, [currentSort], [currentDirection]);
     }
 
+    setLoading(false);
+
     return list;
   }, [currentDirection, currentSort, debtList, isUserAuthenticated, localDebtList, searchByType, searchByValue]);
 
   const isListEmpty = useMemo(() => !currentDebtList || !currentDebtList.length, [currentDebtList]);
+
+  const direction = useMemo(() => currentDirection === SortDirection.asc ? 'ascending' : 'descending', [currentDirection]);
 
   useEffect(() => {
     if (currentSort != SortDebt.none && currentDirection == SortDirection.none) {
@@ -80,114 +121,84 @@ export default function DebtCards() {
     }
   }, [currentDirection, currentSort]);
 
+  useEffect(() => {
+    findRecentDebt();
+
+    return () => {
+      prevDebtList.debtList = debtList;
+      prevDebtList.localDebtList = localDebtList;
+    };
+  }, [debtList, findRecentDebt, localDebtList, prevDebtList]);
+
+  useEffect(() => {
+    if (!recentDebt) {
+      return;
+    }
+
+    const el = document.getElementById(recentDebt?.id);
+
+    if (!el) {
+      return;
+    }
+
+    if (!pageLoadedOnce) {
+      setTimeout(() => {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setPageLoadedOnce(true);
+      }, 2000);
+    } else {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [pageLoadedOnce, recentDebt]);
+
+  if (loading) {
+    return (
+      <div className='d-flex justify-content-center'>
+        <div className='spinner-border text-info m-5 p-3' role='status'>
+          <span className='visually-hidden'>Loading...</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
       <UpdateDebtModal />
-      <div className='d-flex justify-content-end mb-3'>
-        <button
-          type='button'
-          className='btn btn-light border btn-sm'
-          data-bs-toggle='collapse'
-          data-bs-target='#filter-collapse'
-        >
-          <i className='bi bi-filter'></i> Filters
-        </button>
-      </div>
-      <div
-        className='collapse border rounded mb-3'
-        id='filter-collapse'
-      >
-        <div className='row p-3'>
-          <div className='col-3'>
-            <label htmlFor='debt-search'>
-              Search By:
-            </label>
-            <div
-              className='input-group'
-              id='debt-search'
-            >
-              <button
-                className='btn btn-outline-secondary dropdown-toggle'
-                type='button'
-                data-bs-toggle='dropdown'
-              >
-                {upperFirst(searchByType)}
-              </button>
-              <ul className='dropdown-menu'>
-                <li>
-                  <button
-                    name='name'
-                    className='dropdown-item'
-                    onClick={handleSearchType}
-                  >
-                    Name
-                  </button>
-                </li>
-                <li>
-                  <button
-                    name='type'
-                    className='dropdown-item'
-                    onClick={handleSearchType}
-                  >
-                    Type
-                  </button>
-                </li>
-              </ul>
-              <input
-                type='text'
-                className='form-control'
-                onChange={handleSearchValue}
-              />
-            </div>
+      <FilterDebt
+        searchByType={searchByType}
+        searchByValue={searchByValue}
+        currentSort={currentSort}
+        currentDirection={currentDirection}
+        handleSearchType={handleSearchType}
+        handleSearchValue={handleSearchValue}
+        handleSortSelect={handleSortSelect}
+        handleSortDirection={handleSortDirection}
+      />
+      {
+        currentSort != SortDebt.none && (
+          <div className="d-flex justify-content-end pt-3">
+            <span>
+              Sorted by {direction} <strong>{currentSort}</strong>
+            </span>
           </div>
-          <div className='col-3'>
-            <label htmlFor='sort-select'>
-              Sort By:
-            </label>
-            <select
-              className='form-select'
-              id='sort-select'
-              name='SortDebt'
-              onChange={handleSelect}
-              value={currentSort}
-            >
-              <option value={SortDebt.none}>None</option>
-              <option value={SortDebt.balance}>Balance</option>
-              <option value={SortDebt.apr}>Interest Rate (APR)</option>
-              <option value={SortDebt.payment}>Payment</option>
-            </select>
-          </div>
-          <div className='col-3'>
-            <label htmlFor='direction-select'>
-              Sort Direction:
-            </label>
-            <select
-              className='form-select'
-              id='direction-select'
-              name='SortDirection'
-              onChange={handleSelect}
-              value={currentDirection}
-            >
-              <option disabled={currentSort != SortDebt.none} value={SortDirection.none}>None</option>
-              <option value={SortDirection.asc}>Ascending</option>
-              <option value={SortDirection.desc}>Descending</option>
-            </select>
-          </div>
-        </div>
-      </div>
+        )
+      }
       {
         isListEmpty ?
           (
-            <div className='d-flex flex-column justify-content-center align-items-center mt-5'>
+            <div className='d-flex flex-column justify-content-center align-items-center text-center mt-5'>
               <i className='bi bi-exclamation-diamond fs-1'></i>
               <h1>No results found</h1>
               <span>Please check spelling or try again with different search</span>
             </div>
           ) :
           (
-            <div className='row g-3'>
-              {currentDebtList?.map((debt: IDebt, index: number) => (
-                <div className='col-4 mr-0' key={debt.id ?? index}>
+            <div className='row g-3 mb-4 pt-3'>
+              {currentDebtList?.map((debt: IDebt) => (
+                <div
+                  className='col-12 col-md-6 col-lg-4 mr-0'
+                  key={debt.id}
+                >
                   <DebtCard debt={debt} />
                 </div>
               ))}

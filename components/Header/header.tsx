@@ -67,7 +67,7 @@ export default function Header() {
   return (
     <>
       <header className={styles.header}>
-        <h2>Manage My Debt</h2>
+        <h5 className='mb-0'>Manage My Debt</h5>
         <button
           type='button'
           className='btn btn-info'
