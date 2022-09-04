@@ -18,6 +18,7 @@ const Home: NextPage = (props) => {
   const [localDebtList, setLocalDebtList] = useState<IDebt[]>([]);
   const [selectedDebt, setSelectedDebt] = useState<IDebt | null>(null);
   const [valueToUpdate, setValueToUpdate] = useState(UpdateDebtValue.name);
+  const [loading, setLoading] = useState<boolean | null>(true);
 
   const handleValueToUpdate = useCallback((value: UpdateDebtValue) => setValueToUpdate(value), []);
   const handleSelectedDebt = useCallback((value: IDebt | null) => setSelectedDebt(value), []);
@@ -87,7 +88,13 @@ const Home: NextPage = (props) => {
     }
   }, [user, debtList.length]);
 
-  return ( 
+  useEffect(() => {
+    if (loading) {
+      setTimeout(() => setLoading(false), 2000);
+    }
+  }, [loading]);
+
+  return (
     <Authenticator.Provider>
       <UserContext.Provider value={userContextValue}>
         <DebtContext.Provider value={debtContextValue}>
@@ -102,8 +109,20 @@ const Home: NextPage = (props) => {
           <View {...props}>
             <Layout>
               <main>
-                <NewDebtArea />
-                <DebtCards />
+                {
+                  loading ? (
+                    <div className='d-flex justify-content-center align-items-center'>
+                      <div className='loading'>
+                        Loading
+                      </div>
+                    </div>
+                  ) : (
+                    <div className='main-body'>
+                      <NewDebtArea />
+                      <DebtCards />
+                    </div>
+                  )
+                }
               </main>
             </Layout>
           </View>

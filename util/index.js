@@ -31,8 +31,8 @@ export {
 import { raiseError } from './error-handler';
 export { raiseError };
 
-import { UserContext, UserContextInterface, DebtContext, DebtContextInterface, UpdateDebtValue } from './context';
-export { UserContext, UserContextInterface, DebtContext, DebtContextInterface, UpdateDebtValue };
+import { UserContext, UserContextInterface, DebtContext, DebtContextInterface, UpdateDebtValue, DebtRef } from './context';
+export { UserContext, UserContextInterface, DebtContext, DebtContextInterface, UpdateDebtValue, DebtRef };
 
 import { createDebt, fetchDebt, updateDebt, deleteDebt } from './debt-handler';
 export { createDebt, fetchDebt, updateDebt, deleteDebt };
@@ -45,3 +45,6 @@ export { TargetActiveElement };
 
 import { SearchEnum } from './search-enum';
 export { SearchEnum };
+
+import { ConvertAPRToMonthlyPayment, InputValidation, ConvertToCurrency, FormatFields } from './finance-calculations';
+export { ConvertAPRToMonthlyPayment, InputValidation, ConvertToCurrency, FormatFields };

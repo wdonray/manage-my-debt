@@ -25,9 +25,10 @@ interface AuthField {
 interface CreateAccountProps {
   styles: { readonly [key: string]: string }
   handleSignIn: () => void
+  signUpCallBack: () => void
 }
 
-export default function CreateAccount({ styles, handleSignIn }: CreateAccountProps) {
+export default function CreateAccount({ styles, handleSignIn, signUpCallBack }: CreateAccountProps) {
   const { handleIsUserConfirmed } = useContext(UserContext);
 
   const [errorMessage, setErrorMessage] = useState('');
@@ -48,7 +49,8 @@ export default function CreateAccount({ styles, handleSignIn }: CreateAccountPro
 
     handleIsUserConfirmed(false);
     localStorage.setItem('user', JSON.stringify({ email: authFields.email, password: authFields.password }));
-  }, [handleIsUserConfirmed, authFields]);
+    signUpCallBack();
+  }, [handleIsUserConfirmed, authFields.email, authFields.password, signUpCallBack]);
 
   const handleValidation = useCallback(() => {
     if (authFields.password === authFields.confirmPassword) {

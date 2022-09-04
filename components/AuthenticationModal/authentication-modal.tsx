@@ -49,6 +49,7 @@ export default function AuthenticationModal() {
     if (parsedUser) {
       handleIsUserConfirmed(false);
       handleStateChange(AuthenticationState.ConfirmCode);
+      return;
     }
 
     handleStateChange(AuthenticationState.SignIn);
@@ -115,9 +116,10 @@ export default function AuthenticationModal() {
       <CreateAccount
         styles={styles}
         handleSignIn={() => handleStateChange(AuthenticationState.SignIn)}
+        signUpCallBack={checkLocalUser}
       />
     );
-  }, [isAuthenticationState, handleSignInSuccess, handleStateChange]);
+  }, [isAuthenticationState, checkLocalUser, handleSignInSuccess, handleStateChange]);
 
   useEffect(() => {
     checkLocalUser();

@@ -1,9 +1,35 @@
+.collapse {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
+  padding: 10px;
+  margin: 10px auto;
+
+  border-radius: 6px;
+
+  cursor: pointer;
+
+  i {
+    font-size: xx-large;
+  }
+}
+
 .new-debt-container {
   border: 1px solid plum;
   border-radius: 6px;
 
   margin: 20px 0px;
-  padding: 20px;
+
+  form {
+    padding: 20px;
+  }
+
+  .caption {
+    color: gray;
+    font-size: smaller;
+  }
 
   .action-button:first-of-type {
     margin-right: 10px;

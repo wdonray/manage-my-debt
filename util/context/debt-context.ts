@@ -1,9 +1,14 @@
-import { createContext } from 'react';
+import { createContext, LegacyRef } from 'react';
 import { IDebt } from 'types/debt';
 
 export enum UpdateDebtValue {
   name = 'name',
   type = 'type',
+}
+
+export interface DebtRef {
+  id: string | undefined,
+  ref: LegacyRef<HTMLDivElement>
 }
 
 export interface DebtContextInterface {
