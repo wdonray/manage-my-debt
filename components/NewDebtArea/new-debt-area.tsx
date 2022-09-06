@@ -42,7 +42,7 @@ export default function NewDebtArea() {
   }, [cardFields]);
 
   const handleFieldBlur = useCallback(() => {
-    const formattedFields = FormatFields({ balance: cardFields.balance, apr: cardFields.apr, payment: cardFields.payment }, 'string')
+    const formattedFields = FormatFields({ balance: cardFields.balance, apr: cardFields.apr, payment: cardFields.payment }, 'string');
 
     setCreateDebtFields({ ...cardFields, ...formattedFields });
   }, [cardFields]);
@@ -101,6 +101,7 @@ export default function NewDebtArea() {
 
   useEffect(() => {
     handleFieldBlur();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -239,7 +240,7 @@ export default function NewDebtArea() {
                   className='btn btn-outline-secondary'
                   onClick={handleResetFilters}
                 >
-                Reset
+                  Reset
                 </button>
               </div>
               <div className={styles['action-button']}>
@@ -248,7 +249,7 @@ export default function NewDebtArea() {
                   className='btn btn-success'
                   disabled={some(validation, ['valid', false])}
                 >
-                Add
+                  Add
                 </button>
               </div>
             </div>
