@@ -1,6 +1,6 @@
 import { Amplify } from 'aws-amplify';
 import { Authenticator, View } from '@aws-amplify/ui-react';
-import { DebtCards, Layout, NewDebtArea } from '@/components';
+import { DebtCards, Layout, NewDebtArea, CalculationArea } from '@/components';
 import config from 'aws-exports';
 import type { NextPage } from 'next';
 import { ToastContainer } from 'react-toastify';
@@ -120,6 +120,7 @@ const Home: NextPage = (props) => {
                     <div className='main-body'>
                       <NewDebtArea />
                       <DebtCards />
+                      <CalculationArea />
                     </div>
                   )
                 }

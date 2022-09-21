@@ -43,8 +43,10 @@ export default function DebtCard({ debt }: DebtCardProps) {
   const handleInput = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
 
+    handleSelectedDebt(debt);
+
     setCardFields({ ...cardFields, [name]: parseFloat(value) } as IDebt);
-  }, [cardFields]);
+  }, [cardFields, debt, handleSelectedDebt]);
 
   const resetFields = useCallback(() => {
     setCardFields({ balance: debt.balance, apr: debt.apr, payment: debt.payment });
@@ -127,7 +129,7 @@ export default function DebtCard({ debt }: DebtCardProps) {
 
   return (
     <form
-      className={styles.card}
+      className={`${styles.card} shadow-sm`}
       id={debt.id}
       onBlur={submitCardUpdate}
     >

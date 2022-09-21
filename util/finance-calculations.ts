@@ -19,7 +19,7 @@ export function ConvertAPRToMonthlyPayment(apr: number, balance: number, maximum
 const InputFail = (message: string) => ({ valid: false, message });
 const InputPass = () => ({ valid: true, message: '' });
 
-export function InputValidation(field: number, type: 'apr' | 'balance' | 'payment', totalBalance?: number) {
+export function InputValidation(field: number, type?: 'apr' | 'balance' | 'payment', totalBalance?: number) {
   const parsedField = parseFloat(field.toString());
   const parsedBalance = totalBalance ? parseFloat(totalBalance.toString()) : 0;
   const stringField = field.toString();
@@ -28,7 +28,7 @@ export function InputValidation(field: number, type: 'apr' | 'balance' | 'paymen
     return InputFail('Value must at least be 0');
   } else if (isNaN(parsedField)) {
     return InputFail('Must be a number');
-  } else if (field.toString().toLowerCase().includes('e')) {
+  } else if (stringField.toLowerCase().includes('e')) {
     return InputFail('Invalid Input');
   } else if (stringField.length > 1 && stringField.charAt(0) === '0' && stringField.charAt(1) !== '.') {
     return InputFail('Invalid Input');
@@ -68,7 +68,7 @@ export function InputValidation(field: number, type: 'apr' | 'balance' | 'paymen
 }
 
 export function ConvertToCurrency(num: number, step = 2) {
-  return ceil(num, step);
+  return num.toLocaleString('en-US', { maximumFractionDigits: step });
 }
 
 export function FormatFields<Type>(fields: Type, type: 'string' | 'number'): Type {
@@ -78,7 +78,7 @@ export function FormatFields<Type>(fields: Type, type: 'string' | 'number'): Typ
     const n = Number(updatedFields[key]);
     const step = key === 'apr' ? 3 : 2;
 
-    updatedFields = { ...updatedFields, [key]: type === 'string' ? n.toFixed(step) : ConvertToCurrency(n, step) };
+    updatedFields = { ...updatedFields, [key]: type === 'string' ? n.toFixed(step) : ceil(n, step) };
   }
 
   return updatedFields;

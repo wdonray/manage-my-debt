@@ -12,3 +12,6 @@ export { DebtCard, DebtCards };
 
 import { NewDebtArea } from './NewDebtArea';
 export { NewDebtArea };
+
+import { CalculationArea } from './CalculationArea';
+export { CalculationArea };
