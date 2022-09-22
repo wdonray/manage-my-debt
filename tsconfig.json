@@ -21,8 +21,9 @@
       "@/components": ["components/index.js"],
       "@/graphql": ["graphql/index.js"],
       "@/util": ["util/index.js"],
-      "@/types": ["types/index.d.ts"],
-    }
+      "@/types": ["types/index.d.ts"]
+    },
+    "suppressImplicitAnyIndexErrors": true
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "components/Header/index.js", "components/index.js"],
   "exclude": ["node_modules", "amplify"]

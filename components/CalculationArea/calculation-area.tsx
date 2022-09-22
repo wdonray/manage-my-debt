@@ -1,70 +1,11 @@
 import { useContext, useState, useMemo, useCallback, ChangeEvent, useEffect } from 'react';
-import { DebtContext, ConvertToCurrency, InputValidation } from '@/util';
+import { DebtContext, ConvertToCurrency, InputValidation, FormatFields } from '@/util';
 import { orderBy, ceil } from 'lodash';
 
 export default function CalculationArea() {
-  const { debtList } = useContext(DebtContext);
+  const { debtList, localDebtList, isUserAuthenticated } = useContext(DebtContext);
 
   const [paymentInput, setPaymentInput] = useState(0);
-
-  const validation = useMemo(() => ({
-    payment: InputValidation(paymentInput),
-  }), [paymentInput]);
-
-  const debtListMinPayments = useMemo(() => {
-    if (!debtList) {
-      return [];
-    }
-
-    const payments = debtList.map((item) => {
-      const aprDecimal = parseFloat((item.apr / 100).toFixed(4));
-
-      return (item.balance * aprDecimal) / 12;
-    });
-
-    return payments;
-  }, [debtList]);
-
-  const totalMinPayment = useMemo(() => debtListMinPayments.reduce((partialSum, a) => partialSum + a, 0), [debtListMinPayments]);
-  const formattedTotalMinPayment = useMemo(() => ConvertToCurrency(totalMinPayment), [totalMinPayment]);
-
-  const totalCurrentPayment = useMemo(() => debtList?.map((item) => item.payment).reduce((partialSum, a) => partialSum + a, 0), [debtList]);
-  const formattedTotalCurrentPayment = useMemo(() => totalCurrentPayment ? ConvertToCurrency(totalCurrentPayment) : '0', [totalCurrentPayment]);
-
-  const totalDebt = useMemo(() => ConvertToCurrency(debtList?.map((item) => item.balance).reduce((partialSum, a) => partialSum + a, 0) ?? 0), [debtList]);
-
-  const leftOver = useMemo(() => {
-    const value = paymentInput - totalMinPayment;
-
-    return value <= 0 || Number.isNaN(value) ? 0 : value;
-  }, [paymentInput, totalMinPayment]);
-
-  const leftOverFormatted = useMemo(() => {
-    const value = ConvertToCurrency(paymentInput - totalMinPayment);
-
-    return value.includes('-') ? 0 : value;
-  }, [paymentInput, totalMinPayment]);
-
-  const paymentTooLow = useMemo(() => {
-    if (paymentInput) {
-      return paymentInput < totalMinPayment;
-    }
-
-    return false;
-  }, [paymentInput, totalMinPayment]);
-
-  const highPriorityDebt = useMemo(() => {
-    if (!debtList || leftOver <= 0) {
-      return null;
-    }
-
-    const topDebt = orderBy([...debtList], ['apr'], ['desc'])[0];
-
-    return {
-      ...topDebt,
-      updatedPayment: ceil(topDebt.payment + leftOver, 2),
-    };
-  }, [debtList, leftOver]);
 
   const handleInput = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -72,15 +13,94 @@ export default function CalculationArea() {
     setPaymentInput(parseFloat(value));
   }, []);
 
-  useEffect(() => {
-    if (paymentInput <= 0 && totalCurrentPayment) {
-      setPaymentInput(totalCurrentPayment);
+  const validation = useMemo(() => ({ payment: InputValidation(paymentInput) }), [paymentInput]);
+
+  const currentDebtList = useMemo(() => isUserAuthenticated ? debtList : localDebtList, [localDebtList, debtList, isUserAuthenticated]);
+
+  const debtListMinPayments = useMemo(() => {
+    if (!currentDebtList) {
+      return [];
     }
-  }, [paymentInput, totalCurrentPayment]);
+
+    const payments = currentDebtList.map((item) => {
+      const aprDecimal = parseFloat((item.apr / 100).toFixed(4));
+
+      return (item.balance * aprDecimal) / 12;
+    });
+
+    return payments;
+  }, [currentDebtList]);
+
+  const minPaymentValueSum = useMemo(() => {
+    console.log(debtListMinPayments);
+    const reduced = debtListMinPayments.reduce((partialSum, a) => partialSum + a, 0);
+
+    console.log(reduced);
+
+    return {
+      value: reduced,
+      valueFormatted: ConvertToCurrency(reduced),
+    };
+  }, [debtListMinPayments]);
+
+  const fieldValueSum = useCallback((field: string) => {
+    const list = currentDebtList?.map((item) => FormatFields({ value: item[field] }, 'number').value);
+
+    const reduced = list?.reduce((partialSum, a) => partialSum + a, 0);
+
+    return {
+      value: reduced,
+      valueFormatted: ConvertToCurrency(reduced),
+    };
+  }, [currentDebtList]);
+
+  const leftOverSum = useMemo(() => {
+    const leftOverValue = paymentInput - minPaymentValueSum.value;
+
+    return {
+      value: leftOverValue <= 0 || Number.isNaN(leftOverValue) ? 0 : leftOverValue,
+      valueFormatted: ConvertToCurrency(leftOverValue),
+    };
+  }, [minPaymentValueSum.value, paymentInput]);
+
+  const paymentTooLow = useMemo(() => {
+    if (paymentInput) {
+      return paymentInput < minPaymentValueSum.value;
+    }
+
+    return false;
+  }, [minPaymentValueSum.value, paymentInput]);
+
+  const highPriorityDebt = useMemo(() => {
+    if (!currentDebtList || currentDebtList.length <= 0 || leftOverSum.value <= 0) {
+      return null;
+    }
+
+    const topDebt = orderBy([...currentDebtList], ['apr'], ['desc'])[0];
+
+    const formattedFields = FormatFields({ payment: topDebt.payment, leftOverSum: leftOverSum.value }, 'number');
+
+    return {
+      ...topDebt,
+      updatedPayment: ceil(formattedFields.payment + formattedFields.leftOverSum, 2),
+    };
+  }, [currentDebtList, leftOverSum]);
+
+  useEffect(() => {
+    const paymentSum = fieldValueSum('payment').value;
+
+    if (paymentInput <= 0 && paymentSum) {
+      setPaymentInput(paymentSum);
+    }
+  }, [fieldValueSum, paymentInput]);
 
   // Total APR (%)
   // Payoff term (Date)
   // Total interest ($)
+
+  if (!currentDebtList || currentDebtList.length <= 1) {
+    return null;
+  }
 
   return (
     <form className='mb-4 px-2 row'>
@@ -91,15 +111,15 @@ export default function CalculationArea() {
         <div className='d-flex flex-column px-4 py-2'>
           <span className='pb-2 fs-5'>
             <strong>Total Debt: </strong>
-            ${totalDebt}
+            {fieldValueSum('balance').valueFormatted}
           </span>
           <span>
             <strong>Current Monthly Payment: </strong>
-            ${formattedTotalCurrentPayment}
+            {fieldValueSum('payment').valueFormatted}
           </span>
           <span>
             <strong>Minimum Monthly Payment: </strong>
-            ${formattedTotalMinPayment}
+            {minPaymentValueSum.valueFormatted}
           </span>
           <hr></hr>
           <div>
@@ -127,7 +147,7 @@ export default function CalculationArea() {
               <div>
                 <div>
                   <span>Cash left over: </span>
-                  <strong className='text-info'>${paymentInput} - ${formattedTotalMinPayment} = (${leftOverFormatted})</strong>
+                  <strong className='text-info'>${paymentInput} - {minPaymentValueSum.valueFormatted} = ({leftOverSum.valueFormatted})</strong>
                 </div>
 
                 <h4 className='pt-3'>

@@ -1,4 +1,4 @@
-import { ceil } from 'lodash';
+import { ceil, upperFirst } from 'lodash';
 
 // Monthly Interest Rate Calculation
 export function ConvertAPRToMonthlyPayment(apr: number, balance: number, maximumFractionDigits = 2) {
@@ -32,6 +32,8 @@ export function InputValidation(field: number, type?: 'apr' | 'balance' | 'payme
     return InputFail('Invalid Input');
   } else if (stringField.length > 1 && stringField.charAt(0) === '0' && stringField.charAt(1) !== '.') {
     return InputFail('Invalid Input');
+  } else if (parsedField <= 0) {
+    return InputFail(`${upperFirst(type)} cannot be less than 1`);
   }
 
   switch (type) {
@@ -51,14 +53,6 @@ export function InputValidation(field: number, type?: 'apr' | 'balance' | 'payme
       break;
     }
 
-    case 'balance': {
-      if (parsedField <= 0) {
-        return InputFail('Balance cannot be less than 1');
-      }
-
-      break;
-    }
-
     default: {
       break;
     }
@@ -68,7 +62,13 @@ export function InputValidation(field: number, type?: 'apr' | 'balance' | 'payme
 }
 
 export function ConvertToCurrency(num: number, step = 2) {
-  return num.toLocaleString('en-US', { maximumFractionDigits: step });
+  const formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    maximumFractionDigits: step,
+  });
+
+  return formatter.format(num);
 }
 
 export function FormatFields<Type>(fields: Type, type: 'string' | 'number'): Type {

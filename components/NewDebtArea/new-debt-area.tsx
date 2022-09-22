@@ -7,22 +7,24 @@ const initialState = {
   name: '',
   type: '',
   balance: 1.00,
-  apr: 0.000,
-  payment: 0.00,
+  apr: 1.00,
+  payment: 1.00,
   userDebtId: '',
 };
 
 export default function NewDebtArea() {
-  const { userId, isUserAuthenticated, handleAddLocalDebt, handleDebtList, debtList } = useContext(DebtContext);
+  const { userId, isUserAuthenticated, handleAddLocalDebt, handleDebtList, debtList, localDebtList } = useContext(DebtContext);
   const [isLoading, setIsLoading] = useState(false);
   const [collapseShown, setCollapseShown] = useState(false);
 
   const [cardFields, setCreateDebtFields] = useState(initialState);
 
+  const currentDebtList = useMemo(() => isUserAuthenticated ? debtList : localDebtList, [localDebtList, debtList, isUserAuthenticated]);
+
   const recommendedMonthlyPayment = useMemo(() => ConvertAPRToMonthlyPayment(cardFields.apr, cardFields.balance), [cardFields.apr, cardFields.balance]);
   const collapseIconClass = useMemo(() => `bi bi-${collapseShown ? 'dash' : 'plus'}`, [collapseShown]);
   const buttonClass = useMemo(() => collapseShown ? 'danger' : 'success', [collapseShown]);
-  const debtExist = useMemo(() => find(debtList, { name: cardFields.name, type: cardFields.type }), [debtList, cardFields.name, cardFields.type]);
+  const debtExist = useMemo(() => find(currentDebtList, { name: cardFields.name, type: cardFields.type }), [currentDebtList, cardFields.name, cardFields.type]);
 
   const validation = useMemo(() => ({
     debtExist: { valid: !debtExist, message: 'Duplicate debt found!' },
@@ -74,6 +76,7 @@ export default function NewDebtArea() {
 
     setIsLoading(true);
     handleAddLocalDebt({ ...cardFields, id: uniqueId() });
+    setCreateDebtFields({ ...cardFields, name: '', type: '' });
     setIsLoading(false);
   }, [cardFields, handleAddLocalDebt]);
 
