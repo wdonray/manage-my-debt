@@ -26,15 +26,15 @@ export enum SearchType {
 
 export default function DebtCards() {
   const { debtList, localDebtList, isUserAuthenticated } = useContext(DebtContext);
-  const prevDebtList = useRef({ debtList, localDebtList }).current;
+  // const prevDebtList = useRef({ debtList, localDebtList }).current;
 
   const [searchByValue, setSearchByValue] = useState('');
   const [searchByType, setSearchByType] = useState<SearchType>(SearchType.name);
   const [currentDirection, setCurrentDirection] = useState<SortDirection>(SortDirection.none);
   const [currentSort, setCurrentSortDebt] = useState<SortDebt>(SortDebt.none);
-  const [recentDebt, setRecentDebt] = useState<IDebt | null>(null);
+  // const [recentDebt, setRecentDebt] = useState<IDebt | null>(null);
   const [loading, setLoading] = useState(false);
-  const [pageLoadedOnce, setPageLoadedOnce] = useState(false);
+  // const [pageLoadedOnce, setPageLoadedOnce] = useState(false);
 
   const handleSearchValue = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
@@ -63,33 +63,33 @@ export default function DebtCards() {
     setCurrentDirection(currentDirection === SortDirection.asc ? SortDirection.desc : SortDirection.asc);
   }, [currentDirection]);
 
-  const findRecentDebt = useCallback(() => {
-    let updatedDebt = null;
-    const listToCheck = isUserAuthenticated ? debtList : localDebtList;
-    const prevListToCheck = isUserAuthenticated ? prevDebtList.debtList : prevDebtList.localDebtList;
+  // const findRecentDebt = useCallback(() => {
+  //   let updatedDebt = null;
+  //   const listToCheck = isUserAuthenticated ? debtList : localDebtList;
+  //   const prevListToCheck = isUserAuthenticated ? prevDebtList.debtList : prevDebtList.localDebtList;
 
-    if (!prevListToCheck || !listToCheck) {
-      return;
-    }
+  //   if (!prevListToCheck || !listToCheck) {
+  //     return;
+  //   }
 
-    if (!isEqual(prevListToCheck, listToCheck)) {
-      updatedDebt = difference(prevListToCheck, listToCheck).pop();
+  //   if (!isEqual(prevListToCheck, listToCheck)) {
+  //     updatedDebt = difference(prevListToCheck, listToCheck).pop();
 
-      if (!updatedDebt) {
-        updatedDebt = difference(listToCheck, prevListToCheck).pop();
-      }
-    } else {
-      updatedDebt = listToCheck.map((item) => item).pop();
-    }
+  //     if (!updatedDebt) {
+  //       updatedDebt = difference(listToCheck, prevListToCheck).pop();
+  //     }
+  //   } else {
+  //     updatedDebt = listToCheck.map((item) => item).pop();
+  //   }
 
-    if (updatedDebt) {
-      setRecentDebt(updatedDebt);
+  //   if (updatedDebt) {
+  //     setRecentDebt(updatedDebt);
 
-      setTimeout(() => {
-        setRecentDebt(null);
-      }, 2000);
-    }
-  }, [debtList, isUserAuthenticated, localDebtList, prevDebtList.debtList, prevDebtList.localDebtList]);
+  //     setTimeout(() => {
+  //       setRecentDebt(null);
+  //     }, 2000);
+  //   }
+  // }, [debtList, isUserAuthenticated, localDebtList, prevDebtList.debtList, prevDebtList.localDebtList]);
 
   const currentDebtList = useMemo(() => {
     setLoading(true);
@@ -121,14 +121,14 @@ export default function DebtCards() {
     }
   }, [currentDirection, currentSort]);
 
-  useEffect(() => {
-    findRecentDebt();
+  // useEffect(() => {
+  //   findRecentDebt();
 
-    return () => {
-      prevDebtList.debtList = debtList;
-      prevDebtList.localDebtList = localDebtList;
-    };
-  }, [debtList, findRecentDebt, localDebtList, prevDebtList]);
+  //   return () => {
+  //     prevDebtList.debtList = debtList;
+  //     prevDebtList.localDebtList = localDebtList;
+  //   };
+  // }, [debtList, findRecentDebt, localDebtList, prevDebtList]);
 
   // useEffect(() => {
   //   if (!recentDebt) {
