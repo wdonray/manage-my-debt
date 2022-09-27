@@ -1,9 +1,9 @@
 import { IDebt } from '@/types';
-import { ChangeEvent, useCallback, useContext, useEffect, useMemo, useState, MouseEvent, useRef } from 'react';
+import { ChangeEvent, useCallback, useContext, useEffect, useMemo, useState, MouseEvent } from 'react';
 import { DebtContext, SearchEnum } from '@/util';
 import { UpdateDebtModal } from './components';
 import { DebtCard } from './components';
-import { orderBy, difference, isEqual } from 'lodash';
+import { orderBy } from 'lodash';
 import FilterDebt from './components/filter-debt';
 
 export enum SortDebt {
