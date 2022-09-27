@@ -130,26 +130,26 @@ export default function DebtCards() {
     };
   }, [debtList, findRecentDebt, localDebtList, prevDebtList]);
 
-  useEffect(() => {
-    if (!recentDebt) {
-      return;
-    }
+  // useEffect(() => {
+  //   if (!recentDebt) {
+  //     return;
+  //   }
 
-    const el = document.getElementById(recentDebt?.id);
+  //   const el = document.getElementById(recentDebt?.id);
 
-    if (!el) {
-      return;
-    }
+  //   if (!el) {
+  //     return;
+  //   }
 
-    if (!pageLoadedOnce) {
-      setTimeout(() => {
-        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        setPageLoadedOnce(true);
-      }, 2000);
-    } else {
-      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-  }, [pageLoadedOnce, recentDebt]);
+  //   if (!pageLoadedOnce) {
+  //     setTimeout(() => {
+  //       el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  //       setPageLoadedOnce(true);
+  //     }, 2000);
+  //   } else {
+  //     el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  //   }
+  // }, [pageLoadedOnce, recentDebt]);
 
   if (loading) {
     return (

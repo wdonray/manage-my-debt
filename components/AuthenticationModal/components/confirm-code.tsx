@@ -11,6 +11,7 @@ export default function ConfirmCode({ styles, handleSignInSuccess }: ConfirmCode
   const [code, setCode] = useState('');
   const [codeSent, setCodeSent] = useState(false);
   const [counter, setCounter] = useState(30);
+  const [isLoading, setIsLoading] = useState(false);
 
   const user = useMemo(() => {
     const storedUser = localStorage.getItem('user');
@@ -38,6 +39,12 @@ export default function ConfirmCode({ styles, handleSignInSuccess }: ConfirmCode
   }, 1000), [counter]);
 
   const handleCodeCheck = useCallback(async (code: string) => {
+    if (isLoading) {
+      return;
+    }
+
+    setIsLoading(true);
+
     try {
       await handleConfirmCode(user?.email, code);
       const userSignIn = await handleSignIn(user?.email, user?.password);
@@ -47,8 +54,10 @@ export default function ConfirmCode({ styles, handleSignInSuccess }: ConfirmCode
       localStorage.removeItem('user');
     } catch (err) {
       raiseError(err);
+    } finally {
+      setIsLoading(false);
     }
-  }, [user, handleSignInSuccess]);
+  }, [isLoading, user?.email, user?.password, handleSignInSuccess]);
 
   const handleVerificationInput = useCallback(async (value: string) => {
     setCode(value);
@@ -63,12 +72,22 @@ export default function ConfirmCode({ styles, handleSignInSuccess }: ConfirmCode
   useEffect(() => {
     let timer: NodeJS.Timer;
 
-    if (codeSent) {
+    if (codeSent && !isLoading) {
       timer = startTimer();
     }
 
     return () => clearInterval(timer);
-  }, [codeSent, startTimer]);
+  }, [codeSent, isLoading, startTimer]);
+
+  if (isLoading) {
+    return (
+      <div className='d-flex py-4'>
+        <div className='spinner-border text-info mx-auto' role='status'>
+          <span className='visually-hidden'>Loading...</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles['confirm-code-wrapper']}>
@@ -94,6 +113,13 @@ export default function ConfirmCode({ styles, handleSignInSuccess }: ConfirmCode
           </span>
         )
       }
+      <button
+        className='btn btn-primary mt-2'
+        disabled={code.trim() === '' || code.length != 6}
+        onClick={() => handleCodeCheck(code)}
+      >
+        Submit Code
+      </button>
     </div>
   );
 }

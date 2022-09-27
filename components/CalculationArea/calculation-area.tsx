@@ -8,6 +8,8 @@ export default function CalculationArea() {
   const [paymentInput, setPaymentInput] = useState(0);
 
   const handleInput = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+
     const { value } = event.target;
 
     setPaymentInput(parseFloat(value));
@@ -32,10 +34,7 @@ export default function CalculationArea() {
   }, [currentDebtList]);
 
   const minPaymentValueSum = useMemo(() => {
-    console.log(debtListMinPayments);
     const reduced = debtListMinPayments.reduce((partialSum, a) => partialSum + a, 0);
-
-    console.log(reduced);
 
     return {
       value: reduced,
@@ -103,7 +102,10 @@ export default function CalculationArea() {
   }
 
   return (
-    <form className='mb-4 px-2 row'>
+    <form
+      className='mb-4 px-2 row'
+      onSubmit={(e) => e.preventDefault()}
+    >
       <div className="col-12 col-md-10 col-xl-6 border rounded pb-2 px-0 mt-2 mx-auto shadow">
         <div className='bg-light rounded-top p-2 d-flex justify-content-center align-items-center'>
           <h3 className='mb-0'>Avalanche method effect</h3>
@@ -133,7 +135,7 @@ export default function CalculationArea() {
                 name='apr'
                 min={0}
                 step={0.01}
-                value={paymentInput}
+                value={isNaN(paymentInput) ? '' : paymentInput}
                 onChange={handleInput}
               />
               <div className='invalid-feedback'>

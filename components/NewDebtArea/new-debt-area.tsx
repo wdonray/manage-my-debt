@@ -28,10 +28,11 @@ export default function NewDebtArea() {
 
   const validation = useMemo(() => ({
     debtExist: { valid: !debtExist, message: 'Duplicate debt found!' },
+    blankName: { valid: cardFields.name.trim() !== '' },
     balance: InputValidation(cardFields.balance, 'balance'),
     apr: InputValidation(cardFields.apr, 'apr'),
     payment: InputValidation(cardFields.payment, 'payment', cardFields.balance),
-  }), [cardFields.apr, cardFields.balance, cardFields.payment, debtExist]);
+  }), [cardFields, debtExist]);
 
   const handleInput = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     let { name } = event.target;
@@ -60,7 +61,9 @@ export default function NewDebtArea() {
     try {
       const formattedFields = FormatFields({ balance: cardFields.balance, apr: cardFields.apr, payment: cardFields.payment }, 'number');
 
-      const debt = await createDebt({ ...cardFields, ...formattedFields, userDebtId: userId });
+      const trimFields = { ...cardFields, type: cardFields.type.trim(), name: cardFields.name.trim() };
+
+      const debt = await createDebt({ ...trimFields, ...formattedFields, userDebtId: userId });
 
       handleDebtList(debt);
     } catch (err) {

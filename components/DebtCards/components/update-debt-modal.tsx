@@ -1,5 +1,6 @@
 import { ChangeEvent, FormEvent, useCallback, useContext, useMemo, useState } from 'react';
-import { DebtContext, raiseError, updateDebt } from '@/util';
+import { DebtContext, raiseError, updateDebt, UpdateDebtValue } from '@/util';
+import { find } from 'lodash';
 
 enum Titles {
   name = 'Rename',
@@ -12,12 +13,20 @@ enum SubmitButton {
 }
 
 export default function UpdateDebtModal() {
-  const { selectedDebt, handleUpdateLocalDebt, isUserAuthenticated, valueToUpdate, handleDebtList } = useContext(DebtContext);
+  const { selectedDebt, debtList, localDebtList, handleUpdateLocalDebt, isUserAuthenticated, valueToUpdate, handleDebtList, handleSelectedDebt } = useContext(DebtContext);
   const [value, setValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   const title = useMemo(() => Titles[valueToUpdate], [valueToUpdate]);
   const submitButton = useMemo(() => SubmitButton[valueToUpdate], [valueToUpdate]);
+  const currentDebtList = useMemo(() => isUserAuthenticated ? debtList : localDebtList, [localDebtList, debtList, isUserAuthenticated]);
+  const debtExist = useMemo(() => find(currentDebtList, (debt) => {
+    if (valueToUpdate === UpdateDebtValue.name) {
+      return debt.name === value && debt.type === selectedDebt?.type;
+    }
+
+    return debt.type != '' && debt.name === selectedDebt?.name && debt.type === value;
+  }), [currentDebtList, value, valueToUpdate, selectedDebt]);
 
   const handleHideModal = useCallback(() => {
     const closeButton = document.getElementById('update-debt-close-modal');
@@ -29,7 +38,7 @@ export default function UpdateDebtModal() {
   const handleSubmit = useCallback(async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!selectedDebt || !value) {
+    if (!selectedDebt || !value || debtExist) {
       return;
     }
 
@@ -44,8 +53,9 @@ export default function UpdateDebtModal() {
       raiseError(err);
     } finally {
       setIsLoading(false);
+      handleSelectedDebt(null);
     }
-  }, [selectedDebt, value, valueToUpdate, handleHideModal, handleDebtList]);
+  }, [selectedDebt, value, debtExist, valueToUpdate, handleDebtList, handleHideModal, handleSelectedDebt]);
 
   const handleLocalSubmit = useCallback((event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -65,10 +75,6 @@ export default function UpdateDebtModal() {
 
     setValue(value);
   }, []);
-
-  if (!selectedDebt) {
-    return null;
-  }
 
   return (
     <form
@@ -90,23 +96,27 @@ export default function UpdateDebtModal() {
           </div>
           <div className='modal-body text-center'>
             {
-              isLoading ? (
+              (isLoading || !selectedDebt) ? (
                 <div className='spinner-border text-info' role='status'>
                   <span className='visually-hidden'>Loading...</span>
                 </div>
               ) : (
-                <input
-                  type='text'
-                  className='form-control'
-                  placeholder={selectedDebt[valueToUpdate].length ? selectedDebt[valueToUpdate] : 'Other'}
-                  onChange={handleInputChange}
-                  value={value}
-                  maxLength={24}
-                  disabled={isLoading}
-                />
+                <>
+                  <input
+                    type='text'
+                    className={`form-control ${debtExist && 'is-invalid'}`}
+                    placeholder={selectedDebt[valueToUpdate].length ? selectedDebt[valueToUpdate] : 'Other'}
+                    onChange={handleInputChange}
+                    value={value}
+                    maxLength={24}
+                    disabled={isLoading}
+                  />
+                  <div className='invalid-feedback'>
+                    Debt already exist!
+                  </div>
+                </>
               )
             }
-
           </div>
           <div className='modal-footer border-0'>
             <button
@@ -120,7 +130,7 @@ export default function UpdateDebtModal() {
             <button
               type='submit'
               className='btn btn-primary'
-              disabled={isLoading}
+              disabled={isLoading || debtExist != null}
             >
               {submitButton}
             </button>

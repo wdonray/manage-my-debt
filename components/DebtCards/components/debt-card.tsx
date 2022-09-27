@@ -68,6 +68,10 @@ export default function DebtCard({ debt }: DebtCardProps) {
 
     const updatedDebt = { ...debt, ...FormatFields(cardFields, 'number') };
 
+    if (isEqual(updatedDebt, debt)) {
+      return;
+    }
+
     formatLocalFields();
 
     if (!isUserAuthenticated) {
@@ -81,10 +85,8 @@ export default function DebtCard({ debt }: DebtCardProps) {
       handleDebtList(debt);
     } catch (err) {
       raiseError(err);
-    } finally {
-      handleSelectedDebt(null);
     }
-  }, [validation, selectedDebt, debt, cardFields, formatLocalFields, isUserAuthenticated, resetFields, handleUpdateLocalDebt, handleDebtList, handleSelectedDebt]);
+  }, [validation, selectedDebt, debt, cardFields, formatLocalFields, isUserAuthenticated, resetFields, handleUpdateLocalDebt, handleDebtList]);
 
   const handleDelete = useCallback(async () => {
     if (!debt._version || debt?.id == null) {
@@ -136,7 +138,10 @@ export default function DebtCard({ debt }: DebtCardProps) {
       {
         isLoading && (
           <div className={styles.loading}>
-            <div className='spinner-border text-warning' role='status'>
+            <div
+              className='spinner-border text-warning'
+              role='status'
+            >
               <span className='visually-hidden'>Loading...</span>
             </div>
           </div>
@@ -154,7 +159,11 @@ export default function DebtCard({ debt }: DebtCardProps) {
             data-bs-toggle='dropdown'
             aria-expanded='false'
           />
-          <ul className='dropdown-menu' aria-labelledby='debt-card-dropdown-menu'>
+          <ul
+            className='dropdown-menu'
+            aria-labelledby='debt-card-dropdown-menu'
+            onFocus={() => handleSelectedDebt(debt)}
+          >
             <li>
               <button
                 type='button'
