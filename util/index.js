@@ -48,3 +48,6 @@ export { SearchEnum };
 
 import { ConvertAPRToMonthlyPayment, InputValidation, ConvertToCurrency, FormatFields } from './finance-calculations';
 export { ConvertAPRToMonthlyPayment, InputValidation, ConvertToCurrency, FormatFields };
+
+import { TrackPageLoaded, TrackEvent } from './ga';
+export { TrackPageLoaded, TrackEvent };

@@ -21,7 +21,7 @@
       "@/components": ["components/index.js"],
       "@/graphql": ["graphql/index.js"],
       "@/util": ["util/index.js"],
-      "@/types": ["types/index.d.ts"]
+      "@/types": ["types/index.d.ts", "@types/gtag.js"]
     },
     "suppressImplicitAnyIndexErrors": true
   },
