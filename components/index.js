@@ -15,3 +15,6 @@ export { NewDebtArea };
 
 import { CalculationArea } from './CalculationArea';
 export { CalculationArea };
+
+import { GoogleAdsenseContainer } from './GoogleAdsenseContainer';
+export { GoogleAdsenseContainer }; 

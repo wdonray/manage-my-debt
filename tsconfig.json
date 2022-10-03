@@ -25,6 +25,6 @@
     },
     "suppressImplicitAnyIndexErrors": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "components/Header/index.js", "components/index.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "components/Header/index.js", "components/index.js", "components/GoogleAdsenseContainer/index.js"],
   "exclude": ["node_modules", "amplify"]
 }

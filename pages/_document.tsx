@@ -1,5 +1,6 @@
 
 import { Html, Head, Main, NextScript } from 'next/document';
+import { GoogleAdsenseContainer } from '@/components';
 
 export default function Document() {
   return (
@@ -49,6 +50,9 @@ export default function Document() {
         <Main />
         <NextScript />
       </body>
+      <footer>
+        <GoogleAdsenseContainer slot='8679993967' />
+      </footer>
     </Html>
   );
 }

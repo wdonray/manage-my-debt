@@ -38,8 +38,6 @@ export function InputValidation(field: number, type?: 'apr' | 'balance' | 'payme
 
   switch (type) {
     case 'apr': {
-      console.log(parsedField);
-
       if (parsedField > 100) {
         return InputFail('Over 100% APR?!?');
       } else if (parsedField < 0.001) {
