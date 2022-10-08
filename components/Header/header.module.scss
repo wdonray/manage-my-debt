@@ -3,9 +3,25 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  position: unset !important;
   
-  padding: 25px 20px;
-  background-color: plum;
-  height: 40px;
-  width: 100%;
+  width: 100vw;
+
+  .sign-in {
+    background-color: orangered;
+    border-radius: 0;
+  
+    color: white;
+  
+    &:hover {
+      background-color: lighten(orangered, 10%) !important;
+      color: white !important;
+    }
+  }
+
+  .logo {
+    cursor: pointer;
+    width: 100% !important;
+    height: auto !important;
+  }
 }

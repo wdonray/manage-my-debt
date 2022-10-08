@@ -106,7 +106,7 @@ export default function CalculationArea() {
       className='mb-4 px-2 row'
       onSubmit={(e) => e.preventDefault()}
     >
-      <div className="col-12 col-md-10 col-xl-6 border rounded pb-2 px-0 mt-2 mx-auto shadow">
+      <div className='col-12 col-md-10 col-xl-6 border rounded pb-2 px-0 mt-2 mx-auto shadow'>
         <div className='bg-light rounded-top p-2 d-flex justify-content-center align-items-center'>
           <h3 className='mb-0'>Avalanche method effect</h3>
         </div>
@@ -125,7 +125,7 @@ export default function CalculationArea() {
           </span>
           <hr></hr>
           <div>
-            <label htmlFor="payment-input">Amount you can pay per month</label>
+            <label htmlFor='payment-input'>Amount you can pay per month</label>
             <div className='input-group'>
               <span className='input-group-text'>$</span>
               <input

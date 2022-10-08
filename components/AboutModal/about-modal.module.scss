@@ -1,0 +1,45 @@
+.modal-body-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px 35px;
+  
+  .image-container {
+    overflow: hidden;
+
+    img {
+      border-radius: 50%;
+      border: 4px solid orange !important;
+    }
+  }
+
+  .image-container + div {
+    text-align: justify;
+  }
+
+  .socials {
+    width: 100%;
+    margin-top: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+
+    a {
+      font-size: 35px;
+      color: orange;
+
+      &:hover {
+        color: lighten(orange, 10%) !important;
+      }
+    }
+
+    hr {
+      border: 1px solid gray;
+      width: 25px;
+      border-radius: 30px;
+    }
+  }
+}

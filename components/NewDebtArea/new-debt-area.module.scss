@@ -1,37 +1,17 @@
-.collapse {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+#debt-btn {
+  position: fixed;
+  right: 30px;
+  bottom: 50px;
 
-  padding: 10px;
-  margin: 10px auto;
-
-  border-radius: 6px;
-
-  cursor: pointer;
+  background-color: orangered !important;
 
   i {
     font-size: xx-large;
+    color: white;
   }
 }
 
-.new-debt-container {
-  border: 1px solid plum;
-  border-radius: 6px;
-
-  margin: 20px 0px;
-
-  form {
-    padding: 20px;
-  }
-
-  .caption {
-    color: gray;
-    font-size: smaller;
-  }
-
-  .action-button:first-of-type {
-    margin-right: 10px;
-  }
+.caption {
+  color: gray;
+  font-size: smaller;
 }

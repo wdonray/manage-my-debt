@@ -16,7 +16,7 @@ enum AuthenticationState {
 
 export default function AuthenticationModal() {
   const [state, setState] = useState<AuthenticationState>(AuthenticationState.SignIn);
-  const { isUserConfirmed, handleIsUserConfirmed, handleUser } = useContext(UserContext);
+  const { handleIsUserConfirmed, handleUser } = useContext(UserContext);
 
   const handleStateChange = useCallback((state: AuthenticationState) => setState(state), []);
   const isAuthenticationState = useCallback((stateToCompare: AuthenticationState) => state === stateToCompare, [state]);
@@ -28,12 +28,12 @@ export default function AuthenticationModal() {
   }, []);
 
   const bsModalData = useMemo(() => {
-    if (isUserConfirmed) {
+    if (!isAuthenticationState(AuthenticationState.ConfirmCode)) {
       return null;
     }
 
     return { backdrop: 'static', keyboard: 'false' };
-  }, [isUserConfirmed]);
+  }, [isAuthenticationState]);
 
   const checkLocalUser = useCallback(() => {
     handleStateChange(AuthenticationState.Loading);
@@ -128,13 +128,13 @@ export default function AuthenticationModal() {
   return (
     <div
       id='authentication-modal'
-      className={`modal ${styles['modal-wrapper']}`}
+      className={`modal fade ${styles['modal-wrapper']}`}
       data-bs-backdrop={bsModalData?.backdrop}
       data-bs-keyboard={bsModalData?.keyboard}
     >
       <div className='modal-dialog modal-dialog-centered'>
         <div className={`modal-content ${styles['modal-content-wrapper']}`}>
-          <div className='modal-header'>
+          <div className='modal-header border-0'>
             <button
               id='close-authentication-modal'
               type='button'

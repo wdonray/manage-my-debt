@@ -59,7 +59,8 @@
     .icon-wrapper {
       @include center-content(column);
 
-      width: 120px;
+      width: 100px;
+      height: 100px;
       cursor: pointer;
       padding: 20px;
       margin: 10px;

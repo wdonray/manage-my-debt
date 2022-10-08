@@ -1,2 +1,2 @@
-import TargetActiveElement from './active-element';
-export { TargetActiveElement };
+import useBreakPoint, { SIZE } from './useBreakpoint';
+export { useBreakPoint, SIZE };

@@ -18,3 +18,6 @@ export { CalculationArea };
 
 import { GoogleAdsenseContainer } from './GoogleAdsenseContainer';
 export { GoogleAdsenseContainer }; 
+
+import { AboutModal } from './AboutModal';
+export { AboutModal };

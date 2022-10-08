@@ -32,9 +32,9 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
       <Script
         id={process.env.ADSENSE_ID}
         data-ad-client={process.env.ADSENSE_AD_CLIENT}
-        async strategy="afterInteractive"
+        async strategy='afterInteractive'
         onError={(e) => { console.error('Script failed to load', e); }}
-        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+        src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js'
       />
       {getLayout(<Component {...pageProps} />)}
     </>

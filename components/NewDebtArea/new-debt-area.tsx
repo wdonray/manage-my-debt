@@ -15,15 +15,12 @@ const initialState = {
 export default function NewDebtArea() {
   const { userId, isUserAuthenticated, handleAddLocalDebt, handleDebtList, debtList, localDebtList } = useContext(DebtContext);
   const [isLoading, setIsLoading] = useState(false);
-  const [collapseShown, setCollapseShown] = useState(false);
 
   const [cardFields, setCreateDebtFields] = useState(initialState);
 
   const currentDebtList = useMemo(() => isUserAuthenticated ? debtList : localDebtList, [localDebtList, debtList, isUserAuthenticated]);
 
   const recommendedMonthlyPayment = useMemo(() => ConvertAPRToMonthlyPayment(cardFields.apr, cardFields.balance), [cardFields.apr, cardFields.balance]);
-  const collapseIconClass = useMemo(() => `bi bi-${collapseShown ? 'dash' : 'plus'}`, [collapseShown]);
-  const buttonClass = useMemo(() => collapseShown ? 'danger' : 'success', [collapseShown]);
   const debtExist = useMemo(() => find(currentDebtList, { name: cardFields.name, type: cardFields.type }), [currentDebtList, cardFields.name, cardFields.type]);
 
   const validation = useMemo(() => ({
@@ -85,189 +82,177 @@ export default function NewDebtArea() {
 
   const handleResetFilters = useCallback(() => setCreateDebtFields(initialState), []);
 
-  const handleCollapseShown = useCallback((value) => {
-    if (value === collapseShown) {
-      return;
-    }
-
-    setCollapseShown(value);
-  }, [collapseShown]);
-
-  useEffect(() => {
-    const collapse = document.getElementById('new-debt-area');
-
-    collapse?.addEventListener('show.bs.collapse', () => handleCollapseShown(true));
-    collapse?.addEventListener('hide.bs.collapse', () => handleCollapseShown(false));
-
-    return () => {
-      collapse?.removeEventListener('show.bs.collapse', () => handleCollapseShown(true));
-      collapse?.removeEventListener('hide.bs.collapse', () => handleCollapseShown(false));
-    };
-  }, [handleCollapseShown]);
-
   useEffect(() => {
     handleFieldBlur();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <div className='grid'>
+    <div>
       <button
         type='button'
-        className={`btn btn-outline-${buttonClass} col-12 col-md-3 col-lg-2 ${styles.collapse}`}
-        data-bs-toggle='collapse'
+        id={styles['debt-btn']}
+        className='btn rounded-circle rounded-5'
+        data-bs-toggle='offcanvas'
         data-bs-target='#new-debt-area'
         aria-expanded='false'
         aria-controls='new-debt-area'
       >
-        <h5 className='d-flex align-items-center mb-0'>
-          <i className={collapseIconClass} />
-          Add Debt
-        </h5>
+        <i className='bi bi-plus' />
       </button>
       <div
         id='new-debt-area'
-        className={`collapse col-12 ${styles['new-debt-container']}`}
+        className='offcanvas offcanvas-start text-bg-dark'
+        tabIndex={-1}
       >
-        <form onSubmit={!isUserAuthenticated ? handleLocalAddDebt : handleAddDebt}>
-          <fieldset disabled={isLoading} className='row'>
-            <div className='col-12 col-md-4'>
-              <label htmlFor='new-debt-card-name'>Name</label>
-              <div className='input-group mb-2'>
-                <input
-                  id='new-debt-card-name'
-                  required
-                  className='form-control'
-                  placeholder='Name of debt...'
-                  type='text'
-                  name='debt-name'
-                  maxLength={24}
-                  value={cardFields.name}
-                  onChange={handleInput}
-                />
-              </div>
-            </div>
-            <div className='col-12 col-md-4'>
-              <label htmlFor='new-debt-card-type'>Type (Optional)</label>
-              <div className='input-group mb-2'>
-                <input
-                  id='new-debt-card-type'
-                  className='form-control'
-                  placeholder='Credit Card, Student Loan, etc...'
-                  type='text'
-                  name='type'
-                  maxLength={24}
-                  value={cardFields.type}
-                  onChange={handleInput}
-                />
-              </div>
-            </div>
-            <div className='col-12 col-md-4'>
-              <label htmlFor='new-debt-card-balance'>Balance</label>
-              <div className='input-group mb-2'>
-                <span className='input-group-text'>$</span>
-                <input
-                  id='new-debt-card-balance'
-                  className={`form-control ${!validation.balance.valid && 'is-invalid'}`}
-                  type='number'
-                  min={1}
-                  step={0.01}
-                  name='balance'
-                  required
-                  value={cardFields.balance}
-                  onChange={handleInput}
-                  onBlur={handleFieldBlur}
-                />
-                <div className='invalid-feedback'>
-                  {validation.balance.message}
+        <div className='offcanvas-header'>
+          <h5 className='offcanvas-title'>
+            Add New Debt
+          </h5>
+          <button
+            type='button'
+            className='btn-close btn-close-white'
+            data-bs-dismiss='offcanvas'
+            aria-label='Close'
+          />
+        </div>
+        <div className='offcanvas-body'>
+          <form onSubmit={!isUserAuthenticated ? handleLocalAddDebt : handleAddDebt}>
+            <fieldset disabled={isLoading} className='grid'>
+              <div className='col-12'>
+                <label htmlFor='new-debt-card-name'>Name</label>
+                <div className='input-group mb-2'>
+                  <input
+                    id='new-debt-card-name'
+                    required
+                    className='form-control'
+                    placeholder='Name of debt...'
+                    type='text'
+                    name='debt-name'
+                    maxLength={24}
+                    value={cardFields.name}
+                    onChange={handleInput}
+                  />
                 </div>
               </div>
-            </div>
-            <div className='col-12 col-md-4'>
-              <label htmlFor='new-debt-card-apr'>Interest Rate (APR)</label>
-              <div className='input-group mb-2'>
-                <input
-                  id='new-debt-card-apr'
-                  className={`form-control ${!validation.apr.valid && 'is-invalid'}`}
-                  type='number'
-                  max={100}
-                  min={0}
-                  step={0.001}
-                  name='apr'
-                  required
-                  value={cardFields.apr}
-                  onChange={handleInput}
-                  onBlur={handleFieldBlur}
-                />
-                <span className='input-group-text'>%</span>
-                <div className='invalid-feedback'>
-                  {validation.apr.message}
+              <div className='col-12'>
+                <label htmlFor='new-debt-card-type'>Type (Optional)</label>
+                <div className='input-group mb-2'>
+                  <input
+                    id='new-debt-card-type'
+                    className='form-control'
+                    placeholder='Credit Card, Student Loan, etc...'
+                    type='text'
+                    name='type'
+                    maxLength={24}
+                    value={cardFields.type}
+                    onChange={handleInput}
+                  />
                 </div>
               </div>
-            </div>
-            <div className='col-12 col-md-4'>
-              <label htmlFor='new-debt-card-payment'>Monthly Payment</label>
-              <div className='input-group mb-2'>
-                <span className='input-group-text'>$</span>
-                <input
-                  id='new-debt-card-payment'
-                  className={`form-control ${!validation.payment.valid && 'is-invalid'}`}
-                  type='number'
-                  min={0}
-                  step={0.01}
-                  name='payment'
-                  required
-                  value={cardFields.payment}
-                  onChange={handleInput}
-                  onBlur={handleFieldBlur}
-                />
-                <div className='invalid-feedback'>
-                  {validation.payment.message}
+              <div className='col-12'>
+                <label htmlFor='new-debt-card-balance'>Balance</label>
+                <div className='input-group mb-2'>
+                  <span className='input-group-text'>$</span>
+                  <input
+                    id='new-debt-card-balance'
+                    className={`form-control ${!validation.balance.valid && 'is-invalid'}`}
+                    type='number'
+                    min={1}
+                    step={0.01}
+                    name='balance'
+                    required
+                    value={cardFields.balance}
+                    onChange={handleInput}
+                    onBlur={handleFieldBlur}
+                  />
+                  <div className='invalid-feedback'>
+                    {validation.balance.message}
+                  </div>
                 </div>
               </div>
-              {
-                recommendedMonthlyPayment.monthlyPayment != '$0.00' && (
-                  <label
-                    className={styles.caption}
-                    htmlFor='new-debt-card-payment'
-                  >
-                    <div className='mb-1'>
-                      Monthly interest rate: {recommendedMonthlyPayment.monthlyInterestRatePercentage}
-                    </div>
-                    Recommended minimum payment: <strong>{recommendedMonthlyPayment.monthlyPayment}</strong>
-                  </label>
-                )
-              }
-            </div>
-            <div className='d-flex flex-row mt-3 justify-content-end align-items-center'>
-              <div className={styles['action-button']}>
+              <div className='col-12'>
+                <label htmlFor='new-debt-card-apr'>Interest Rate (APR)</label>
+                <div className='input-group mb-2'>
+                  <input
+                    id='new-debt-card-apr'
+                    className={`form-control ${!validation.apr.valid && 'is-invalid'}`}
+                    type='number'
+                    max={100}
+                    min={0}
+                    step={0.001}
+                    name='apr'
+                    required
+                    value={cardFields.apr}
+                    onChange={handleInput}
+                    onBlur={handleFieldBlur}
+                  />
+                  <span className='input-group-text rounded-end'>%</span>
+                  <div className='invalid-feedback'>
+                    {validation.apr.message}
+                  </div>
+                </div>
+              </div>
+              <div className='col-12'>
+                <label htmlFor='new-debt-card-payment'>Monthly Payment</label>
+                <div className='input-group mb-2'>
+                  <span className='input-group-text'>$</span>
+                  <input
+                    id='new-debt-card-payment'
+                    className={`form-control ${!validation.payment.valid && 'is-invalid'}`}
+                    type='number'
+                    min={0}
+                    step={0.01}
+                    name='payment'
+                    required
+                    value={cardFields.payment}
+                    onChange={handleInput}
+                    onBlur={handleFieldBlur}
+                  />
+                  <div className='invalid-feedback'>
+                    {validation.payment.message}
+                  </div>
+                </div>
+                {
+                  recommendedMonthlyPayment.monthlyPayment != '$0.00' && (
+                    <label
+                      className={styles.caption}
+                      htmlFor='new-debt-card-payment'
+                    >
+                      <div className='mb-1'>
+                        Monthly interest rate: {recommendedMonthlyPayment.monthlyInterestRatePercentage}
+                      </div>
+                      Recommended minimum payment: <strong>{recommendedMonthlyPayment.monthlyPayment}</strong>
+                    </label>
+                  )
+                }
+              </div>
+              <div className='row px-4 g-3 mt-1 justify-content-around'>
                 <button
                   type='button'
-                  className='btn btn-outline-secondary'
+                  className='btn btn-secondary col-12 col-md-5'
                   onClick={handleResetFilters}
                 >
                   Reset
                 </button>
-              </div>
-              <div className={styles['action-button']}>
                 <button
                   type='submit'
-                  className='btn btn-success'
+                  className='btn btn-success col-12 col-md-5'
                   disabled={some(validation, ['valid', false])}
                 >
                   Add
                 </button>
               </div>
-            </div>
-            {
-              !validation.debtExist.valid && (
-                <div className='col-12 text-center'>
-                  <strong className='text-danger'>{validation.debtExist.message}</strong>
-                </div>
-              )
-            }
-          </fieldset>
-        </form>
+              {
+                !validation.debtExist.valid && (
+                  <div className='col-12 text-center'>
+                    <strong className='text-danger'>{validation.debtExist.message}</strong>
+                  </div>
+                )
+              }
+            </fieldset>
+          </form>
+        </div>
       </div>
     </div>
   );

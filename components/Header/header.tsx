@@ -6,33 +6,34 @@ import {
   useState,
 } from 'react';
 import styles from './header.module.scss';
-import { AuthenticationModal } from '@/components';
-import { UserContext, handleSignOut, raiseError, fetchDBUser } from '@/util';
+import { AuthenticationModal, AboutModal } from '@/components';
+import { UserContext, fetchDBUser, useBreakPoint, SIZE } from '@/util';
 import { Hub, Auth } from 'aws-amplify';
+import Image from 'next/image';
+import { HeaderContent } from './components';
 
 export const siteTitle = 'Manage My Debt';
 
 export default function Header() {
   const { handleUser } = useContext(UserContext);
   const [authenticated, setAuthenticated] = useState(false);
+  const breakPoint = useBreakPoint();
 
-  const buttonText = useMemo(() => authenticated ? 'Sign Out' : 'Sign In', [authenticated]);
-  const bsData = useMemo(() => authenticated ? null : { toggle: 'modal', target: '#authentication-modal' }, [authenticated]);
+  const imageSize = useMemo(() => {
+    const defaultSizes = { width: '300rem', height: '100' };
 
-  const handleAction = useCallback(async () => {
-    if (!authenticated) {
-      return;
+    if (!breakPoint.width) {
+      return defaultSizes;
     }
 
-    try {
-      await handleSignOut();
-
-      handleUser(null);
-      setAuthenticated(false);
-    } catch (error) {
-      raiseError(error);
+    if (breakPoint.value === SIZE.XS) {
+      return { width: breakPoint.width - 175, height: '50' };
     }
-  }, [handleUser, authenticated]);
+
+    return defaultSizes;
+  }, [breakPoint]);
+
+  const handleAuthenticated = useCallback((value: boolean) => setAuthenticated(value), []);
 
   useEffect(() => {
     const authCheck = async () => {
@@ -65,20 +66,59 @@ export default function Header() {
   }, []);
 
   return (
-    <>
-      <header className={styles.header}>
-        <h5 className='mb-0'>Manage My Debt</h5>
-        <button
-          type='button'
-          className='btn btn-info'
-          data-bs-toggle={bsData?.toggle}
-          data-bs-target={bsData?.target}
-          onClick={handleAction}
-        >
-          {buttonText}
-        </button>
+    <div>
+      <header className={`${styles.header} py-2 px-2 px-md-5`}>
+        <Image 
+          src='/brand-logo/svg/logo-no-background.svg' 
+          alt='brand-logo'
+          className={styles.logo}
+          width={imageSize.width}
+          height={imageSize.height}
+        />
+
+        {
+          (breakPoint.value === SIZE.SM || breakPoint.value === SIZE.XS) ?  (
+            <div>
+              <i 
+                className='bi bi-list fs-1'
+                data-bs-toggle='offcanvas' 
+                data-bs-target='#mobile-canvas' 
+                aria-controls='mobile-canvas'
+              />
+              <div 
+                className='offcanvas offcanvas-end text-bg-dark' 
+                tabIndex={-1} 
+                id='mobile-canvas' 
+              >
+                <div className='offcanvas-header'>
+                  <button 
+                    type='button' 
+                    className='btn-close btn-close-white' 
+                    data-bs-dismiss='offcanvas' 
+                    aria-label='Close'
+                  />
+                </div>
+                <div className='offcanvas-body'>
+                  <HeaderContent 
+                    styles={styles} 
+                    handleAuthenticated={handleAuthenticated}
+                    authenticated={authenticated}
+                    mobile
+                  />
+                </div>
+              </div>
+            </div>
+          ) : (
+            <HeaderContent 
+              styles={styles} 
+              handleAuthenticated={handleAuthenticated}
+              authenticated={authenticated}
+            />
+          )
+        }
       </header>
       <AuthenticationModal />
-    </>
+      <AboutModal />
+    </div>
   );
 }

@@ -176,7 +176,7 @@ export default function DebtCards() {
       />
       {
         currentSort != SortDebt.none && (
-          <div className="d-flex justify-content-end pt-3">
+          <div className='d-flex justify-content-end pt-3'>
             <span>
               Sorted by {direction} <strong>{currentSort}</strong>
             </span>

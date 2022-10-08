@@ -31,10 +31,10 @@ $spinner-font-size: calc($spinner-size / 10);
   line-height: $spinner-size;
   font-family: sans-serif;
   font-size: $spinner-font-size;
-  color: plum;
+  color: orange;
   letter-spacing: 4px;
   text-transform: uppercase;
-  text-shadow: 0 0 10px plum;
+  text-shadow: 0 0 10px orange;
 }
 
 .loading:before {
@@ -42,7 +42,7 @@ $spinner-font-size: calc($spinner-size / 10);
   position: absolute;
   border-width: 15px;
   border-style: solid;
-  border-color: plum #EAF0F6 #EAF0F6;
+  border-color: orangered #EAF0F6 #EAF0F6;
   border-radius: 100%;
   animation: rotation 2s linear infinite;
 

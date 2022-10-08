@@ -40,8 +40,8 @@ export { createDebt, fetchDebt, updateDebt, deleteDebt };
 import { difference, removeProperties } from './object-util';
 export { difference, removeProperties };
 
-import { TargetActiveElement } from './hooks';
-export { TargetActiveElement };
+import { useBreakPoint, SIZE } from './hooks';
+export { useBreakPoint, SIZE };
 
 import { SearchEnum } from './search-enum';
 export { SearchEnum };
