@@ -32,7 +32,7 @@ export default function Document() {
         <script 
           async 
           src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-${process.env.ADSENSE_ID}`}
-          crossOrigin="anonymous"
+          crossOrigin='anonymous'
         />
         <script
           async

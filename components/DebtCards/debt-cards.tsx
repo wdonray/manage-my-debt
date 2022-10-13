@@ -134,7 +134,7 @@ export default function DebtCards() {
           ) :
           (
             <div 
-              id="debt-list" 
+              id='debt-list' 
               className='row g-3 mb-4 pt-3'
             >
               {currentDebtList?.map((debt: IDebt) => (

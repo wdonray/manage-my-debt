@@ -77,7 +77,7 @@ export default function NewDebtArea() {
       setCreateDebtFields({ ...cardFields, name: '', type: '' });
       setIsLoading(false);
       setTimeout(() => handleScrollToDebt(), 100);
-      
+
       if (hideBar) {
         handleHideModal();
       }
@@ -92,7 +92,7 @@ export default function NewDebtArea() {
 
     setCreateDebtFields({ ...cardFields, name: '', type: '' });
     setIsLoading(false);
-    
+
     setTimeout(() => handleScrollToDebt(), 100);
 
     if (hideBar) {
@@ -131,7 +131,7 @@ export default function NewDebtArea() {
           </h5>
           <button
             type='button'
-            id="close-add-debt"
+            id='close-add-debt'
             className='btn-close btn-close-white'
             data-bs-dismiss='offcanvas'
             aria-label='Close'
@@ -249,20 +249,20 @@ export default function NewDebtArea() {
                 }
               </div>
               <div className='row px-4 px-md-2 g-3 mt-1'>
-                <div className="form-check col-12">
-                  <input 
-                    className="form-check-input" 
-                    type="checkbox"
-                    value=""
+                <div className='form-check col-12'>
+                  <input
+                    className='form-check-input'
+                    type='checkbox'
+                    value=''
                     checked={hideBar}
                     onChange={handleSideBarHidden}
-                    id="hide-sidebar" 
+                    id='hide-sidebar'
                   />
-                  <label 
-                    className="form-check-label" 
-                    htmlFor="hide-sidebar"
+                  <label
+                    className='form-check-label'
+                    htmlFor='hide-sidebar'
                   >
-                      Hide sidebar after adding debt
+                    Hide sidebar after adding debt
                   </label>
                 </div>
                 <button
