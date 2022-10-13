@@ -14,12 +14,12 @@ const initialState = {
 
 export default function NewDebtArea() {
   const { userId, isUserAuthenticated, handleAddLocalDebt, handleDebtList, debtList, localDebtList } = useContext(DebtContext);
-  const [isLoading, setIsLoading] = useState(false);
 
+  const [isLoading, setIsLoading] = useState(false);
   const [cardFields, setCreateDebtFields] = useState(initialState);
+  const [hideBar, setHideBar] = useState(true);
 
   const currentDebtList = useMemo(() => isUserAuthenticated ? debtList : localDebtList, [localDebtList, debtList, isUserAuthenticated]);
-
   const recommendedMonthlyPayment = useMemo(() => ConvertAPRToMonthlyPayment(cardFields.apr, cardFields.balance), [cardFields.apr, cardFields.balance]);
   const debtExist = useMemo(() => find(currentDebtList, { name: cardFields.name, type: cardFields.type }), [currentDebtList, cardFields.name, cardFields.type]);
 
@@ -41,11 +41,21 @@ export default function NewDebtArea() {
     setCreateDebtFields({ ...cardFields, [name]: event.target.value });
   }, [cardFields]);
 
+  const handleHideModal = useCallback(() => {
+    const closeButton = document.getElementById('close-add-debt');
+
+    closeButton?.click();
+  }, []);
+
+  const handleScrollToDebt = useCallback(() => document.getElementById('debt-list')?.lastElementChild?.scrollIntoView({ behavior: 'smooth', block: 'center' }), []);
+
   const handleFieldBlur = useCallback(() => {
     const formattedFields = FormatFields({ balance: cardFields.balance, apr: cardFields.apr, payment: cardFields.payment }, 'string');
 
     setCreateDebtFields({ ...cardFields, ...formattedFields });
   }, [cardFields]);
+
+  const handleSideBarHidden = useCallback(() => setHideBar(!hideBar), [hideBar]);
 
   const handleAddDebt = useCallback(async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -57,9 +67,7 @@ export default function NewDebtArea() {
 
     try {
       const formattedFields = FormatFields({ balance: cardFields.balance, apr: cardFields.apr, payment: cardFields.payment }, 'number');
-
       const trimFields = { ...cardFields, type: cardFields.type.trim(), name: cardFields.name.trim() };
-
       const debt = await createDebt({ ...trimFields, ...formattedFields, userDebtId: userId });
 
       handleDebtList(debt);
@@ -68,17 +76,29 @@ export default function NewDebtArea() {
     } finally {
       setCreateDebtFields({ ...cardFields, name: '', type: '' });
       setIsLoading(false);
+      setTimeout(() => handleScrollToDebt(), 100);
+      
+      if (hideBar) {
+        handleHideModal();
+      }
     }
-  }, [cardFields, handleDebtList, userId]);
+  }, [cardFields, handleDebtList, handleHideModal, handleScrollToDebt, hideBar, userId]);
 
   const handleLocalAddDebt = useCallback((event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     setIsLoading(true);
     handleAddLocalDebt({ ...cardFields, id: uniqueId() });
+
     setCreateDebtFields({ ...cardFields, name: '', type: '' });
     setIsLoading(false);
-  }, [cardFields, handleAddLocalDebt]);
+    
+    setTimeout(() => handleScrollToDebt(), 100);
+
+    if (hideBar) {
+      handleHideModal();
+    }
+  }, [cardFields, handleAddLocalDebt, handleHideModal, handleScrollToDebt, hideBar]);
 
   const handleResetFilters = useCallback(() => setCreateDebtFields(initialState), []);
 
@@ -111,6 +131,7 @@ export default function NewDebtArea() {
           </h5>
           <button
             type='button'
+            id="close-add-debt"
             className='btn-close btn-close-white'
             data-bs-dismiss='offcanvas'
             aria-label='Close'
@@ -227,7 +248,23 @@ export default function NewDebtArea() {
                   )
                 }
               </div>
-              <div className='row px-4 g-3 mt-1 justify-content-around'>
+              <div className='row px-4 px-md-2 g-3 mt-1'>
+                <div className="form-check col-12">
+                  <input 
+                    className="form-check-input" 
+                    type="checkbox"
+                    value=""
+                    checked={hideBar}
+                    onChange={handleSideBarHidden}
+                    id="hide-sidebar" 
+                  />
+                  <label 
+                    className="form-check-label" 
+                    htmlFor="hide-sidebar"
+                  >
+                      Hide sidebar after adding debt
+                  </label>
+                </div>
                 <button
                   type='button'
                   className='btn btn-secondary col-12 col-md-5'
@@ -237,7 +274,7 @@ export default function NewDebtArea() {
                 </button>
                 <button
                   type='submit'
-                  className='btn btn-success col-12 col-md-5'
+                  className='btn btn-success col-12 col-md-5 ms-auto'
                   disabled={some(validation, ['valid', false])}
                 >
                   Add

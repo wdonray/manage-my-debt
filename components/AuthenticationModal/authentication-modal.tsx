@@ -2,7 +2,6 @@ import styles from './authentication-modal.module.scss';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { SignIn, CreateAccount, ConfirmCode, ForgotPassword, ResetPassword } from './components';
 import { UserContext } from '@/util';
-import { toast } from 'react-toastify';
 import { IUser } from 'types/user';
 
 enum AuthenticationState {
@@ -62,7 +61,6 @@ export default function AuthenticationModal() {
 
     handleUser(user);
     handleHideModal();
-    toast.success('Welcome back!');
   }, [handleHideModal, handleUser]);
 
   const authenticationComponent = useMemo(() => {
