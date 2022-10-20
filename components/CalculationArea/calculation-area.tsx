@@ -19,28 +19,28 @@ export default function CalculationArea() {
 
   const currentDebtList = useMemo(() => isUserAuthenticated ? debtList : localDebtList, [localDebtList, debtList, isUserAuthenticated]);
 
-  const debtListMinPayments = useMemo(() => {
-    if (!currentDebtList) {
-      return [];
-    }
+  // const debtListMinPayments = useMemo(() => {
+  //   if (!currentDebtList) {
+  //     return [];
+  //   }
 
-    const payments = currentDebtList.map((item) => {
-      const aprDecimal = parseFloat((item.apr / 100).toFixed(4));
+  //   const payments = currentDebtList.map((item) => {
+  //     const aprDecimal = parseFloat((item.apr / 100).toFixed(4));
 
-      return (item.balance * aprDecimal) / 12;
-    });
+  //     return (item.balance * aprDecimal) / 12;
+  //   });
 
-    return payments;
-  }, [currentDebtList]);
+  //   return payments;
+  // }, [currentDebtList]);
 
-  const minPaymentValueSum = useMemo(() => {
-    const reduced = debtListMinPayments.reduce((partialSum, a) => partialSum + a, 0);
+  // const minPaymentValueSum = useMemo(() => {
+  //   const reduced = debtListMinPayments.reduce((partialSum, a) => partialSum + a, 0);
 
-    return {
-      value: reduced,
-      valueFormatted: ConvertToCurrency(reduced),
-    };
-  }, [debtListMinPayments]);
+  //   return {
+  //     value: reduced,
+  //     valueFormatted: ConvertToCurrency(reduced),
+  //   };
+  // }, [debtListMinPayments]);
 
   const fieldValueSum = useCallback((field: string) => {
     const list = currentDebtList?.map((item) => FormatFields({ value: item[field] }, 'number').value);
