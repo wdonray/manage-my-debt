@@ -51,6 +51,7 @@ export default function AboutModal() {
                 objectFit='cover'
                 width={headshotSize}
                 height={headshotSize}
+                quality={100}
               />
             </div>
             <div className='mt-3'>

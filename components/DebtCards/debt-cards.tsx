@@ -1,10 +1,12 @@
 import { IDebt } from '@/types';
+import Image from 'next/image';
 import { ChangeEvent, useCallback, useContext, useEffect, useMemo, useState, MouseEvent } from 'react';
 import { DebtContext, SearchEnum } from '@/util';
 import { UpdateDebtModal } from './components';
 import { DebtCard } from './components';
 import { orderBy } from 'lodash';
 import FilterDebt from './components/filter-debt';
+import EmptyList from './components/empty-list';
 
 export enum SortDebt {
   none = 'none',
@@ -104,35 +106,29 @@ export default function DebtCards() {
   return (
     <div>
       <UpdateDebtModal />
-      <FilterDebt
-        searchByType={searchByType}
-        searchByValue={searchByValue}
-        currentSort={currentSort}
-        currentDirection={currentDirection}
-        handleSearchType={handleSearchType}
-        handleSearchValue={handleSearchValue}
-        handleSortSelect={handleSortSelect}
-        handleSortDirection={handleSortDirection}
-      />
+      <EmptyList isListEmpty={isListEmpty} />
       {
-        currentSort != SortDebt.none && (
-          <div className='d-flex justify-content-end pt-3'>
-            <span>
+        !isListEmpty && (
+          <div>
+            {
+              currentSort != SortDebt.none && (
+                <div className='d-flex justify-content-end pt-3'>
+                  <span>
               Sorted by {direction} <strong>{currentSort}</strong>
-            </span>
-          </div>
-        )
-      }
-      {
-        isListEmpty ?
-          (
-            <div className='d-flex flex-column justify-content-center align-items-center text-center mt-5'>
-              <i className='bi bi-exclamation-diamond fs-1'></i>
-              <h1>No results found</h1>
-              <span>Please check spelling or try again with different search</span>
-            </div>
-          ) :
-          (
+                  </span>
+                </div>
+              )
+            }
+            <FilterDebt
+              searchByType={searchByType}
+              searchByValue={searchByValue}
+              currentSort={currentSort}
+              currentDirection={currentDirection}
+              handleSearchType={handleSearchType}
+              handleSearchValue={handleSearchValue}
+              handleSortSelect={handleSortSelect}
+              handleSortDirection={handleSortDirection}
+            />
             <div 
               id='debt-list' 
               className='row g-3 mb-4 pt-3'
@@ -146,7 +142,8 @@ export default function DebtCards() {
                 </div>
               ))}
             </div>
-          )
+          </div>
+        )
       }
     </div>
   );

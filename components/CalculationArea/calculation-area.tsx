@@ -54,21 +54,21 @@ export default function CalculationArea() {
   }, [currentDebtList]);
 
   const leftOverSum = useMemo(() => {
-    const leftOverValue = paymentInput - minPaymentValueSum.value;
+    const leftOverValue = paymentInput - fieldValueSum('payment').value;
 
     return {
       value: leftOverValue <= 0 || Number.isNaN(leftOverValue) ? 0 : leftOverValue,
       valueFormatted: ConvertToCurrency(leftOverValue),
     };
-  }, [minPaymentValueSum.value, paymentInput]);
+  }, [fieldValueSum, paymentInput]);
 
   const paymentTooLow = useMemo(() => {
     if (paymentInput) {
-      return paymentInput < minPaymentValueSum.value;
+      return paymentInput < fieldValueSum('payment').value;
     }
 
     return false;
-  }, [minPaymentValueSum.value, paymentInput]);
+  }, [fieldValueSum, paymentInput]);
 
   const highPriorityDebt = useMemo(() => {
     if (!currentDebtList || currentDebtList.length <= 0 || leftOverSum.value <= 0) {
@@ -119,12 +119,11 @@ export default function CalculationArea() {
             <strong>Current Monthly Payment: </strong>
             {fieldValueSum('payment').valueFormatted}
           </span>
-          <span>
+          {/* <span>
             <strong>Minimum Monthly Payment: </strong>
             {minPaymentValueSum.valueFormatted}
-          </span>
-          <hr></hr>
-          <div>
+          </span> */}
+          <div className='mt-3'>
             <label htmlFor='payment-input'>Amount you can pay per month</label>
             <div className='input-group'>
               <span className='input-group-text'>$</span>
@@ -149,7 +148,7 @@ export default function CalculationArea() {
               <div>
                 <div>
                   <span>Cash left over: </span>
-                  <strong className='text-info'>${paymentInput} - {minPaymentValueSum.valueFormatted} = ({leftOverSum.valueFormatted})</strong>
+                  <strong className='text-info'>${paymentInput} - {fieldValueSum('payment').valueFormatted} = ({leftOverSum.valueFormatted})</strong>
                 </div>
 
                 <h4 className='pt-3'>
