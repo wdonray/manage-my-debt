@@ -32,9 +32,7 @@ export default function DebtCard({ debt }: DebtCardProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   const recommendedMonthlyPayment = useMemo(() => ConvertAPRToMonthlyPayment(cardFields.apr, cardFields.balance), [cardFields.apr, cardFields.balance]);
-  const isCredit = useMemo(() => debt && ['credit', 'creditcard', 'credit card'].includes(debt.type.trim().toLowerCase()) , [debt]);
-
-  console.log(isCredit);
+  const isCredit = useMemo(() => debt && ['credit', 'creditcard', 'credit card'].includes(debt.type.trim().toLowerCase()), [debt]);
 
   const validation = useMemo(() => ({
     fieldsUpdated: { valid: !isEqual(cardFields, { balance: debt.balance, apr: debt.apr, payment: debt.payment }) },
@@ -268,9 +266,9 @@ export default function DebtCard({ debt }: DebtCardProps) {
               htmlFor={`${debt.id}-monthly-payment`}
             >
               <div>
-              Monthly interest rate: {recommendedMonthlyPayment.monthlyInterestRatePercentage}
+                Monthly interest rate: {recommendedMonthlyPayment.monthlyInterestRatePercentage}
               </div>
-            Recommended minimum payment: <strong>{recommendedMonthlyPayment.monthlyPayment}</strong>
+              Recommended minimum payment: <strong>{recommendedMonthlyPayment.monthlyPayment}</strong>
             </label>
           )
         }

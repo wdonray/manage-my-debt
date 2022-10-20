@@ -1,5 +1,4 @@
 import { IDebt } from '@/types';
-import Image from 'next/image';
 import { ChangeEvent, useCallback, useContext, useEffect, useMemo, useState, MouseEvent } from 'react';
 import { DebtContext, SearchEnum } from '@/util';
 import { UpdateDebtModal } from './components';
@@ -114,7 +113,7 @@ export default function DebtCards() {
               currentSort != SortDebt.none && (
                 <div className='d-flex justify-content-end pt-3'>
                   <span>
-              Sorted by {direction} <strong>{currentSort}</strong>
+                    Sorted by {direction} <strong>{currentSort}</strong>
                   </span>
                 </div>
               )
@@ -129,8 +128,8 @@ export default function DebtCards() {
               handleSortSelect={handleSortSelect}
               handleSortDirection={handleSortDirection}
             />
-            <div 
-              id='debt-list' 
+            <div
+              id='debt-list'
               className='row g-3 mb-4 pt-3'
             >
               {currentDebtList?.map((debt: IDebt) => (
