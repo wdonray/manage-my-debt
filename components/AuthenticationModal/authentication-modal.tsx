@@ -1,6 +1,7 @@
-import { IUser } from 'types/user';
-import { SignIn, CreateAccount, ConfirmCode, ForgotPassword, ResetPassword } from './components';
+import { ConfirmCode, CreateAccount, ForgotPassword, ResetPassword, SignIn } from './components';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+
+import { IUser } from 'types/user';
 import { UserContext } from '@/util';
 import styles from './authentication-modal.module.scss';
 
@@ -17,8 +18,15 @@ export default function AuthenticationModal() {
   const [state, setState] = useState<AuthenticationState>(AuthenticationState.SignIn);
   const { handleIsUserConfirmed, handleUser } = useContext(UserContext);
 
-  const handleStateChange = useCallback((state: AuthenticationState) => setState(state), []);
-  const isAuthenticationState = useCallback((stateToCompare: AuthenticationState) => state === stateToCompare, [state]);
+  const handleStateChange = useCallback((state: AuthenticationState) => {
+    return setState(state);
+  }, []);
+  const isAuthenticationState = useCallback(
+    (stateToCompare: AuthenticationState) => {
+      return state === stateToCompare;
+    },
+    [state]
+  );
 
   const handleHideModal = useCallback(() => {
     const closeButton = document.getElementById('close-authentication-modal');
@@ -89,8 +97,12 @@ export default function AuthenticationModal() {
       return (
         <SignIn
           styles={styles}
-          handleCreateAccount={() => handleStateChange(AuthenticationState.CreateAccount)}
-          handleForgotPassword={() => handleStateChange(AuthenticationState.ForgotPassword)}
+          handleCreateAccount={() => {
+            return handleStateChange(AuthenticationState.CreateAccount);
+          }}
+          handleForgotPassword={() => {
+            return handleStateChange(AuthenticationState.ForgotPassword);
+          }}
           handleSignInSuccess={handleSignInSuccess}
         />
       );
@@ -98,16 +110,24 @@ export default function AuthenticationModal() {
       return (
         <ForgotPassword
           styles={styles}
-          handleBackToSignIn={() => handleStateChange(AuthenticationState.SignIn)}
-          handleResetPassword={() => handleStateChange(AuthenticationState.ResetPassword)}
+          handleBackToSignIn={() => {
+            return handleStateChange(AuthenticationState.SignIn);
+          }}
+          handleResetPassword={() => {
+            return handleStateChange(AuthenticationState.ResetPassword);
+          }}
         />
       );
     } else if (isAuthenticationState(AuthenticationState.ResetPassword)) {
       return (
         <ResetPassword
           styles={styles}
-          handleBackToSignIn={() => handleStateChange(AuthenticationState.SignIn)}
-          handleBackToForgotPassword={() => handleStateChange(AuthenticationState.ForgotPassword)}
+          handleBackToSignIn={() => {
+            return handleStateChange(AuthenticationState.SignIn);
+          }}
+          handleBackToForgotPassword={() => {
+            return handleStateChange(AuthenticationState.ForgotPassword);
+          }}
         />
       );
     }
@@ -115,7 +135,9 @@ export default function AuthenticationModal() {
     return (
       <CreateAccount
         styles={styles}
-        handleSignIn={() => handleStateChange(AuthenticationState.SignIn)}
+        handleSignIn={() => {
+          return handleStateChange(AuthenticationState.SignIn);
+        }}
         signUpCallBack={checkLocalUser}
       />
     );

@@ -1,31 +1,21 @@
-import {
-  useCallback,
-  FormEvent,
-  ChangeEvent,
-  useState,
-  useContext,
-  useMemo,
-} from 'react';
-import {
-  UserContext,
-  handleSignUp,
-  raiseError,
-} from '@/util';
+import { ChangeEvent, FormEvent, useCallback, useContext, useMemo, useState } from 'react';
+import { UserContext, handleSignUp, raiseError } from '@/util';
+
+import { IUser } from '@/types';
 import SocialSignIn from './social-sign-in';
 import { isEmpty } from 'lodash';
-import { IUser } from '@/types';
 
 interface AuthField {
-  email: string
-  name: string
-  password: string,
-  confirmPassword: string
+  email: string;
+  name: string;
+  password: string;
+  confirmPassword: string;
 }
 
 interface CreateAccountProps {
-  styles: { readonly [key: string]: string }
-  handleSignIn: () => void
-  signUpCallBack: () => void
+  styles: { readonly [key: string]: string };
+  handleSignIn: () => void;
+  signUpCallBack: () => void;
 }
 
 export default function CreateAccount({ styles, handleSignIn, signUpCallBack }: CreateAccountProps) {
@@ -40,17 +30,22 @@ export default function CreateAccount({ styles, handleSignIn, signUpCallBack }: 
     confirmPassword: '',
   });
 
-  const passwordClassNames = useMemo(() => `form-control ${!isEmpty(errorMessage) && 'border-danger'}`, [errorMessage]);
+  const passwordClassNames = useMemo(() => {
+    return `form-control ${!isEmpty(errorMessage) && 'border-danger'}`;
+  }, [errorMessage]);
 
-  const handleSignUpSuccess = useCallback((user: IUser) => {
-    if (!user) {
-      return;
-    }
+  const handleSignUpSuccess = useCallback(
+    (user: IUser) => {
+      if (!user) {
+        return;
+      }
 
-    handleIsUserConfirmed(false);
-    localStorage.setItem('user', JSON.stringify({ email: authFields.email, password: authFields.password }));
-    signUpCallBack();
-  }, [handleIsUserConfirmed, authFields.email, authFields.password, signUpCallBack]);
+      handleIsUserConfirmed(false);
+      localStorage.setItem('user', JSON.stringify({ email: authFields.email, password: authFields.password }));
+      signUpCallBack();
+    },
+    [handleIsUserConfirmed, authFields.email, authFields.password, signUpCallBack]
+  );
 
   const handleValidation = useCallback(() => {
     if (authFields.password === authFields.confirmPassword) {
@@ -62,33 +57,39 @@ export default function CreateAccount({ styles, handleSignIn, signUpCallBack }: 
     return false;
   }, [authFields]);
 
-  const handleSubmit = useCallback(async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleSubmit = useCallback(
+    async (event: FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
 
-    if (!handleValidation()) {
-      return;
-    }
+      if (!handleValidation()) {
+        return;
+      }
 
-    setIsLoading(true);
-    const { email, name, password } = authFields;
+      setIsLoading(true);
+      const { email, name, password } = authFields;
 
-    try {
-      const user = await handleSignUp(email, name, password);
+      try {
+        const user = await handleSignUp(email, name, password);
 
-      handleSignUpSuccess(user);
-    } catch (err) {
-      raiseError(err);
-    }
+        handleSignUpSuccess(user);
+      } catch (err) {
+        raiseError(err);
+      }
 
-    setIsLoading(false);
-  }, [authFields, handleSignUpSuccess, handleValidation]);
+      setIsLoading(false);
+    },
+    [authFields, handleSignUpSuccess, handleValidation]
+  );
 
-  const handleInput = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
+  const handleInput = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = event.target;
 
-    setErrorMessage('');
-    setAuthFields({ ...authFields, [name]: value });
-  }, [authFields]);
+      setErrorMessage('');
+      setAuthFields({ ...authFields, [name]: value });
+    },
+    [authFields]
+  );
 
   return (
     <div className={styles['sign-in-wrapper']}>
@@ -159,10 +160,15 @@ export default function CreateAccount({ styles, handleSignIn, signUpCallBack }: 
             disabled={isLoading}
           >
             {isLoading ? (
-              <div className='spinner-border text-info' role='status'>
+              <div
+                className='spinner-border text-info'
+                role='status'
+              >
                 <span className='visually-hidden'>Loading...</span>
               </div>
-            ) : 'Create Account'}
+            ) : (
+              'Create Account'
+            )}
           </button>
         </div>
       </form>
@@ -175,6 +181,6 @@ export default function CreateAccount({ styles, handleSignIn, signUpCallBack }: 
         callback={handleSignUpSuccess}
         styles={styles}
       />
-    </div >
+    </div>
   );
 }

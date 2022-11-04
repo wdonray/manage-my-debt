@@ -1,5 +1,5 @@
-import { handleSignOut, UserContext, raiseError, useBreakPoint, SIZE } from '@/util';
-import { useContext, useMemo, useCallback } from 'react';
+import { SIZE, UserContext, handleSignOut, raiseError, useBreakPoint } from '@/util';
+import { useCallback, useContext, useMemo } from 'react';
 
 interface HeaderContentProps {
   authenticated: boolean;
@@ -12,13 +12,23 @@ export default function HeaderContent({ authenticated, handleAuthenticated, styl
 
   const breakPoint = useBreakPoint();
 
-  const mobile = useMemo(() => breakPoint.value === SIZE.SM || breakPoint.value === SIZE.XS, [breakPoint]);
+  const mobile = useMemo(() => {
+    return breakPoint.value === SIZE.SM || breakPoint.value === SIZE.XS;
+  }, [breakPoint]);
 
-  const headerClass = useMemo(() => `d-flex align-items-center flex-${mobile ? 'column-reverse' : 'row'} ${mobile ? 'justify-content-center' : 'justify-content-end'}`, [mobile]);
-  const aboutClass = useMemo(() => `fw-bold text-white text-decoration-none text-${mobile ? 'light' : 'secondary'} me-md-5 ${mobile && 'mt-3'} `, [mobile]);
-  const buttonClass = useMemo(() => `btn rounded-sm py-1 px-2 ${styles.login}`, [styles]);
+  const headerClass = useMemo(() => {
+    return `d-flex align-items-center flex-${mobile ? 'column-reverse' : 'row'} ${mobile ? 'justify-content-center' : 'justify-content-end'}`;
+  }, [mobile]);
+  const aboutClass = useMemo(() => {
+    return `fw-bold text-white text-decoration-none text-${mobile ? 'light' : 'secondary'} me-md-5 ${mobile && 'mt-3'} `;
+  }, [mobile]);
+  const buttonClass = useMemo(() => {
+    return `btn rounded-sm py-1 px-2 ${styles.login}`;
+  }, [styles]);
 
-  const buttonText = useMemo(() => (authenticated ? 'Logout' : 'Login'), [authenticated]);
+  const buttonText = useMemo(() => {
+    return authenticated ? 'Logout' : 'Login';
+  }, [authenticated]);
 
   const bsData = useMemo(() => {
     if (!authenticated) {

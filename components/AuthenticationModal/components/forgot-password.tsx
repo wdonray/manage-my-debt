@@ -1,20 +1,10 @@
-import {
-  useCallback,
-  FormEvent,
-  ChangeEvent,
-  useState,
-  useContext,
-} from 'react';
-import {
-  handleForgotPassword,
-  raiseError,
-  UserContext,
-} from '@/util';
+import { ChangeEvent, FormEvent, useCallback, useContext, useState } from 'react';
+import { UserContext, handleForgotPassword, raiseError } from '@/util';
 
 interface ForgotPasswordProps {
-  styles: { readonly [key: string]: string }
-  handleBackToSignIn: () => void
-  handleResetPassword: () => void
+  styles: { readonly [key: string]: string };
+  handleBackToSignIn: () => void;
+  handleResetPassword: () => void;
 }
 
 export default function ForgotPassword({ styles, handleBackToSignIn, handleResetPassword }: ForgotPasswordProps) {
@@ -22,20 +12,23 @@ export default function ForgotPassword({ styles, handleBackToSignIn, handleReset
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState('');
 
-  const handleSubmit = useCallback(async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setIsLoading(true);
+  const handleSubmit = useCallback(
+    async (event: FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      setIsLoading(true);
 
-    try {
-      await handleForgotPassword(email);
-      handleForgotPasswordEmail(email);
-      handleResetPassword();
-    } catch (err) {
-      raiseError(err);
-    }
+      try {
+        await handleForgotPassword(email);
+        handleForgotPasswordEmail(email);
+        handleResetPassword();
+      } catch (err) {
+        raiseError(err);
+      }
 
-    setIsLoading(false);
-  }, [email, handleResetPassword, handleForgotPasswordEmail]);
+      setIsLoading(false);
+    },
+    [email, handleResetPassword, handleForgotPasswordEmail]
+  );
 
   const handleEmailInput = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -66,10 +59,15 @@ export default function ForgotPassword({ styles, handleBackToSignIn, handleReset
             disabled={isLoading}
           >
             {isLoading ? (
-              <div className='spinner-border text-info' role='status'>
+              <div
+                className='spinner-border text-info'
+                role='status'
+              >
                 <span className='visually-hidden'>Loading...</span>
               </div>
-            ) : 'Reset Password'}
+            ) : (
+              'Reset Password'
+            )}
           </button>
         </div>
       </form>
@@ -81,6 +79,6 @@ export default function ForgotPassword({ styles, handleBackToSignIn, handleReset
           Back
         </a>
       </p>
-    </div >
+    </div>
   );
 }

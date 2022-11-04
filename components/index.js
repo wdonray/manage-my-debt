@@ -1,23 +1,32 @@
-import { Header } from './Header';
-export { Header };
-
-import { Layout } from './Layout';
-export { Layout };
-
-import { AuthenticationModal } from './AuthenticationModal';
-export { AuthenticationModal };
-
 import { DebtCard, DebtCards } from './DebtCards';
-export { DebtCard, DebtCards };
-
-import { NewDebtArea } from './NewDebtArea';
-export { NewDebtArea };
-
-import { CalculationArea } from './CalculationArea';
-export { CalculationArea };
-
-import { GoogleAdsenseContainer } from './GoogleAdsenseContainer';
-export { GoogleAdsenseContainer }; 
 
 import { AboutModal } from './AboutModal';
+import { AuthenticationModal } from './AuthenticationModal';
+import { CalculationArea } from './CalculationArea';
+import { GoogleAdsenseContainer } from './GoogleAdsenseContainer';
+import { Header } from './Header';
+import { Layout } from './Layout';
+import { NewDebtArea } from './NewDebtArea';
+
+export { Header };
+
+
+export { Layout };
+
+
+export { AuthenticationModal };
+
+
+export { DebtCard, DebtCards };
+
+
+export { NewDebtArea };
+
+
+export { CalculationArea };
+
+
+export { GoogleAdsenseContainer };
+
+
 export { AboutModal };

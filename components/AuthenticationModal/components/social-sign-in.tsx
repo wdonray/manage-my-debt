@@ -1,11 +1,12 @@
-import { useEffect, useCallback, MouseEvent, useContext } from 'react';
+import { MouseEvent, useCallback, useContext, useEffect } from 'react';
+import { UserContext, handleDBUserCreation, handleSocialSignIn, raiseError } from '@/util';
+
 import { Hub } from 'aws-amplify';
-import { handleDBUserCreation, handleSocialSignIn, raiseError, UserContext } from '@/util';
 import { IUser } from 'types/user';
 
 interface SocialSignInProps {
-  callback: (user: IUser) => void
-  styles: { readonly [key: string]: string }
+  callback: (user: IUser) => void;
+  styles: { readonly [key: string]: string };
 }
 
 export default function SocialSignIn({ callback, styles }: SocialSignInProps) {
@@ -35,6 +36,9 @@ export default function SocialSignIn({ callback, styles }: SocialSignInProps) {
 
           break;
         }
+
+        default:
+          break;
       }
     });
 

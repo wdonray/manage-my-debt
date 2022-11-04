@@ -1,11 +1,11 @@
-import { IDebt } from '@/types';
-import { ChangeEvent, useCallback, useContext, useEffect, useMemo, useState, MouseEvent } from 'react';
+import { ChangeEvent, MouseEvent, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { DebtCard, UpdateDebtModal } from './components';
 import { DebtContext, SearchEnum } from '@/util';
-import { UpdateDebtModal } from './components';
-import { DebtCard } from './components';
-import { orderBy } from 'lodash';
-import FilterDebt from './components/FilterDebt/filter-debt';
+
 import EmptyList from './components/EmptyList/empty-list';
+import FilterDebt from './components/FilterDebt/filter-debt';
+import { IDebt } from '@/types';
+import { orderBy } from 'lodash';
 
 export enum SortDebt {
   none = 'none',
@@ -65,7 +65,9 @@ export default function DebtCards() {
     [currentDirection]
   );
 
-  const rawDebtList = useMemo(() => (isUserAuthenticated ? debtList : localDebtList), [debtList, isUserAuthenticated, localDebtList]);
+  const rawDebtList = useMemo(() => {
+    return isUserAuthenticated ? debtList : localDebtList;
+  }, [debtList, isUserAuthenticated, localDebtList]);
 
   const currentDebtList = useMemo(() => {
     setLoading(true);
@@ -73,7 +75,9 @@ export default function DebtCards() {
     let list = rawDebtList;
 
     if (searchByValue != '') {
-      list = list?.filter((item) => item[searchByType].toLocaleLowerCase().includes(searchByValue.toLocaleLowerCase()));
+      list = list?.filter((item) => {
+        return item[searchByType].toLocaleLowerCase().includes(searchByValue.toLocaleLowerCase());
+      });
     }
 
     if (currentDirection != SortDirection.none) {
@@ -85,9 +89,13 @@ export default function DebtCards() {
     return list;
   }, [currentDirection, currentSort, rawDebtList, searchByType, searchByValue]);
 
-  const isListEmpty = useMemo(() => !currentDebtList || !currentDebtList.length, [currentDebtList]);
+  const isListEmpty = useMemo(() => {
+    return !currentDebtList || !currentDebtList.length;
+  }, [currentDebtList]);
 
-  const direction = useMemo(() => (currentDirection === SortDirection.asc ? 'ascending' : 'descending'), [currentDirection]);
+  const direction = useMemo(() => {
+    return currentDirection === SortDirection.asc ? 'ascending' : 'descending';
+  }, [currentDirection]);
 
   useEffect(() => {
     if (currentSort != SortDebt.none && currentDirection == SortDirection.none) {
@@ -140,14 +148,16 @@ export default function DebtCards() {
             id='debt-list'
             className='row g-3 mb-4 pt-3'
           >
-            {currentDebtList?.map((debt: IDebt) => (
-              <div
-                className='col-12 col-md-6 col-lg-4 mr-0'
-                key={debt.id}
-              >
-                <DebtCard debt={debt} />
-              </div>
-            ))}
+            {currentDebtList?.map((debt: IDebt) => {
+              return (
+                <div
+                  className='col-12 col-md-6 col-lg-4 mr-0'
+                  key={debt.id}
+                >
+                  <DebtCard debt={debt} />
+                </div>
+              );
+            })}
           </div>
         </div>
       )}

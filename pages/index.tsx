@@ -1,13 +1,14 @@
-import { Amplify } from 'aws-amplify';
 import { Authenticator, View } from '@aws-amplify/ui-react';
-import { DebtCards, Layout, NewDebtArea, CalculationArea, Header } from '@/components';
-import config from 'aws-exports';
-import type { NextPage } from 'next';
-import { ToastContainer } from 'react-toastify';
-import { useCallback, useEffect, useState } from 'react';
+import { CalculationArea, DebtCards, Header, Layout, NewDebtArea } from '@/components';
 import { DebtContext, DebtContextInterface, UpdateDebtValue, UserContext, UserContextInterface } from '@/util';
 import { IDebt, IUser } from '@/types';
+import { useCallback, useEffect, useState } from 'react';
+
+import { Amplify } from 'aws-amplify';
 import Head from 'next/head';
+import type { NextPage } from 'next';
+import { ToastContainer } from 'react-toastify';
+import config from 'aws-exports';
 
 Amplify.configure(config);
 
@@ -21,17 +22,33 @@ const Home: NextPage = (props) => {
   const [valueToUpdate, setValueToUpdate] = useState(UpdateDebtValue.name);
   const [loading, setLoading] = useState<boolean | null>(true);
 
-  const handleValueToUpdate = useCallback((value: UpdateDebtValue) => setValueToUpdate(value), []);
-  const handleSelectedDebt = useCallback((value: IDebt | null) => setSelectedDebt(value), []);
-  const handleUser = useCallback((value: IUser | null) => setUser(value), []);
-  const handleIsUserConfirmed = useCallback((value: boolean | null) => setIsUserConfirmed(value), []);
-  const handleForgotPasswordEmail = useCallback((value: string | null) => setForgotPasswordEmail(value), []);
+  const handleValueToUpdate = useCallback((value: UpdateDebtValue) => {
+    return setValueToUpdate(value);
+  }, []);
+
+  const handleSelectedDebt = useCallback((value: IDebt | null) => {
+    return setSelectedDebt(value);
+  }, []);
+
+  const handleUser = useCallback((value: IUser | null) => {
+    return setUser(value);
+  }, []);
+
+  const handleIsUserConfirmed = useCallback((value: boolean | null) => {
+    return setIsUserConfirmed(value);
+  }, []);
+
+  const handleForgotPasswordEmail = useCallback((value: string | null) => {
+    return setForgotPasswordEmail(value);
+  }, []);
 
   const handleDebtList = useCallback(
     (debt: IDebt) => {
       const updatedList = [...debtList];
 
-      const existingIndex = updatedList.findIndex((item) => item.id === debt.id);
+      const existingIndex = updatedList.findIndex((item) => {
+        return item.id === debt.id;
+      });
 
       if (existingIndex != -1) {
         updatedList.splice(existingIndex, 1, debt);
@@ -39,7 +56,11 @@ const Home: NextPage = (props) => {
         updatedList.push(debt);
       }
 
-      setDebtList(updatedList.filter((item) => !item._deleted));
+      setDebtList(
+        updatedList.filter((item) => {
+          return !item._deleted;
+        })
+      );
     },
     [debtList]
   );
@@ -55,7 +76,9 @@ const Home: NextPage = (props) => {
 
   const handleUpdateLocalDebt = useCallback(
     (debt: IDebt) => {
-      const updatedList = localDebtList.map((item) => (item.id === debt.id ? debt : item));
+      const updatedList = localDebtList.map((item) => {
+        return item.id === debt.id ? debt : item;
+      });
 
       setLocalDebtList(updatedList);
     },
@@ -64,7 +87,11 @@ const Home: NextPage = (props) => {
 
   const handleDeleteLocalDebt = useCallback(
     (id: string) => {
-      setLocalDebtList(localDebtList.filter((item) => item.id != id));
+      setLocalDebtList(
+        localDebtList.filter((item) => {
+          return item.id != id;
+        })
+      );
     },
     [localDebtList]
   );
@@ -95,7 +122,10 @@ const Home: NextPage = (props) => {
 
   useEffect(() => {
     if (user !== null && debtList.length === 0) {
-      const userDebt = user.debt?.items.filter((item) => !item._deleted) ?? [];
+      const userDebt =
+        user.debt?.items.filter((item) => {
+          return !item._deleted;
+        }) ?? [];
 
       setDebtList(userDebt);
     }
@@ -103,7 +133,11 @@ const Home: NextPage = (props) => {
 
   useEffect(() => {
     if (loading) {
-      setTimeout(() => setLoading(false), 2000);
+      const loadingLength = 2000;
+
+      setTimeout(() => {
+        return setLoading(false);
+      }, loadingLength);
     }
   }, [loading]);
 

@@ -1,7 +1,8 @@
+import { SIZE, useBreakPoint } from '@/util';
+import { useCallback, useMemo, useState } from 'react';
+
 import Image from 'next/image';
 import styles from './about-modal.module.scss';
-import { useBreakPoint, SIZE } from '@/util';
-import { useMemo, useState, useCallback } from 'react';
 
 export default function AboutModal() {
   const breakPoint = useBreakPoint();
@@ -22,7 +23,9 @@ export default function AboutModal() {
     return defaultSize;
   }, [breakPoint]);
 
-  const handleImageLoading = useCallback(() => setImageLoading(false), []);
+  const handleImageLoading = useCallback(() => {
+    return setImageLoading(false);
+  }, []);
 
   return (
     <div

@@ -1,5 +1,6 @@
-import { Html, Head, Main, NextScript } from 'next/document';
-// import { GoogleAdsenseContainer } from '@/components';
+import { Head, Html, Main, NextScript } from 'next/document';
+
+// Import { GoogleAdsenseContainer } from '@/components';
 
 export default function Document() {
   return (
