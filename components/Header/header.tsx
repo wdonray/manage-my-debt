@@ -1,39 +1,35 @@
-import {
-  useMemo,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
-import styles from './header.module.scss';
 import { AuthenticationModal, AboutModal } from '@/components';
-import { UserContext, fetchDBUser, useBreakPoint, SIZE } from '@/util';
-import { Hub, Auth } from 'aws-amplify';
-import Image from 'next/image';
 import { HeaderContent } from './components';
+import { Hub, Auth } from 'aws-amplify';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { UserContext, fetchDBUser, useBreakPoint, SIZE } from '@/util';
+import Image from 'next/image';
+import styles from './header.module.scss';
 
 export const siteTitle = 'Manage My Debt';
 
 export default function Header() {
   const { handleUser } = useContext(UserContext);
-  const [authenticated, setAuthenticated] = useState(false);
   const breakPoint = useBreakPoint();
 
+  const [authenticated, setAuthenticated] = useState(false);
+
+  const handleAuthenticated = useCallback((value: boolean) => setAuthenticated(value), []);
+
   const imageSize = useMemo(() => {
-    const defaultSizes = { width: '300rem', height: '100' };
+    const defaultSizes = { width: '30', height: '30' };
 
     if (!breakPoint.width) {
       return defaultSizes;
     }
 
     if (breakPoint.value === SIZE.XS) {
-      return { width: breakPoint.width - 175, height: '50' };
+      return { width: '30', height: '30' };
     }
 
     return defaultSizes;
   }, [breakPoint]);
-
-  const handleAuthenticated = useCallback((value: boolean) => setAuthenticated(value), []);
+  const startedClass = useMemo(() => `btn rounded-sm py-1 px-2 ${styles.started}`, []);
 
   useEffect(() => {
     const authCheck = async () => {
@@ -67,55 +63,57 @@ export default function Header() {
 
   return (
     <div>
-      <header className={`${styles.header} py-2 px-2 px-md-5`}>
-        <Image 
-          src='/brand-logo/svg/logo-no-background.svg' 
-          alt='brand-logo'
-          className={styles.logo}
-          width={imageSize.width}
-          height={imageSize.height}
-        />
-
-        {
-          (breakPoint.value === SIZE.SM || breakPoint.value === SIZE.XS) ?  (
-            <div>
-              <i 
-                className='bi bi-list fs-1'
-                data-bs-toggle='offcanvas' 
-                data-bs-target='#mobile-canvas' 
-                aria-controls='mobile-canvas'
+      <header className={`${styles.header} m-0 py-3 px-2 px-md-5`}>
+        <div className={`row ${styles.body}`}>
+          <div className='col-10 col-md-6 px-3'>
+            <div className={`${styles.logo} d-flex flex-row align-items-end`}>
+              <Image
+                src='/avalanche-logo.png'
+                layout='fixed'
+                alt='brand-logo'
+                width={imageSize.width}
+                height={imageSize.height}
               />
-              <div 
-                className='offcanvas offcanvas-end text-bg-dark' 
-                tabIndex={-1} 
-                id='mobile-canvas' 
-              >
-                <div className='offcanvas-header'>
-                  <button 
-                    type='button' 
-                    className='btn-close btn-close-white' 
-                    data-bs-dismiss='offcanvas' 
-                    aria-label='Close'
-                  />
-                </div>
-                <div className='offcanvas-body'>
-                  <HeaderContent 
-                    styles={styles} 
-                    handleAuthenticated={handleAuthenticated}
-                    authenticated={authenticated}
-                    mobile
-                  />
-                </div>
-              </div>
+              <h4>
+                Manage<mark className={styles.mark}>My</mark>Debt
+              </h4>
             </div>
-          ) : (
-            <HeaderContent 
-              styles={styles} 
+          </div>
+
+          <div className='col-2 col-md-6'>
+            <HeaderContent
+              styles={styles}
               handleAuthenticated={handleAuthenticated}
               authenticated={authenticated}
             />
-          )
-        }
+          </div>
+
+          <div className='col-12'>
+            <div className={`row px-2 py-4 p-md-4 p-lg-5 ${styles['text-body']}`}>
+              <div className='col-12'>
+                <h1 className='display-1'>Everything you need</h1>
+                <h1 className='display-1'>in one place</h1>
+              </div>
+
+              <div className='col-12 col-md-6'>
+                <span>An avalanche debt repayment calculator for those ready to create a plan to get rid of their debt.</span>
+              </div>
+
+              {!authenticated && (
+                <div className='col-12 pt-4'>
+                  <button
+                    type='button'
+                    className={startedClass}
+                    data-bs-toggle='modal'
+                    data-bs-target='#authentication-modal'
+                  >
+                    Get Started <i className='bi bi-arrow-right'></i>
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </header>
       <AuthenticationModal />
       <AboutModal />

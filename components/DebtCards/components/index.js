@@ -1,5 +1,5 @@
-import DebtCard from './debt-card';
+import DebtCard from './DebtCard/debt-card';
 export { DebtCard };
 
-import UpdateDebtModal from './update-debt-modal';
+import UpdateDebtModal from './UpdateDebtModal/update-debt-modal';
 export { UpdateDebtModal };

@@ -1,6 +1,5 @@
-@import "/node_modules/bootstrap/scss/functions";
-@import "/node_modules/bootstrap/scss/variables";
-@import "/node_modules/bootstrap/scss/mixins";
+$text-color: #bfd6ff;
+$green: #41c39f;
 
 @mixin center-content($direction) {
   display: flex;
@@ -22,7 +21,7 @@
       width: 100%;
       padding: 0 30px;
 
-      @media (max-width: 768px) { 
+      @media (max-width: 768px) {
         padding: 0;
       }
     }
@@ -71,21 +70,37 @@
       }
     }
   }
+
+  a {
+    color: $green;
+  }
 }
 
 .modal-wrapper {
+  background: linear-gradient(lighten(#090e44, 5), darken(#090e44, 15));
+  color: $text-color !important;
+
   .modal-content-wrapper {
+    background-color: darken(#090e44, 5);
+    border: 1px solid lighten(#090e44, 5);
     border-radius: 1rem;
+
+    .close {
+      color: $text-color !important;
+      margin-left: auto;
+      font-size: 30px;
+      cursor: pointer;
+    }
   }
 
   .sign-in-wrapper {
     @include wrapper-style();
   }
-  
+
   .create-account-wrapper {
     @include wrapper-style();
   }
-  
+
   .confirm-code-wrapper {
     @include wrapper-style();
 

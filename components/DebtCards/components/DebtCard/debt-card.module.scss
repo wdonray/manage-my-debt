@@ -1,15 +1,38 @@
-$border-radius: 3px;
+$green: #41c39f;
+$dark-color: darken(#090e44, 2);
+$text-color: #bfd6ff;
 
 .card {
   position: relative;
-  //background-color: lighten(#121212, 12%);
+  background-color: #00000028;
+  border: 1px solid $green;
+  border-radius: 20px;
+  color: $text-color;
+
+  h5 {
+    color: $text-color;
+  }
+
+  padding: 10px;
+
+  input {
+    background-color: transparent !important;
+    color: $text-color !important;
+
+    &:focus {
+      box-shadow: none !important;
+    }
+  }
+
+  span {
+    background-color: transparent;
+    color: white;
+  }
 
   .loading {
     display: flex;
     justify-content: center;
     align-items: center;
-
-    border-radius: $border-radius;
 
     text-align: center;
     position: absolute;
@@ -20,7 +43,7 @@ $border-radius: 3px;
     z-index: 999;
 
     background-color: #808080;
-    opacity: .5;
+    opacity: 0.5;
   }
 
   .header {
@@ -28,19 +51,13 @@ $border-radius: 3px;
     justify-content: space-between;
     padding: 5px 10px;
 
-    border-top-left-radius: $border-radius;
-    border-top-right-radius: $border-radius;
-
-    color: white;
-    background-color: orange;
-
     h5 {
       margin: 0;
       padding-right: 10px;
     }
 
     span {
-      font-size: .875em;
+      font-size: 0.875em;
     }
 
     i {
@@ -54,13 +71,7 @@ $border-radius: 3px;
 
   .body {
     border-top: 0px;
-    border-bottom-left-radius: $border-radius;
-    border-bottom-right-radius: $border-radius;
-    border: 1px solid orange;
     padding: 10px 20px;
-    height: 275px;
-
-    // color: white;
 
     .caption {
       color: gray;

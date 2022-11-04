@@ -1,6 +1,6 @@
 import { Amplify } from 'aws-amplify';
 import { Authenticator, View } from '@aws-amplify/ui-react';
-import { DebtCards, Layout, NewDebtArea, CalculationArea } from '@/components';
+import { DebtCards, Layout, NewDebtArea, CalculationArea, Header } from '@/components';
 import config from 'aws-exports';
 import type { NextPage } from 'next';
 import { ToastContainer } from 'react-toastify';
@@ -26,35 +26,47 @@ const Home: NextPage = (props) => {
   const handleIsUserConfirmed = useCallback((value: boolean | null) => setIsUserConfirmed(value), []);
   const handleForgotPasswordEmail = useCallback((value: string | null) => setForgotPasswordEmail(value), []);
 
-  const handleDebtList = useCallback((debt: IDebt) => {
-    const updatedList = [...debtList];
+  const handleDebtList = useCallback(
+    (debt: IDebt) => {
+      const updatedList = [...debtList];
 
-    const existingIndex = updatedList.findIndex((item) => item.id === debt.id);
+      const existingIndex = updatedList.findIndex((item) => item.id === debt.id);
 
-    if (existingIndex != -1) {
-      updatedList.splice(existingIndex, 1, debt);
-    } else {
-      updatedList.push(debt);
-    }
+      if (existingIndex != -1) {
+        updatedList.splice(existingIndex, 1, debt);
+      } else {
+        updatedList.push(debt);
+      }
 
-    setDebtList(updatedList.filter(((item) => !item._deleted)));
-  }, [debtList]);
+      setDebtList(updatedList.filter((item) => !item._deleted));
+    },
+    [debtList]
+  );
 
-  const handleAddLocalDebt = useCallback((debt: IDebt) => {
-    const updatedList = [...localDebtList, debt];
+  const handleAddLocalDebt = useCallback(
+    (debt: IDebt) => {
+      const updatedList = [...localDebtList, debt];
 
-    setLocalDebtList(updatedList);
-  }, [localDebtList]);
+      setLocalDebtList(updatedList);
+    },
+    [localDebtList]
+  );
 
-  const handleUpdateLocalDebt = useCallback((debt: IDebt) => {
-    const updatedList = localDebtList.map((item) => item.id === debt.id ? debt : item);
+  const handleUpdateLocalDebt = useCallback(
+    (debt: IDebt) => {
+      const updatedList = localDebtList.map((item) => (item.id === debt.id ? debt : item));
 
-    setLocalDebtList(updatedList);
-  }, [localDebtList]);
+      setLocalDebtList(updatedList);
+    },
+    [localDebtList]
+  );
 
-  const handleDeleteLocalDebt = useCallback((id: string) => {
-    setLocalDebtList(localDebtList.filter((item) => item.id != id));
-  }, [localDebtList]);
+  const handleDeleteLocalDebt = useCallback(
+    (id: string) => {
+      setLocalDebtList(localDebtList.filter((item) => item.id != id));
+    },
+    [localDebtList]
+  );
 
   const userContextValue: UserContextInterface = {
     user,
@@ -109,21 +121,20 @@ const Home: NextPage = (props) => {
           <View {...props}>
             <Layout>
               <main>
-                {
-                  loading ? (
-                    <div className='d-flex justify-content-center align-items-center'>
-                      <div className='loading'>
-                        Loading
-                      </div>
-                    </div>
-                  ) : (
-                    <div className='main-body'>
+                {loading ? (
+                  <div className='d-flex justify-content-center align-items-center loading-container'>
+                    <div className='loading'>Loading</div>
+                  </div>
+                ) : (
+                  <div className='main-body'>
+                    <Header />
+                    <div className='container'>
                       <NewDebtArea />
                       <DebtCards />
                       <CalculationArea />
                     </div>
-                  )
-                }
+                  </div>
+                )}
               </main>
             </Layout>
           </View>

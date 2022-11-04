@@ -1,0 +1,85 @@
+$green: #41c39f;
+$border: 1px solid $green;
+$text-color: #bfd6ff;
+
+@mixin input-style {
+  background-color: transparent !important;
+  color: $text-color !important;
+
+  &:focus {
+    box-shadow: none !important;
+  }
+}
+
+@mixin button-style {
+  background-color: orangered;
+  border-color: transparent;
+
+  color: white;
+
+  &:hover {
+    background-color: lighten(orangered, 10%) !important;
+  }
+}
+
+@mixin placeholder {
+  &::-webkit-input-placeholder {
+    @content;
+  }
+  &:-moz-placeholder {
+    @content;
+  }
+  &::-moz-placeholder {
+    @content;
+  }
+  &:-ms-input-placeholder {
+    @content;
+  }
+}
+
+.filter-debt-container {
+  button {
+    @include button-style();
+    border: transparent;
+  }
+
+  .sort {
+    @include button-style();
+    border: transparent;
+  }
+
+  .body {
+    border: $border;
+    background-color: #00000028;
+  }
+
+  input {
+    @include input-style();
+
+    @include placeholder() {
+      color: $text-color;
+    }
+  }
+
+  select {
+    @include input-style();
+
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    background-image: url('data:image/svg+xml;utf8,<svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 10.127L12 18.127L20 10.127H4Z" fill="%238E8E93"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 16px 12px;
+
+    option {
+      color: black;
+    }
+  }
+
+  span {
+    background-color: transparent;
+    color: white;
+  }
+}

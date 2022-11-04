@@ -1,9 +1,12 @@
+$green: #41c39f;
+
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: 'Space Grotesk', sans-serif;
-  //background-color: #121212;
+  font-family: 'Josefin Sans', sans-serif;
+  background-color: darken(#090e44, 3);
+  color: #bfd6ff;
 }
 
 footer {
@@ -20,41 +23,48 @@ footer {
 $spinner-size: 150px;
 $spinner-font-size: calc($spinner-size / 10);
 
-.loading {
-  position: absolute;
-  top: 30%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: $spinner-size;
-  height: $spinner-size;
-  background: transparent;
-  text-align: center;
-  line-height: $spinner-size;
-  font-family: sans-serif;
-  font-size: $spinner-font-size;
-  color: orange;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  text-shadow: 0 0 10px orange;
+main {
+  position: relative;
 }
 
-.loading:before {
-  content: "";
+.loading-container {
   position: absolute;
-  border-width: 15px;
-  border-style: solid;
-  border-color: orangered #EAF0F6 #EAF0F6;
-  border-radius: 100%;
-  animation: rotation 2s linear infinite;
-
-  top: -3px;
-  left: -3px;
+  z-index: 9999;
+  height: 100vh;
   width: 100%;
-  height: 100%;
-}
 
-.main-body {
-  animation: slide-up 0.5s ease-out;
+  .loading {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: $spinner-size;
+    height: $spinner-size;
+    background: transparent;
+    text-align: center;
+    line-height: $spinner-size;
+    font-family: sans-serif;
+    font-size: $spinner-font-size;
+    color: orange;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    text-shadow: 0 0 10px orange;
+  }
+
+  .loading:before {
+    content: '';
+    position: absolute;
+    border-width: 15px;
+    border-style: solid;
+    border-color: orangered #eaf0f6 #eaf0f6;
+    border-radius: 100%;
+    animation: rotation 2s linear infinite;
+
+    top: -3px;
+    left: -3px;
+    width: 100%;
+    height: 100%;
+  }
 }
 
 @keyframes rotation {
@@ -64,17 +74,5 @@ $spinner-font-size: calc($spinner-size / 10);
 
   100% {
     transform: rotate(360deg);
-  }
-}
-
-@keyframes slide-up {
-  from {
-    margin-top: 100%;
-    height: 300%;
-  }
-
-  to {
-    margin-top: 0%;
-    height: 100%;
   }
 }

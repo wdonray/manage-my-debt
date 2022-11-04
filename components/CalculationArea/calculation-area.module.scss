@@ -1,0 +1,93 @@
+$green: #41c39f;
+$border: 1px solid $green;
+$text-color: #bfd6ff;
+
+@mixin input-style {
+  background-color: transparent !important;
+  color: $text-color !important;
+
+  &:focus {
+    box-shadow: none !important;
+  }
+}
+
+@mixin button-style {
+  background-color: orangered;
+  border-color: transparent;
+
+  color: white;
+
+  &:hover {
+    background-color: lighten(orangered, 10%) !important;
+  }
+}
+
+@mixin placeholder {
+  &::-webkit-input-placeholder {
+    @content;
+  }
+  &:-moz-placeholder {
+    @content;
+  }
+  &::-moz-placeholder {
+    @content;
+  }
+  &:-ms-input-placeholder {
+    @content;
+  }
+}
+
+.calculation-area-container {
+  border: $border;
+  color: $text-color;
+
+  p {
+    font-weight: bolder;
+    margin-bottom: 0;
+  }
+
+  hr {
+    border: 1px solid gray;
+    border-radius: 30px;
+  }
+
+  h3 {
+    color: white;
+  }
+
+  strong,
+  span {
+    color: $text-color;
+  }
+
+  h4 strong {
+    color: $green;
+  }
+
+  button {
+    @include button-style();
+    border: transparent;
+  }
+
+  input {
+    @include input-style();
+
+    @include placeholder() {
+      color: $text-color;
+    }
+  }
+
+  span[class='input-group-text'] {
+    background-color: transparent;
+    color: white;
+  }
+
+  border: $border;
+  background-color: #00000028;
+
+  .header {
+    background-color: $green;
+    color: $text-color;
+    font-weight: bolder;
+  }
+}

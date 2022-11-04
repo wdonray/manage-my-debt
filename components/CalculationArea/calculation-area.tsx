@@ -1,6 +1,7 @@
 import { useContext, useState, useMemo, useCallback, ChangeEvent, useEffect } from 'react';
 import { DebtContext, ConvertToCurrency, InputValidation, FormatFields } from '@/util';
 import { orderBy, ceil } from 'lodash';
+import styles from './calculation-area.module.scss';
 
 export default function CalculationArea() {
   const { debtList, localDebtList, isUserAuthenticated } = useContext(DebtContext);
@@ -17,41 +18,21 @@ export default function CalculationArea() {
 
   const validation = useMemo(() => ({ payment: InputValidation(paymentInput) }), [paymentInput]);
 
-  const currentDebtList = useMemo(() => isUserAuthenticated ? debtList : localDebtList, [localDebtList, debtList, isUserAuthenticated]);
+  const currentDebtList = useMemo(() => (isUserAuthenticated ? debtList : localDebtList), [localDebtList, debtList, isUserAuthenticated]);
 
-  // const debtListMinPayments = useMemo(() => {
-  //   if (!currentDebtList) {
-  //     return [];
-  //   }
+  const fieldValueSum = useCallback(
+    (field: string) => {
+      const list = currentDebtList?.map((item) => FormatFields({ value: item[field] }, 'number').value);
 
-  //   const payments = currentDebtList.map((item) => {
-  //     const aprDecimal = parseFloat((item.apr / 100).toFixed(4));
+      const reduced = list?.reduce((partialSum, a) => partialSum + a, 0);
 
-  //     return (item.balance * aprDecimal) / 12;
-  //   });
-
-  //   return payments;
-  // }, [currentDebtList]);
-
-  // const minPaymentValueSum = useMemo(() => {
-  //   const reduced = debtListMinPayments.reduce((partialSum, a) => partialSum + a, 0);
-
-  //   return {
-  //     value: reduced,
-  //     valueFormatted: ConvertToCurrency(reduced),
-  //   };
-  // }, [debtListMinPayments]);
-
-  const fieldValueSum = useCallback((field: string) => {
-    const list = currentDebtList?.map((item) => FormatFields({ value: item[field] }, 'number').value);
-
-    const reduced = list?.reduce((partialSum, a) => partialSum + a, 0);
-
-    return {
-      value: reduced,
-      valueFormatted: ConvertToCurrency(reduced),
-    };
-  }, [currentDebtList]);
+      return {
+        value: reduced,
+        valueFormatted: ConvertToCurrency(reduced),
+      };
+    },
+    [currentDebtList]
+  );
 
   const leftOverSum = useMemo(() => {
     const leftOverValue = paymentInput - fieldValueSum('payment').value;
@@ -106,23 +87,19 @@ export default function CalculationArea() {
       className='mb-4 px-2 row'
       onSubmit={(e) => e.preventDefault()}
     >
-      <div className='col-12 col-md-10 col-xl-6 border rounded pb-2 px-0 mt-2 mx-auto shadow'>
-        <div className='bg-light rounded-top p-2 d-flex justify-content-center align-items-center'>
+      <div className={`col-12 col-md-10 col-xl-6 rounded pb-2 px-0 mt-2 mx-auto shadow ${styles['calculation-area-container']}`}>
+        <div className={` p-2 d-flex justify-content-center align-items-center ${styles.header}`}>
           <h3 className='mb-0'>Avalanche method effect</h3>
         </div>
         <div className='d-flex flex-column px-4 py-2'>
           <span className='pb-2 fs-5'>
-            <strong>Total Debt: </strong>
-            {fieldValueSum('balance').valueFormatted}
+            <span>Total Debt</span>
+            <p>{fieldValueSum('balance').valueFormatted}</p>
           </span>
           <span>
-            <strong>Current Monthly Payment: </strong>
-            {fieldValueSum('payment').valueFormatted}
+            <span>Current Monthly Payment</span>
+            <p>{fieldValueSum('payment').valueFormatted}</p>
           </span>
-          {/* <span>
-            <strong>Minimum Monthly Payment: </strong>
-            {minPaymentValueSum.valueFormatted}
-          </span> */}
           <div className='mt-3'>
             <label htmlFor='payment-input'>Amount you can pay per month</label>
             <div className='input-group'>
@@ -137,42 +114,41 @@ export default function CalculationArea() {
                 value={isNaN(paymentInput) ? '' : paymentInput}
                 onChange={handleInput}
               />
-              <div className='invalid-feedback'>
-                {validation.payment.message}
-              </div>
+              <div className='invalid-feedback'>{validation.payment.message}</div>
             </div>
             {paymentTooLow && <h5 className='mt-3 text-danger text-center'>Current payment must be greater than minimum</h5>}
           </div>
-          {
-            highPriorityDebt != null && (
+          {highPriorityDebt != null && (
+            <div className='mt-3'>
               <div>
-                <div>
-                  <span>Cash left over: </span>
-                  <strong className='text-info'>${paymentInput} - {fieldValueSum('payment').valueFormatted} = ({leftOverSum.valueFormatted})</strong>
-                </div>
-
-                <h4 className='pt-3'>
-                  <span>Target Debt: </span>
-                  <strong className='text-primary'>{highPriorityDebt.name} </strong>
-                  <span className='fw-light fs-6'>({highPriorityDebt.type.length ? highPriorityDebt.type : 'None'}) </span>
-                </h4>
-
-                <div>
-                  <strong>Current Payment: </strong>
-                  <span className='text-danger'>${highPriorityDebt.payment}</span>
-                </div>
-
-                <div>
-                  <strong>Suggested Payment: </strong>
-                  <span className='text-success'>${highPriorityDebt.updatedPayment}</span>
-                </div>
-
-                <span className='fw-light'>Pay minimum payments for every other debt</span>
+                <span>Cash left over</span>
+                <p>
+                  ${paymentInput} - {fieldValueSum('payment').valueFormatted} = ({leftOverSum.valueFormatted})
+                </p>
               </div>
-            )
-          }
+
+              <hr></hr>
+
+              <h4>
+                <span>Target Debt: </span>
+                <strong>{highPriorityDebt.name} </strong>
+              </h4>
+
+              <div>
+                <span>Current Payment</span>
+                <p>${highPriorityDebt.payment}</p>
+              </div>
+
+              <div>
+                <span>Suggested Payment</span>
+                <p>${highPriorityDebt.updatedPayment}</p>
+              </div>
+
+              <span className='fw-light mt-2'>Pay minimum payments for every other debt</span>
+            </div>
+          )}
         </div>
       </div>
-    </form >
+    </form>
   );
 }

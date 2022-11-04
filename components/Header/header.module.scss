@@ -1,27 +1,65 @@
+$green: #41c39f;
+
+@mixin button-style {
+  background-color: orangered;
+
+  color: white;
+
+  &:hover {
+    background-color: lighten(orangered, 10%) !important;
+    color: white !important;
+  }
+}
+
 .header {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  position: unset !important;
-  
+  background-image: url('/avalanche-background.jpg');
+  background-position: bottom;
+  background-size: cover;
+  color: white;
+  position: relative;
   width: 100vw;
 
-  .sign-in {
-    background-color: orangered;
-    border-radius: 0;
-  
-    color: white;
-  
-    &:hover {
-      background-color: lighten(orangered, 10%) !important;
-      color: white !important;
-    }
+  .canvas {
+    background: linear-gradient(lighten(#090e44, 5), darken(#090e44, 15));
   }
 
-  .logo {
-    cursor: pointer;
-    width: 100% !important;
-    height: auto !important;
+  .body {
+    .logo {
+      cursor: pointer;
+
+      h4 {
+        margin-bottom: 0;
+        padding-left: 10px;
+
+        mark {
+          color: orangered;
+          background-color: transparent;
+          padding: 0;
+        }
+      }
+    }
+
+    .text-body {
+      h1 {
+        font-weight: bolder;
+      }
+
+      span {
+        font-size: 1rem;
+      }
+
+      h1:nth-child(2) {
+        color: $green;
+      }
+    }
+
+    .login {
+      @include button-style();
+    }
+
+    .started {
+      @include button-style();
+      font-weight: bolder;
+    }
   }
 }

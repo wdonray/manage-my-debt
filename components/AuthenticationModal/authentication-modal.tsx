@@ -1,16 +1,16 @@
-import styles from './authentication-modal.module.scss';
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { SignIn, CreateAccount, ConfirmCode, ForgotPassword, ResetPassword } from './components';
-import { UserContext } from '@/util';
 import { IUser } from 'types/user';
+import { SignIn, CreateAccount, ConfirmCode, ForgotPassword, ResetPassword } from './components';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { UserContext } from '@/util';
+import styles from './authentication-modal.module.scss';
 
 enum AuthenticationState {
-  Loading,
-  SignIn,
-  CreateAccount,
   ConfirmCode,
+  CreateAccount,
   ForgotPassword,
+  Loading,
   ResetPassword,
+  SignIn,
 }
 
 export default function AuthenticationModal() {
@@ -54,34 +54,38 @@ export default function AuthenticationModal() {
     handleStateChange(AuthenticationState.SignIn);
   }, [handleIsUserConfirmed, handleStateChange]);
 
-  const handleSignInSuccess = useCallback((user: IUser) => {
-    if (!user) {
-      return;
-    }
+  const handleSignInSuccess = useCallback(
+    (user: IUser) => {
+      if (!user) {
+        return;
+      }
 
-    handleUser(user);
-    handleHideModal();
-  }, [handleHideModal, handleUser]);
+      handleUser(user);
+      handleHideModal();
+    },
+    [handleHideModal, handleUser]
+  );
 
   const authenticationComponent = useMemo(() => {
     if (isAuthenticationState(AuthenticationState.Loading)) {
       return (
         <div className='d-flex justify-content-center'>
-          <div className='spinner-border text-info m-5 p-3' role='status'>
+          <div
+            className='spinner-border text-info m-5 p-3'
+            role='status'
+          >
             <span className='visually-hidden'>Loading...</span>
           </div>
         </div>
       );
-    }
-    else if (isAuthenticationState(AuthenticationState.ConfirmCode)) {
+    } else if (isAuthenticationState(AuthenticationState.ConfirmCode)) {
       return (
         <ConfirmCode
           styles={styles}
           handleSignInSuccess={handleSignInSuccess}
         />
       );
-    }
-    else if (isAuthenticationState(AuthenticationState.SignIn)) {
+    } else if (isAuthenticationState(AuthenticationState.SignIn)) {
       return (
         <SignIn
           styles={styles}
@@ -90,8 +94,7 @@ export default function AuthenticationModal() {
           handleSignInSuccess={handleSignInSuccess}
         />
       );
-    }
-    else if (isAuthenticationState(AuthenticationState.ForgotPassword)) {
+    } else if (isAuthenticationState(AuthenticationState.ForgotPassword)) {
       return (
         <ForgotPassword
           styles={styles}
@@ -99,8 +102,7 @@ export default function AuthenticationModal() {
           handleResetPassword={() => handleStateChange(AuthenticationState.ResetPassword)}
         />
       );
-    }
-    else if (isAuthenticationState(AuthenticationState.ResetPassword)) {
+    } else if (isAuthenticationState(AuthenticationState.ResetPassword)) {
       return (
         <ResetPassword
           styles={styles}
@@ -133,19 +135,16 @@ export default function AuthenticationModal() {
       <div className='modal-dialog modal-dialog-centered'>
         <div className={`modal-content ${styles['modal-content-wrapper']}`}>
           <div className='modal-header border-0'>
-            <button
+            <i
               id='close-authentication-modal'
-              type='button'
-              className='btn-close'
               data-bs-dismiss='modal'
+              className={`bi bi-x ${styles.close}`}
               aria-label='Close'
-            />
+            ></i>
           </div>
-          <div className='modal-body'>
-            {authenticationComponent}
-          </div>
+          <div className='modal-body'>{authenticationComponent}</div>
         </div>
       </div>
-    </div >
+    </div>
   );
 }

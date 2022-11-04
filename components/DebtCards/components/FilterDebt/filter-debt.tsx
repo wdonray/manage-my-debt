@@ -1,36 +1,27 @@
 import { MouseEvent, ChangeEvent, useMemo } from 'react';
-import { upperFirst } from 'lodash';
-import { SortDebt, SortDirection, SearchType } from '../debt-cards';
+import { SortDebt, SortDirection, SearchType } from '../../debt-cards';
+import styles from './filter-debt.module.scss';
 
 interface FilterDebtProps {
-  searchByType: SearchType,
-  searchByValue: string,
-  currentSort: SortDebt,
-  currentDirection: SortDirection,
-  handleSearchType: (event: MouseEvent<HTMLButtonElement>) => void,
-  handleSearchValue: (event: ChangeEvent<HTMLInputElement>) => void,
-  handleSortSelect: (event: ChangeEvent<HTMLSelectElement>) => void,
-  handleSortDirection: (event: MouseEvent<HTMLButtonElement>) => void,
+  searchByType: SearchType;
+  searchByValue: string;
+  currentSort: SortDebt;
+  currentDirection: SortDirection;
+  handleSearchType: (event: MouseEvent<HTMLButtonElement>) => void;
+  handleSearchValue: (event: ChangeEvent<HTMLInputElement>) => void;
+  handleSortSelect: (event: ChangeEvent<HTMLSelectElement>) => void;
+  handleSortDirection: (event: MouseEvent<HTMLButtonElement>) => void;
 }
 
-export default function FilterDebt({
-  searchByType,
-  searchByValue,
-  currentSort,
-  currentDirection,
-  handleSearchType,
-  handleSearchValue,
-  handleSortSelect,
-  handleSortDirection,
-}: FilterDebtProps) {
+export default function FilterDebt({ searchByValue, currentSort, currentDirection, handleSearchType, handleSearchValue, handleSortSelect, handleSortDirection }: FilterDebtProps) {
   const sortDirectionIcon = useMemo(() => `bi bi-sort-numeric-${currentDirection === SortDirection.desc ? 'down' : 'up'}`, [currentDirection]);
 
   return (
-    <div>
-      <div className='d-flex justify-content-end mb-3'>
+    <div className={styles['filter-debt-container']}>
+      <div className='d-flex justify-content-end my-3'>
         <button
           type='button'
-          className='btn btn-light border btn-sm'
+          className='btn btn-sm'
           data-bs-toggle='collapse'
           data-bs-target='#filter-collapse'
         >
@@ -38,25 +29,16 @@ export default function FilterDebt({
         </button>
       </div>
       <div
-        className='collapse border rounded'
+        className={`collapse rounded ${styles.body}`}
         id='filter-collapse'
       >
         <div className='row p-3'>
           <div className='col-12 col-md-4'>
-            <label htmlFor='debt-search'>
-              Search By:
-            </label>
+            <label htmlFor='debt-search'>Search:</label>
             <div
               className='input-group'
               id='debt-search'
             >
-              <button
-                className='btn btn-outline-secondary dropdown-toggle'
-                type='button'
-                data-bs-toggle='dropdown'
-              >
-                {upperFirst(searchByType)}
-              </button>
               <ul className='dropdown-menu'>
                 <li>
                   <button
@@ -79,17 +61,15 @@ export default function FilterDebt({
               </ul>
               <input
                 type='text'
-                className='form-control'
+                className='form-control rounded-start'
                 onChange={handleSearchValue}
-                placeholder={'Type here to search...'}
+                placeholder={'Search for debt...'}
                 value={searchByValue}
               />
             </div>
           </div>
           <div className='col-9 col-md-3 mt-2 mt-md-0'>
-            <label htmlFor='sort-select'>
-              Sort By:
-            </label>
+            <label htmlFor='sort-select'>Sort By:</label>
             <select
               className='form-select'
               id='sort-select'
@@ -106,7 +86,7 @@ export default function FilterDebt({
             <button
               disabled={currentDirection === SortDirection.none}
               type='button'
-              className='btn btn-outline-secondary'
+              className={`btn btn-outline-secondary ${styles.sort}`}
               onClick={handleSortDirection}
             >
               <i className={sortDirectionIcon} />
@@ -114,6 +94,6 @@ export default function FilterDebt({
           </div>
         </div>
       </div>
-    </div >
+    </div>
   );
 }

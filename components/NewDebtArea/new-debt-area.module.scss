@@ -1,19 +1,102 @@
-#debt-btn {
-  position: fixed;
-  right: 30px;
-  bottom: 50px;
+$green: #41c39f;
+$dark-color: darken(#090e44, 2);
 
-  z-index: 999;
+@mixin font-style {
+  background-color: $dark-color;
+  border-color: $dark-color;
+  color: #bfd6ff;
+  font-weight: bolder;
+  margin: 10px;
+  margin-right: 0;
+}
 
-  background-color: orangered !important;
-
-  i {
-    font-size: xx-large;
-    color: white;
+@mixin placeholder {
+  &::-webkit-input-placeholder {
+    @content;
+  }
+  &:-moz-placeholder {
+    @content;
+  }
+  &::-moz-placeholder {
+    @content;
+  }
+  &:-ms-input-placeholder {
+    @content;
   }
 }
 
-.caption {
-  color: gray;
-  font-size: smaller;
+.debt-area-container {
+  margin-top: 40px;
+
+  border: $green 1px solid;
+  border-radius: 5px;
+
+  background-color: #00000028;
+
+  button[type='submit'] {
+    background-color: orangered;
+    border: transparent;
+    color: white;
+
+    &:hover {
+      background-color: lighten(orangered, 10%) !important;
+    }
+
+    &:disabled {
+      background-color: #7b7b7b28;
+      color: #666885;
+    }
+  }
+
+  .name-container {
+    background-color: $green;
+
+    .name-inner-content {
+      width: calc(100% - 250px);
+
+      @media (max-width: 576px) {
+        width: 100%;
+      }
+
+      @media (min-width: 992px) {
+        width: 35%;
+      }
+    }
+
+    input {
+      @include font-style();
+
+      &:focus {
+        box-shadow: none !important;
+      }
+
+      @include placeholder {
+        color: white;
+      }
+    }
+
+    span {
+      margin: 10px;
+      background-color: $dark-color;
+      color: white;
+      border-color: $dark-color;
+    }
+  }
+
+  .field-container {
+    input {
+      background-color: transparent;
+      color: #bfd6ff;
+    }
+
+    span {
+      background-color: transparent;
+      color: white;
+    }
+
+    .caption {
+      color: gray;
+      font-size: smaller;
+    }
+  }
 }

@@ -1,45 +1,87 @@
-.modal-body-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+$text-color: #bfd6ff;
+$green: #41c39f;
 
-  padding: 20px 35px;
-  
-  .image-container {
-    overflow: hidden;
+.modal-wrapper {
+  background: linear-gradient(lighten(#090e44, 5), darken(#090e44, 15));
+  color: $text-color !important;
 
-    img {
-      border-radius: 50%;
-      border: 4px solid orange !important;
+  a {
+    color: $green;
+  }
+
+  button {
+    color: $text-color;
+  }
+
+  .modal-content-wrapper {
+    background-color: darken(#090e44, 5);
+    border: 1px solid lighten(#090e44, 5);
+    border-radius: 1rem;
+
+    .close {
+      color: $text-color !important;
+      margin-left: auto;
+      font-size: 30px;
+      cursor: pointer;
     }
-  }
 
-  .image-container + div {
-    text-align: justify;
-  }
+    .modal-body-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
 
-  .socials {
-    width: 100%;
-    margin-top: 20px;
+      padding: 20px 35px;
 
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
+      .image-loading-wrapper {
+        position: relative;
 
-    a {
-      font-size: 35px;
-      color: orange;
+        .spinner {
+          z-index: 999;
+          position: absolute;
+          top: 40%;
+          left: 40%;
+          width: 3rem;
+          height: 3rem;
+        }
 
-      &:hover {
-        color: lighten(orange, 10%) !important;
+        .image-container {
+          overflow: hidden;
+
+          img {
+            border-radius: 50%;
+            border: 4px solid orange !important;
+          }
+        }
       }
-    }
 
-    hr {
-      border: 1px solid gray;
-      width: 25px;
-      border-radius: 30px;
+      .image-container + div {
+        text-align: justify;
+      }
+
+      .socials {
+        width: 100%;
+        margin-top: 20px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+
+        a {
+          font-size: 35px;
+          color: orange;
+
+          &:hover {
+            color: lighten(orange, 10%) !important;
+          }
+        }
+
+        hr {
+          border: 1px solid gray;
+          width: 25px;
+          border-radius: 30px;
+        }
+      }
     }
   }
 }

@@ -1,53 +1,51 @@
-import {
-  useCallback,
-  FormEvent,
-  ChangeEvent,
-  useState,
-} from 'react';
-import {
-  handleSignIn,
-  raiseError,
-} from '@/util';
+import { useCallback, FormEvent, ChangeEvent, useState } from 'react';
+import { handleSignIn, raiseError } from '@/util';
 import SocialSignIn from './social-sign-in';
 import { IUser } from 'types/user';
 
 interface AuthField {
-  email: string
-  password: string
+  email: string;
+  password: string;
 }
 
 interface SignInProps {
-  styles: { readonly [key: string]: string }
-  handleCreateAccount: () => void
-  handleForgotPassword: () => void
-  handleSignInSuccess: (user: IUser) => void
+  styles: { readonly [key: string]: string };
+  handleCreateAccount: () => void;
+  handleForgotPassword: () => void;
+  handleSignInSuccess: (user: IUser) => void;
 }
 
 export default function SignIn({ styles, handleCreateAccount, handleForgotPassword, handleSignInSuccess }: SignInProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [authFields, setAuthFields] = useState<AuthField>({ email: '', password: '' });
 
-  const handleSubmit = useCallback(async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setIsLoading(true);
-    const { email, password } = authFields;
+  const handleSubmit = useCallback(
+    async (event: FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      setIsLoading(true);
+      const { email, password } = authFields;
 
-    try {
-      const user = await handleSignIn(email, password);
+      try {
+        const user = await handleSignIn(email, password);
 
-      handleSignInSuccess(user);
-    } catch (err) {
-      raiseError(err);
-    }
+        handleSignInSuccess(user);
+      } catch (err) {
+        raiseError(err);
+      }
 
-    setIsLoading(false);
-  }, [authFields, handleSignInSuccess]);
+      setIsLoading(false);
+    },
+    [authFields, handleSignInSuccess]
+  );
 
-  const handleInput = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
+  const handleInput = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = event.target;
 
-    setAuthFields({ ...authFields, [name]: value });
-  }, [authFields]);
+      setAuthFields({ ...authFields, [name]: value });
+    },
+    [authFields]
+  );
 
   return (
     <div className={styles['sign-in-wrapper']}>
@@ -102,28 +100,31 @@ export default function SignIn({ styles, handleCreateAccount, handleForgotPasswo
             disabled={isLoading}
           >
             {isLoading ? (
-              <div className='spinner-border text-info' role='status'>
+              <div
+                className='spinner-border text-info'
+                role='status'
+              >
                 <span className='visually-hidden'>Loading...</span>
               </div>
-            ) : 'Log in'}
+            ) : (
+              'Log in'
+            )}
           </button>
         </div>
       </form>
-      {
-        !isLoading && (
-          <div>
-            <div className={styles['social-split-wrapper']}>
-              <hr />
-              <span>or continue with</span>
-              <hr />
-            </div>
-            <SocialSignIn
-              callback={handleSignInSuccess}
-              styles={styles}
-            />
+      {!isLoading && (
+        <div>
+          <div className={styles['social-split-wrapper']}>
+            <hr />
+            <span>or continue with</span>
+            <hr />
           </div>
-        )
-      }
-    </div >
+          <SocialSignIn
+            callback={handleSignInSuccess}
+            styles={styles}
+          />
+        </div>
+      )}
+    </div>
   );
 }

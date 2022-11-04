@@ -4,8 +4,8 @@ import { DebtContext, SearchEnum } from '@/util';
 import { UpdateDebtModal } from './components';
 import { DebtCard } from './components';
 import { orderBy } from 'lodash';
-import FilterDebt from './components/filter-debt';
-import EmptyList from './components/empty-list';
+import FilterDebt from './components/FilterDebt/filter-debt';
+import EmptyList from './components/EmptyList/empty-list';
 
 export enum SortDebt {
   none = 'none',
@@ -56,11 +56,14 @@ export default function DebtCards() {
     setCurrentSortDebt(SearchEnum(SortDebt, value) as SortDebt);
   }, []);
 
-  const handleSortDirection = useCallback((event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
+  const handleSortDirection = useCallback(
+    (event: MouseEvent<HTMLButtonElement>) => {
+      event.preventDefault();
 
-    setCurrentDirection(currentDirection === SortDirection.asc ? SortDirection.desc : SortDirection.asc);
-  }, [currentDirection]);
+      setCurrentDirection(currentDirection === SortDirection.asc ? SortDirection.desc : SortDirection.asc);
+    },
+    [currentDirection]
+  );
 
   const currentDebtList = useMemo(() => {
     setLoading(true);
@@ -82,7 +85,7 @@ export default function DebtCards() {
 
   const isListEmpty = useMemo(() => !currentDebtList || !currentDebtList.length, [currentDebtList]);
 
-  const direction = useMemo(() => currentDirection === SortDirection.asc ? 'ascending' : 'descending', [currentDirection]);
+  const direction = useMemo(() => (currentDirection === SortDirection.asc ? 'ascending' : 'descending'), [currentDirection]);
 
   useEffect(() => {
     if (currentSort != SortDebt.none && currentDirection == SortDirection.none) {
@@ -95,7 +98,10 @@ export default function DebtCards() {
   if (loading) {
     return (
       <div className='d-flex justify-content-center'>
-        <div className='spinner-border text-info m-5 p-3' role='status'>
+        <div
+          className='spinner-border text-info m-5 p-3'
+          role='status'
+        >
           <span className='visually-hidden'>Loading...</span>
         </div>
       </div>
@@ -106,44 +112,40 @@ export default function DebtCards() {
     <div>
       <UpdateDebtModal />
       <EmptyList isListEmpty={isListEmpty} />
-      {
-        !isListEmpty && (
-          <div>
-            {
-              currentSort != SortDebt.none && (
-                <div className='d-flex justify-content-end pt-3'>
-                  <span>
-                    Sorted by {direction} <strong>{currentSort}</strong>
-                  </span>
-                </div>
-              )
-            }
-            <FilterDebt
-              searchByType={searchByType}
-              searchByValue={searchByValue}
-              currentSort={currentSort}
-              currentDirection={currentDirection}
-              handleSearchType={handleSearchType}
-              handleSearchValue={handleSearchValue}
-              handleSortSelect={handleSortSelect}
-              handleSortDirection={handleSortDirection}
-            />
-            <div
-              id='debt-list'
-              className='row g-3 mb-4 pt-3'
-            >
-              {currentDebtList?.map((debt: IDebt) => (
-                <div
-                  className='col-12 col-md-6 col-lg-4 mr-0'
-                  key={debt.id}
-                >
-                  <DebtCard debt={debt} />
-                </div>
-              ))}
+      {!isListEmpty && (
+        <div>
+          {currentSort != SortDebt.none && (
+            <div className='d-flex justify-content-end pt-3'>
+              <span>
+                Sorted by {direction} <strong>{currentSort}</strong>
+              </span>
             </div>
+          )}
+          <FilterDebt
+            searchByType={searchByType}
+            searchByValue={searchByValue}
+            currentSort={currentSort}
+            currentDirection={currentDirection}
+            handleSearchType={handleSearchType}
+            handleSearchValue={handleSearchValue}
+            handleSortSelect={handleSortSelect}
+            handleSortDirection={handleSortDirection}
+          />
+          <div
+            id='debt-list'
+            className='row g-3 mb-4 pt-3'
+          >
+            {currentDebtList?.map((debt: IDebt) => (
+              <div
+                className='col-12 col-md-6 col-lg-4 mr-0'
+                key={debt.id}
+              >
+                <DebtCard debt={debt} />
+              </div>
+            ))}
           </div>
-        )
-      }
+        </div>
+      )}
     </div>
   );
 }
