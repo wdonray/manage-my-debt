@@ -65,10 +65,12 @@ export default function DebtCards() {
     [currentDirection]
   );
 
+  const rawDebtList = useMemo(() => (isUserAuthenticated ? debtList : localDebtList), [debtList, isUserAuthenticated, localDebtList]);
+
   const currentDebtList = useMemo(() => {
     setLoading(true);
 
-    let list = isUserAuthenticated ? debtList : localDebtList;
+    let list = rawDebtList;
 
     if (searchByValue != '') {
       list = list?.filter((item) => item[searchByType].toLocaleLowerCase().includes(searchByValue.toLocaleLowerCase()));
@@ -81,7 +83,7 @@ export default function DebtCards() {
     setLoading(false);
 
     return list;
-  }, [currentDirection, currentSort, debtList, isUserAuthenticated, localDebtList, searchByType, searchByValue]);
+  }, [currentDirection, currentSort, rawDebtList, searchByType, searchByValue]);
 
   const isListEmpty = useMemo(() => !currentDebtList || !currentDebtList.length, [currentDebtList]);
 
@@ -112,6 +114,18 @@ export default function DebtCards() {
     <div>
       <UpdateDebtModal />
       <EmptyList isListEmpty={isListEmpty} />
+      {rawDebtList && rawDebtList.length > 0 && (
+        <FilterDebt
+          searchByType={searchByType}
+          searchByValue={searchByValue}
+          currentSort={currentSort}
+          currentDirection={currentDirection}
+          handleSearchType={handleSearchType}
+          handleSearchValue={handleSearchValue}
+          handleSortSelect={handleSortSelect}
+          handleSortDirection={handleSortDirection}
+        />
+      )}
       {!isListEmpty && (
         <div>
           {currentSort != SortDebt.none && (
@@ -121,16 +135,7 @@ export default function DebtCards() {
               </span>
             </div>
           )}
-          <FilterDebt
-            searchByType={searchByType}
-            searchByValue={searchByValue}
-            currentSort={currentSort}
-            currentDirection={currentDirection}
-            handleSearchType={handleSearchType}
-            handleSearchValue={handleSearchValue}
-            handleSortSelect={handleSortSelect}
-            handleSortDirection={handleSortDirection}
-          />
+
           <div
             id='debt-list'
             className='row g-3 mb-4 pt-3'

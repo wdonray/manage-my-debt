@@ -1,0 +1,49 @@
+$text-color: #bfd6ff;
+$green: #41c39f;
+
+@mixin button-style {
+  background-color: orangered;
+  border-color: transparent;
+
+  color: white;
+
+  &:hover {
+    background-color: lighten(orangered, 10%) !important;
+    color: white !important;
+  }
+}
+
+.modal-wrapper {
+  background: linear-gradient(lighten(#090e44, 5), darken(#090e44, 15));
+  color: $text-color !important;
+
+  a {
+    color: $green;
+  }
+
+  button {
+    color: $text-color;
+  }
+
+  .modal-content-wrapper {
+    background-color: darken(#090e44, 5);
+    border: 1px solid lighten(#090e44, 5);
+    border-radius: 1rem;
+
+    .close {
+      color: $text-color !important;
+      margin-left: auto;
+      font-size: 30px;
+      cursor: pointer;
+    }
+
+    .modal-body-wrapper {
+    }
+
+    .modal-footer-wrapper {
+      button[type='submit'] {
+        @include button-style();
+      }
+    }
+  }
+}

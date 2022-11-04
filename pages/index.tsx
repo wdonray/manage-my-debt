@@ -7,6 +7,7 @@ import { ToastContainer } from 'react-toastify';
 import { useCallback, useEffect, useState } from 'react';
 import { DebtContext, DebtContextInterface, UpdateDebtValue, UserContext, UserContextInterface } from '@/util';
 import { IDebt, IUser } from '@/types';
+import Head from 'next/head';
 
 Amplify.configure(config);
 
@@ -120,6 +121,9 @@ const Home: NextPage = (props) => {
           />
           <View {...props}>
             <Layout>
+              <Head>
+                <title>Manage My Debt</title>
+              </Head>
               <main>
                 {loading ? (
                   <div className='d-flex justify-content-center align-items-center loading-container'>

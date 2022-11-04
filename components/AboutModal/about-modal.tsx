@@ -35,7 +35,7 @@ export default function AboutModal() {
         <div className={`modal-content ${styles['modal-content-wrapper']}`}>
           <div className='modal-header border-0'>
             <i
-              id='close-authentication-modal'
+              id='close-about-modal'
               data-bs-dismiss='modal'
               className={`bi bi-x ${styles.close}`}
               aria-label='Close'
