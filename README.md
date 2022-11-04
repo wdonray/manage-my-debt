@@ -1,34 +1,69 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+# Manage My Debt
 
-First, run the development server:
+Hey there, my name is Donray. I created this site out of a recent obsession I had, personal finance! I grew up not knowing anything about personal finance and after some research and courses I grew much better at it over time and found it really enjoyable and freeing. This site will slowly expand and grow as time comes, so far it just utilizes the debt avalanche method. I hope it helps anyone out there as much as it helped me. Have a wonderful day!
 
-```bash
-npm run dev
-# or
-yarn dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠 Tools Used
+**Front-end**: Next.js, React, Eslint, Sass, Typescript, Lodash, and Bootstrap.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+**Back-end (AWS)**: Amplify, DynamoDB, IAM, Cognito, Route 53, AppSync(GraphQL)
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## Demo
+Check it out and send any feedback or issues!
 
-## Learn More
+https://www.manage-my-debt.com
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## FAQ
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+#### - Question 1
 
-## Deploy on Vercel
+#### Why should I use this site?
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+This site may not be for everyone, maybe you already have a pretty good handle of your debt. Maybe you prefer to pay someone to manage it for you. Maybe you don't like the author :disappointed: ... Some of these are valid points but when trying to take back control of your life the first step may be difficult, the avalanche method helped me and I hope it can help you.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+#### - Question 2
+
+#### What is the avalanche method?
+
+"A debt avalanche is a type of accelerated debt repayment plan. Essentially, a debtor allocates enough money to make the minimum payment on each source of debt, then devotes any remaining repayment funds to the debt with the highest interest rate. Using the debt avalanche approach, once the debt with the highest interest rate is entirely paid off, then the extra repayment funds go toward the next-highest interest-bearing loan. This system continues until all the debts are paid off." 
+
+
+#### - Question 3
+
+#### Why should I pay off highest interest first?
+
+"The advantage of the debt avalanche method of debt repayment is that it minimizes the amount of interest you pay while working toward your debt-free goal, as long as you stick to the plan. It also lessens the amount of time it takes to get out of debt—assuming consistent payments—because less interest accumulates."
+
+"Interest adds to these debts because lenders use compound interest rates. The rate at which compound interest accrues depends on the frequency of compounding such that the higher the number of compounding periods, the greater the compound interest. Most credit card balances will compound interest on a daily basis, but there are loans where the interest can compound monthly, semi-annually, or annually."
+
+#### - Question 4
+
+#### Where did you learn from?
+
+Many places, the internet is large and information is free. I will list a few resources below that helped me get started. 
+
+- [Investopedia: Personal Finance](https://www.investopedia.com/terms/p/personalfinance.asp)
+- [Udemy: Personal Finance 101: Everything You Need to Know](https://www.udemy.com/share/101xUo3@erkwUhDpuF7VgYpx4c3H760ag_Xjz9amS6T-g2NpY3QQie43HPs8BFyG4D8moA8WNg==/)
+- [Khan Acadamey: Personal finance](https://www.khanacademy.org/college-careers-more/personal-finance)
+- [The Simple Path to Wealth](https://www.audible.com/pd/The-Simple-Path-to-Wealth-Audiobook/B071P3SQ2Z?action_code=ASSGB149080119000H&share_location=pdp&shareTest=TestShare)
+- [A Beginner's Guide to the Stock Market: Everything You Need to Start Making Money Today](https://www.audible.com/pd/A-Beginners-Guide-to-the-Stock-Market-Everything-You-Need-to-Start-Making-Money-Today-Audiobook/B07V593WG4?action_code=ASSGB149080119000H&share_location=pdp&shareTest=TestShare)
+
+
+
+## Acknowledgements
+
+ - [Chaley: Designer / Tester](https://github.com/chayboats)
+ - [Devin: Occasional Tester](https://github.com/devinbroussard)
+
+## Feedback
+
+If you have any feedback, please reach out to us at donrayxwilliams@gmail.com
+
+
+## Authors
+
+- [@wdonray](https://www.github.com/wdonray)
+
