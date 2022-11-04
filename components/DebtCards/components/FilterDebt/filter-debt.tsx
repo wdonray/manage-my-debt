@@ -1,5 +1,6 @@
-import { MouseEvent, ChangeEvent, useMemo } from 'react';
-import { SortDebt, SortDirection, SearchType } from '../../debt-cards';
+import { ChangeEvent, MouseEvent, useMemo } from 'react';
+import { SearchType, SortDebt, SortDirection } from '../../debt-cards';
+
 import styles from './filter-debt.module.scss';
 
 interface FilterDebtProps {
@@ -14,7 +15,9 @@ interface FilterDebtProps {
 }
 
 export default function FilterDebt({ searchByValue, currentSort, currentDirection, handleSearchType, handleSearchValue, handleSortSelect, handleSortDirection }: FilterDebtProps) {
-  const sortDirectionIcon = useMemo(() => `bi bi-sort-numeric-${currentDirection === SortDirection.desc ? 'down' : 'up'}`, [currentDirection]);
+  const sortDirectionIcon = useMemo(() => {
+    return `bi bi-sort-numeric-${currentDirection === SortDirection.desc ? 'down' : 'up'}`;
+  }, [currentDirection]);
 
   return (
     <div className={styles['filter-debt-container']}>

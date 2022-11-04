@@ -1,6 +1,7 @@
-import { ChangeEvent, FormEvent, useCallback, useContext, useMemo, useState, useEffect } from 'react';
-import { DebtContext, createDebt, raiseError, InputValidation, FormatFields } from '@/util';
+import { ChangeEvent, FormEvent, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { DebtContext, FormatFields, InputValidation, createDebt, raiseError } from '@/util';
 import { find, some, uniqueId } from 'lodash';
+
 import styles from './new-debt-area.module.scss';
 
 const initialState = {
@@ -18,19 +19,22 @@ export default function NewDebtArea() {
   const [isLoading, setIsLoading] = useState(false);
   const [cardFields, setCreateDebtFields] = useState(initialState);
 
-  const currentDebtList = useMemo(() => (isUserAuthenticated ? debtList : localDebtList), [localDebtList, debtList, isUserAuthenticated]);
-  const debtExist = useMemo(() => find(currentDebtList, { name: cardFields.name, type: cardFields.type }), [currentDebtList, cardFields.name, cardFields.type]);
+  const currentDebtList = useMemo(() => {
+    return isUserAuthenticated ? debtList : localDebtList;
+  }, [localDebtList, debtList, isUserAuthenticated]);
+  const debtExist = useMemo(() => {
+    return find(currentDebtList, { name: cardFields.name, type: cardFields.type });
+  }, [currentDebtList, cardFields.name, cardFields.type]);
 
-  const validation = useMemo(
-    () => ({
+  const validation = useMemo(() => {
+    return {
       debtExist: { valid: !debtExist, message: 'Duplicate debt found!' },
       blankName: { valid: cardFields.name.trim() !== '' },
       balance: InputValidation(cardFields.balance, 'balance'),
       apr: InputValidation(cardFields.apr, 'apr'),
       payment: InputValidation(cardFields.payment, 'payment', cardFields.balance),
-    }),
-    [cardFields, debtExist]
-  );
+    };
+  }, [cardFields, debtExist]);
 
   const handleInput = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
@@ -45,7 +49,9 @@ export default function NewDebtArea() {
     [cardFields]
   );
 
-  const handleScrollToDebt = useCallback(() => document.getElementById('debt-list')?.lastElementChild?.scrollIntoView({ behavior: 'smooth', block: 'center' }), []);
+  const handleScrollToDebt = useCallback(() => {
+    return document.getElementById('debt-list')?.lastElementChild?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, []);
 
   const handleFieldBlur = useCallback(() => {
     const formattedFields = FormatFields({ balance: cardFields.balance, apr: cardFields.apr, payment: cardFields.payment }, 'string');
@@ -73,7 +79,9 @@ export default function NewDebtArea() {
       } finally {
         setCreateDebtFields({ ...cardFields, name: '', type: '' });
         setIsLoading(false);
-        setTimeout(() => handleScrollToDebt(), 100);
+        setTimeout(() => {
+          return handleScrollToDebt();
+        }, 100);
       }
     },
     [cardFields, handleDebtList, handleScrollToDebt, userId]
@@ -89,7 +97,9 @@ export default function NewDebtArea() {
       setCreateDebtFields({ ...cardFields, name: '', type: '' });
       setIsLoading(false);
 
-      setTimeout(() => handleScrollToDebt(), 100);
+      setTimeout(() => {
+        return handleScrollToDebt();
+      }, 100);
     },
     [cardFields, handleAddLocalDebt, handleScrollToDebt]
   );

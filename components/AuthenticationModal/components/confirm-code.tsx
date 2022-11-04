@@ -1,10 +1,12 @@
-import { useState, useCallback, MouseEvent, useEffect, useMemo } from 'react';
-import VerificationInput from 'react-verification-input';
-import { handleSendSignUpCode, handleConfirmCode, raiseError, handleSignIn } from '@/util';
+import { MouseEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import { handleConfirmCode, handleSendSignUpCode, handleSignIn, raiseError } from '@/util';
+
 import { IUser } from '@/types';
+import VerificationInput from 'react-verification-input';
+
 interface ConfirmCodeProps {
-  styles: { readonly [key: string]: string }
-  handleSignInSuccess: (user: IUser) => void
+  styles: { readonly [key: string]: string };
+  handleSignInSuccess: (user: IUser) => void;
 }
 
 export default function ConfirmCode({ styles, handleSignInSuccess }: ConfirmCodeProps) {
@@ -23,51 +25,62 @@ export default function ConfirmCode({ styles, handleSignInSuccess }: ConfirmCode
     return JSON.parse(storedUser);
   }, []);
 
-  const handleSendCodeClick = useCallback((event: MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault();
-    setCodeSent(true);
-    handleSendSignUpCode(user?.email);
-  }, [user]);
+  const handleSendCodeClick = useCallback(
+    (event: MouseEvent<HTMLAnchorElement>) => {
+      event.preventDefault();
+      setCodeSent(true);
+      handleSendSignUpCode(user?.email);
+    },
+    [user]
+  );
 
-  const startTimer = useCallback(() => setInterval(() => {
-    setCounter(counter - 1);
+  const startTimer = useCallback(() => {
+    return setInterval(() => {
+      setCounter(counter - 1);
 
-    if (counter === 1) {
-      setCounter(30);
-      setCodeSent(false);
-    }
-  }, 1000), [counter]);
+      if (counter === 1) {
+        setCounter(30);
+        setCodeSent(false);
+      }
+    }, 1000);
+  }, [counter]);
 
-  const handleCodeCheck = useCallback(async (code: string) => {
-    if (isLoading) {
-      return;
-    }
+  const handleCodeCheck = useCallback(
+    async (code: string) => {
+      if (isLoading) {
+        return;
+      }
 
-    setIsLoading(true);
+      setIsLoading(true);
 
-    try {
-      await handleConfirmCode(user?.email, code);
-      const userSignIn = await handleSignIn(user?.email, user?.password);
+      try {
+        await handleConfirmCode(user?.email, code);
+        const userSignIn = await handleSignIn(user?.email, user?.password);
 
-      handleSignInSuccess(userSignIn);
+        handleSignInSuccess(userSignIn);
 
-      localStorage.removeItem('user');
-    } catch (err) {
-      raiseError(err);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [isLoading, user?.email, user?.password, handleSignInSuccess]);
+        localStorage.removeItem('user');
+      } catch (err) {
+        raiseError(err);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [isLoading, user?.email, user?.password, handleSignInSuccess]
+  );
 
-  const handleVerificationInput = useCallback(async (value: string) => {
-    setCode(value);
+  const handleVerificationInput = useCallback(
+    async (value: string) => {
+      setCode(value);
 
-    if (value.length !== 6) {
-      return;
-    }
+      if (value.length !== 6) {
+        return;
+      }
 
-    await handleCodeCheck(value);
-  }, [handleCodeCheck]);
+      await handleCodeCheck(value);
+    },
+    [handleCodeCheck]
+  );
 
   useEffect(() => {
     let timer: NodeJS.Timer;
@@ -76,13 +89,18 @@ export default function ConfirmCode({ styles, handleSignInSuccess }: ConfirmCode
       timer = startTimer();
     }
 
-    return () => clearInterval(timer);
+    return () => {
+      return clearInterval(timer);
+    };
   }, [codeSent, isLoading, startTimer]);
 
   if (isLoading) {
     return (
       <div className='d-flex py-4'>
-        <div className='spinner-border text-info mx-auto' role='status'>
+        <div
+          className='spinner-border text-info mx-auto'
+          role='status'
+        >
           <span className='visually-hidden'>Loading...</span>
         </div>
       </div>
@@ -92,31 +110,28 @@ export default function ConfirmCode({ styles, handleSignInSuccess }: ConfirmCode
   return (
     <div className={styles['confirm-code-wrapper']}>
       <h1>Enter Code</h1>
-      <p className={styles['sub-header']}>
-        Please enter the code sent to your email
-      </p>
+      <p className={styles['sub-header']}>Please enter the code sent to your email</p>
       <VerificationInput
         value={code}
         onChange={handleVerificationInput}
       />
-      {
-        !codeSent ? (
-          <a
-            className='mt-3'
-            href='#'
-            onClick={handleSendCodeClick}
-          >
-            send code
-          </a>) : (
-          <span className='mt-3'>
-            {counter}
-          </span>
-        )
-      }
+      {!codeSent ? (
+        <a
+          className='mt-3'
+          href='#'
+          onClick={handleSendCodeClick}
+        >
+          send code
+        </a>
+      ) : (
+        <span className='mt-3'>{counter}</span>
+      )}
       <button
         className='btn btn-primary mt-2'
         disabled={code.trim() === '' || code.length != 6}
-        onClick={() => handleCodeCheck(code)}
+        onClick={() => {
+          return handleCodeCheck(code);
+        }}
       >
         Submit Code
       </button>

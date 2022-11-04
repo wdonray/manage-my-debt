@@ -1,7 +1,8 @@
-import { useCallback, FormEvent, ChangeEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useCallback, useState } from 'react';
 import { handleSignIn, raiseError } from '@/util';
-import SocialSignIn from './social-sign-in';
+
 import { IUser } from 'types/user';
+import SocialSignIn from './social-sign-in';
 
 interface AuthField {
   email: string;

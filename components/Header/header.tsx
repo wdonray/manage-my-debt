@@ -1,8 +1,9 @@
-import { AuthenticationModal, AboutModal } from '@/components';
-import { HeaderContent } from './components';
-import { Hub, Auth } from 'aws-amplify';
+import { AboutModal, AuthenticationModal } from '@/components';
+import { Auth, Hub } from 'aws-amplify';
+import { SIZE, UserContext, fetchDBUser, useBreakPoint } from '@/util';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { UserContext, fetchDBUser, useBreakPoint, SIZE } from '@/util';
+
+import { HeaderContent } from './components';
 import Image from 'next/image';
 import styles from './header.module.scss';
 
@@ -14,7 +15,9 @@ export default function Header() {
 
   const [authenticated, setAuthenticated] = useState(false);
 
-  const handleAuthenticated = useCallback((value: boolean) => setAuthenticated(value), []);
+  const handleAuthenticated = useCallback((value: boolean) => {
+    return setAuthenticated(value);
+  }, []);
 
   const imageSize = useMemo(() => {
     const defaultSizes = { width: '30', height: '30' };
@@ -29,7 +32,9 @@ export default function Header() {
 
     return defaultSizes;
   }, [breakPoint]);
-  const startedClass = useMemo(() => `btn rounded-sm py-1 px-2 ${styles.started}`, []);
+  const startedClass = useMemo(() => {
+    return `btn rounded-sm py-1 px-2 ${styles.started}`;
+  }, []);
 
   useEffect(() => {
     const authCheck = async () => {
@@ -49,12 +54,16 @@ export default function Header() {
   }, [handleUser]);
 
   useEffect(() => {
+    // eslint-disable-next-line require-await
     const authCheck = Hub.listen('auth', async ({ payload: { event } }) => {
       switch (event) {
         case 'signIn': {
           setAuthenticated(true);
           break;
         }
+
+        default:
+          break;
       }
     });
 

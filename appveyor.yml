@@ -1,0 +1,22 @@
+# Continuous Integration
+# Test against this version of Node.js
+environment: 
+  matrix:
+    # node.js
+    - nodejs_version: "14"
+  
+# Install scripts. (runs after repo cloning)
+install:
+  # Get the latest stable version of Node.js or io.js
+  - ps: Install-Product node $env:nodejs_version
+  # Install Modules
+  - npm install
+
+# Post-install test scripts
+test_script:
+  # Debugging
+  - node --version
+  - npm --version
+  
+# Do not build
+build: false

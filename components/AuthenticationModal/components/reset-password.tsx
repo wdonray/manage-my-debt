@@ -1,28 +1,18 @@
-import {
-  useCallback,
-  FormEvent,
-  ChangeEvent,
-  useState,
-  useContext,
-  useMemo,
-} from 'react';
-import {
-  handleForgotPasswordSubmit,
-  raiseError,
-  UserContext,
-} from '@/util';
+import { ChangeEvent, FormEvent, useCallback, useContext, useMemo, useState } from 'react';
+import { UserContext, handleForgotPasswordSubmit, raiseError } from '@/util';
+
 import { isEmpty } from 'lodash';
 
 interface AuthField {
-  code: string
-  password: string
-  confirmPassword: string
+  code: string;
+  password: string;
+  confirmPassword: string;
 }
 
 interface ResetPasswordProps {
-  styles: { readonly [key: string]: string }
-  handleBackToSignIn: () => void
-  handleBackToForgotPassword: () => void
+  styles: { readonly [key: string]: string };
+  handleBackToSignIn: () => void;
+  handleBackToForgotPassword: () => void;
 }
 
 export default function ForgotPassword({ styles, handleBackToSignIn, handleBackToForgotPassword }: ResetPasswordProps) {
@@ -31,7 +21,9 @@ export default function ForgotPassword({ styles, handleBackToSignIn, handleBackT
   const [authFields, setAuthFields] = useState<AuthField>({ code: '', password: '', confirmPassword: '' });
   const { forgotPasswordEmail } = useContext(UserContext);
 
-  const passwordClassNames = useMemo(() => `form-control ${!isEmpty(errorMessage) && 'border-danger'}`, [errorMessage]);
+  const passwordClassNames = useMemo(() => {
+    return `form-control ${!isEmpty(errorMessage) && 'border-danger'}`;
+  }, [errorMessage]);
 
   const handleValidation = useCallback(() => {
     if (authFields.password === authFields.confirmPassword) {
@@ -43,33 +35,39 @@ export default function ForgotPassword({ styles, handleBackToSignIn, handleBackT
     return false;
   }, [authFields]);
 
-  const handleSubmit = useCallback(async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleSubmit = useCallback(
+    async (event: FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
 
-    if (!forgotPasswordEmail || !handleValidation()) {
-      return;
-    }
+      if (!forgotPasswordEmail || !handleValidation()) {
+        return;
+      }
 
-    const { code, confirmPassword } = authFields;
+      const { code, confirmPassword } = authFields;
 
-    setIsLoading(true);
+      setIsLoading(true);
 
-    try {
-      await handleForgotPasswordSubmit(forgotPasswordEmail, code, confirmPassword);
-      handleBackToSignIn();
-    } catch (err) {
-      raiseError(err);
-    }
+      try {
+        await handleForgotPasswordSubmit(forgotPasswordEmail, code, confirmPassword);
+        handleBackToSignIn();
+      } catch (err) {
+        raiseError(err);
+      }
 
-    setIsLoading(false);
-  }, [authFields, forgotPasswordEmail, handleBackToSignIn, handleValidation]);
+      setIsLoading(false);
+    },
+    [authFields, forgotPasswordEmail, handleBackToSignIn, handleValidation]
+  );
 
-  const handleInput = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
+  const handleInput = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = event.target;
 
-    setErrorMessage('');
-    setAuthFields({ ...authFields, [name]: value });
-  }, [authFields]);
+      setErrorMessage('');
+      setAuthFields({ ...authFields, [name]: value });
+    },
+    [authFields]
+  );
 
   return (
     <div className={styles['sign-in-wrapper']}>
@@ -119,10 +117,15 @@ export default function ForgotPassword({ styles, handleBackToSignIn, handleBackT
             disabled={isLoading}
           >
             {isLoading ? (
-              <div className='spinner-border text-info' role='status'>
+              <div
+                className='spinner-border text-info'
+                role='status'
+              >
                 <span className='visually-hidden'>Loading...</span>
               </div>
-            ) : 'Reset Password'}
+            ) : (
+              'Reset Password'
+            )}
           </button>
         </div>
       </form>
@@ -134,6 +137,6 @@ export default function ForgotPassword({ styles, handleBackToSignIn, handleBackT
           Back
         </a>
       </p>
-    </div >
+    </div>
   );
 }

@@ -1,8 +1,9 @@
-import { isEqual, some } from 'lodash';
 import { ChangeEvent, FocusEvent, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { updateDebt, raiseError, deleteDebt, DebtContext, UpdateDebtValue, InputValidation, FormatFields } from '@/util';
-import styles from './debt-card.module.scss';
+import { DebtContext, FormatFields, InputValidation, UpdateDebtValue, deleteDebt, raiseError, updateDebt } from '@/util';
+import { isEqual, some } from 'lodash';
+
 import { IDebt } from '@/types';
+import styles from './debt-card.module.scss';
 
 interface DebtCardProps {
   debt: IDebt;
@@ -14,15 +15,14 @@ export default function DebtCard({ debt }: DebtCardProps) {
   const [cardFields, setCardFields] = useState({ balance: debt.balance, apr: debt.apr, payment: debt.payment });
   const [isLoading, setIsLoading] = useState(false);
 
-  const validation = useMemo(
-    () => ({
+  const validation = useMemo(() => {
+    return {
       fieldsUpdated: { valid: !isEqual(cardFields, { balance: debt.balance, apr: debt.apr, payment: debt.payment }) },
       balance: InputValidation(cardFields.balance, 'balance'),
       apr: InputValidation(cardFields.apr, 'apr'),
       payment: InputValidation(cardFields.payment, 'payment', cardFields.balance),
-    }),
-    [cardFields, debt]
-  );
+    };
+  }, [cardFields, debt]);
 
   const handleInput = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
@@ -107,7 +107,9 @@ export default function DebtCard({ debt }: DebtCardProps) {
   }, [debt.id, handleDeleteLocalDebt]);
 
   useEffect(() => {
-    window.onbeforeunload = () => selectedDebt != null;
+    window.onbeforeunload = () => {
+      return selectedDebt != null;
+    };
   }, [selectedDebt]);
 
   useEffect(() => {
@@ -149,7 +151,9 @@ export default function DebtCard({ debt }: DebtCardProps) {
           <ul
             className='dropdown-menu'
             aria-labelledby='debt-card-dropdown-menu'
-            onFocus={() => handleSelectedDebt(debt)}
+            onFocus={() => {
+              return handleSelectedDebt(debt);
+            }}
           >
             <li>
               <button
@@ -157,7 +161,9 @@ export default function DebtCard({ debt }: DebtCardProps) {
                 className='dropdown-item'
                 data-bs-toggle='modal'
                 data-bs-target='#update-debt-modal'
-                onClick={() => handleValueToUpdate(UpdateDebtValue.name)}
+                onClick={() => {
+                  return handleValueToUpdate(UpdateDebtValue.name);
+                }}
               >
                 <i className='bi bi-pencil-square'></i> Rename
               </button>
@@ -189,7 +195,9 @@ export default function DebtCard({ debt }: DebtCardProps) {
             required
             value={isNaN(cardFields.balance) ? '' : cardFields.balance}
             onChange={handleInput}
-            onClick={() => handleSelectedDebt(debt)}
+            onClick={() => {
+              return handleSelectedDebt(debt);
+            }}
           />
           <div className='invalid-feedback'>{validation.balance.message}</div>
         </div>
@@ -206,7 +214,9 @@ export default function DebtCard({ debt }: DebtCardProps) {
             required
             value={isNaN(cardFields.apr) ? '' : cardFields.apr}
             onChange={handleInput}
-            onClick={() => handleSelectedDebt(debt)}
+            onClick={() => {
+              return handleSelectedDebt(debt);
+            }}
           />
           <span className='input-group-text rounded-end'>%</span>
           <div className='invalid-feedback'>{InputValidation(cardFields.apr, 'apr').message}</div>
@@ -224,7 +234,9 @@ export default function DebtCard({ debt }: DebtCardProps) {
             required
             value={isNaN(cardFields.payment) ? '' : cardFields.payment}
             onChange={handleInput}
-            onClick={() => handleSelectedDebt(debt)}
+            onClick={() => {
+              return handleSelectedDebt(debt);
+            }}
           />
           <div className='invalid-feedback'>{validation.payment.message}</div>
         </div>

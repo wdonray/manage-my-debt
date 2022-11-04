@@ -1,6 +1,7 @@
-import { useContext, useState, useMemo, useCallback, ChangeEvent, useEffect } from 'react';
-import { DebtContext, ConvertToCurrency, InputValidation, FormatFields } from '@/util';
-import { orderBy, ceil } from 'lodash';
+import { ChangeEvent, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { ConvertToCurrency, DebtContext, FormatFields, InputValidation } from '@/util';
+import { ceil, orderBy } from 'lodash';
+
 import styles from './calculation-area.module.scss';
 
 export default function CalculationArea() {
@@ -16,15 +17,23 @@ export default function CalculationArea() {
     setPaymentInput(parseFloat(value));
   }, []);
 
-  const validation = useMemo(() => ({ payment: InputValidation(paymentInput) }), [paymentInput]);
+  const validation = useMemo(() => {
+    return { payment: InputValidation(paymentInput) };
+  }, [paymentInput]);
 
-  const currentDebtList = useMemo(() => (isUserAuthenticated ? debtList : localDebtList), [localDebtList, debtList, isUserAuthenticated]);
+  const currentDebtList = useMemo(() => {
+    return isUserAuthenticated ? debtList : localDebtList;
+  }, [localDebtList, debtList, isUserAuthenticated]);
 
   const fieldValueSum = useCallback(
     (field: string) => {
-      const list = currentDebtList?.map((item) => FormatFields({ value: item[field] }, 'number').value);
+      const list = currentDebtList?.map((item) => {
+        return FormatFields({ value: item[field] }, 'number').value;
+      });
 
-      const reduced = list?.reduce((partialSum, a) => partialSum + a, 0);
+      const reduced = list?.reduce((partialSum, a) => {
+        return partialSum + a;
+      }, 0);
 
       return {
         value: reduced,
@@ -85,7 +94,9 @@ export default function CalculationArea() {
   return (
     <form
       className='mb-4 px-2 row'
-      onSubmit={(e) => e.preventDefault()}
+      onSubmit={(e) => {
+        return e.preventDefault();
+      }}
     >
       <div className={`col-12 col-md-10 col-xl-6 rounded pb-2 px-0 mt-2 mx-auto shadow ${styles['calculation-area-container']}`}>
         <div className={` p-2 d-flex justify-content-center align-items-center ${styles.header}`}>

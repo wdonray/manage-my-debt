@@ -1,19 +1,15 @@
-import { useEffect } from 'react';
 import styles from './google-adsense-container.module.scss';
+import { useEffect } from 'react';
 
 interface GoogleAdsenseContainerInterface {
-  slot: string
-  adFormat?: string
-  fullWidthResponsive?: string
+  slot: string;
+  adFormat?: string;
+  fullWidthResponsive?: string;
 }
 
 // TODO: Use this!
 
-export function GoogleAdsenseContainer({
-  slot,
-  adFormat = 'auto',
-  fullWidthResponsive = 'true',
-}: GoogleAdsenseContainerInterface) {
+export function GoogleAdsenseContainer({ slot, adFormat = 'auto', fullWidthResponsive = 'true' }: GoogleAdsenseContainerInterface) {
   useEffect(() => {
     (window.adsbygoogle = window.adsbygoogle || []).push({});
   }, []);

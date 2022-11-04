@@ -1,5 +1,6 @@
 import { ChangeEvent, FormEvent, useCallback, useContext, useMemo, useState } from 'react';
-import { DebtContext, raiseError, updateDebt, UpdateDebtValue } from '@/util';
+import { DebtContext, UpdateDebtValue, raiseError, updateDebt } from '@/util';
+
 import { find } from 'lodash';
 import styles from './update-debt.module.scss';
 
@@ -18,20 +19,27 @@ export default function UpdateDebtModal() {
   const [value, setValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const title = useMemo(() => Titles[valueToUpdate], [valueToUpdate]);
-  const submitButton = useMemo(() => SubmitButton[valueToUpdate], [valueToUpdate]);
-  const currentDebtList = useMemo(() => (isUserAuthenticated ? debtList : localDebtList), [localDebtList, debtList, isUserAuthenticated]);
-  const debtExist = useMemo(
-    () =>
-      find(currentDebtList, (debt) => {
-        if (valueToUpdate === UpdateDebtValue.name) {
-          return debt.name === value && debt.type === selectedDebt?.type;
-        }
+  const title = useMemo(() => {
+    return Titles[valueToUpdate];
+  }, [valueToUpdate]);
 
-        return debt.type != '' && debt.name === selectedDebt?.name && debt.type === value;
-      }),
-    [currentDebtList, value, valueToUpdate, selectedDebt]
-  );
+  const submitButton = useMemo(() => {
+    return SubmitButton[valueToUpdate];
+  }, [valueToUpdate]);
+
+  const currentDebtList = useMemo(() => {
+    return isUserAuthenticated ? debtList : localDebtList;
+  }, [localDebtList, debtList, isUserAuthenticated]);
+
+  const debtExist = useMemo(() => {
+    return find(currentDebtList, (debt) => {
+      if (valueToUpdate === UpdateDebtValue.name) {
+        return debt.name === value && debt.type === selectedDebt?.type;
+      }
+
+      return debt.type != '' && debt.name === selectedDebt?.name && debt.type === value;
+    });
+  }, [currentDebtList, value, valueToUpdate, selectedDebt]);
 
   const handleHideModal = useCallback(() => {
     const closeButton = document.getElementById('update-debt-close-modal');
