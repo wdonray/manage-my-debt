@@ -4,6 +4,19 @@
             "Type": "String",
             "Default": "NONE"
         },
+        "AppSyncApiName": {
+            "Type": "String",
+            "Default": "AppSyncSimpleTransform"
+        },
+        "authRoleName": {
+            "Type": "String"
+        },
+        "unauthRoleName": {
+            "Type": "String"
+        },
+        "AuthCognitoUserPoolId": {
+            "Type": "String"
+        },
         "DynamoDBModelTableReadIOPS": {
             "Type": "Number",
             "Default": 5,
@@ -41,19 +54,6 @@
             ],
             "Description": "Enable server side encryption powered by KMS."
         },
-        "AuthCognitoUserPoolId": {
-            "Type": "String"
-        },
-        "AppSyncApiName": {
-            "Type": "String",
-            "Default": "AppSyncSimpleTransform"
-        },
-        "authRoleName": {
-            "Type": "String"
-        },
-        "unauthRoleName": {
-            "Type": "String"
-        },
         "S3DeploymentBucket": {
             "Type": "String",
             "Description": "An S3 Bucket name where assets are deployed"
@@ -67,6 +67,14 @@
         "GraphQLAPI": {
             "Type": "AWS::AppSync::GraphQLApi",
             "Properties": {
+                "AdditionalAuthenticationProviders": [
+                    {
+                        "AuthenticationType": "API_KEY"
+                    },
+                    {
+                        "AuthenticationType": "AWS_IAM"
+                    }
+                ],
                 "AuthenticationType": "AMAZON_COGNITO_USER_POOLS",
                 "Name": {
                     "Fn::Join": [
@@ -82,14 +90,6 @@
                         ]
                     ]
                 },
-                "AdditionalAuthenticationProviders": [
-                    {
-                        "AuthenticationType": "API_KEY"
-                    },
-                    {
-                        "AuthenticationType": "AWS_IAM"
-                    }
-                ],
                 "UserPoolConfig": {
                     "AwsRegion": {
                         "Ref": "AWS::Region"
@@ -138,7 +138,7 @@
                     ]
                 },
                 "Description": "debt repayment db",
-                "Expires": 1690493786
+                "Expires": 1775261530
             }
         },
         "GraphQLAPINONEDS95A13CF0": {
@@ -150,24 +150,14 @@
                         "ApiId"
                     ]
                 },
+                "Description": "None Data Source for Pipeline functions",
                 "Name": "NONE_DS",
-                "Type": "NONE",
-                "Description": "None Data Source for Pipeline functions"
+                "Type": "NONE"
             }
         },
         "DataStore": {
             "Type": "AWS::DynamoDB::Table",
             "Properties": {
-                "KeySchema": [
-                    {
-                        "AttributeName": "ds_pk",
-                        "KeyType": "HASH"
-                    },
-                    {
-                        "AttributeName": "ds_sk",
-                        "KeyType": "RANGE"
-                    }
-                ],
                 "AttributeDefinitions": [
                     {
                         "AttributeName": "ds_pk",
@@ -179,6 +169,16 @@
                     }
                 ],
                 "BillingMode": "PAY_PER_REQUEST",
+                "KeySchema": [
+                    {
+                        "AttributeName": "ds_pk",
+                        "KeyType": "HASH"
+                    },
+                    {
+                        "AttributeName": "ds_sk",
+                        "KeyType": "RANGE"
+                    }
+                ],
                 "StreamSpecification": {
                     "StreamViewType": "NEW_AND_OLD_IMAGES"
                 },
@@ -327,30 +327,6 @@
         "Debt": {
             "Type": "AWS::CloudFormation::Stack",
             "Properties": {
-                "TemplateURL": {
-                    "Fn::Join": [
-                        "",
-                        [
-                            "https://s3.",
-                            {
-                                "Ref": "AWS::Region"
-                            },
-                            ".",
-                            {
-                                "Ref": "AWS::URLSuffix"
-                            },
-                            "/",
-                            {
-                                "Ref": "S3DeploymentBucket"
-                            },
-                            "/",
-                            {
-                                "Ref": "S3DeploymentRootKey"
-                            },
-                            "/stacks/Debt.json"
-                        ]
-                    ]
-                },
                 "Parameters": {
                     "DynamoDBModelTableReadIOPS": {
                         "Ref": "DynamoDBModelTableReadIOPS"
@@ -394,15 +370,7 @@
                     "referencetotransformerrootstackunauthRoleName49F3C1FERef": {
                         "Ref": "unauthRoleName"
                     }
-                }
-            },
-            "DependsOn": [
-                "GraphQLAPITransformerSchema3CB2AE18"
-            ]
-        },
-        "User": {
-            "Type": "AWS::CloudFormation::Stack",
-            "Properties": {
+                },
                 "TemplateURL": {
                     "Fn::Join": [
                         "",
@@ -423,10 +391,18 @@
                             {
                                 "Ref": "S3DeploymentRootKey"
                             },
-                            "/stacks/User.json"
+                            "/stacks/Debt.json"
                         ]
                     ]
-                },
+                }
+            },
+            "DependsOn": [
+                "GraphQLAPITransformerSchema3CB2AE18"
+            ]
+        },
+        "User": {
+            "Type": "AWS::CloudFormation::Stack",
+            "Properties": {
                 "Parameters": {
                     "DynamoDBModelTableReadIOPS": {
                         "Ref": "DynamoDBModelTableReadIOPS"
@@ -512,15 +488,7 @@
                             "Outputs.transformerrootstackDebtDebtOwnerDataResolverFnDebtOwnerDataResolverFnAppSyncFunction74B306B6FunctionId"
                         ]
                     }
-                }
-            },
-            "DependsOn": [
-                "GraphQLAPITransformerSchema3CB2AE18"
-            ]
-        },
-        "ConnectionStack": {
-            "Type": "AWS::CloudFormation::Stack",
-            "Properties": {
+                },
                 "TemplateURL": {
                     "Fn::Join": [
                         "",
@@ -541,10 +509,18 @@
                             {
                                 "Ref": "S3DeploymentRootKey"
                             },
-                            "/stacks/ConnectionStack.json"
+                            "/stacks/User.json"
                         ]
                     ]
-                },
+                }
+            },
+            "DependsOn": [
+                "GraphQLAPITransformerSchema3CB2AE18"
+            ]
+        },
+        "ConnectionStack": {
+            "Type": "AWS::CloudFormation::Stack",
+            "Properties": {
                 "Parameters": {
                     "referencetotransformerrootstackGraphQLAPI20497F53ApiId": {
                         "Fn::GetAtt": [
@@ -594,6 +570,30 @@
                             "Outputs.transformerrootstackUserUserTableA7A02430Ref"
                         ]
                     }
+                },
+                "TemplateURL": {
+                    "Fn::Join": [
+                        "",
+                        [
+                            "https://s3.",
+                            {
+                                "Ref": "AWS::Region"
+                            },
+                            ".",
+                            {
+                                "Ref": "AWS::URLSuffix"
+                            },
+                            "/",
+                            {
+                                "Ref": "S3DeploymentBucket"
+                            },
+                            "/",
+                            {
+                                "Ref": "S3DeploymentRootKey"
+                            },
+                            "/stacks/ConnectionStack.json"
+                        ]
+                    ]
                 }
             },
             "DependsOn": [
@@ -605,6 +605,8 @@
         "AuthRolePolicy01921FC820": {
             "Type": "AWS::IAM::ManagedPolicy",
             "Properties": {
+                "Description": "",
+                "Path": "/",
                 "PolicyDocument": {
                     "Statement": [
                         {
@@ -928,8 +930,6 @@
                     ],
                     "Version": "2012-10-17"
                 },
-                "Description": "",
-                "Path": "/",
                 "Roles": [
                     {
                         "Ref": "authRoleName"
@@ -940,6 +940,8 @@
         "UnauthRolePolicy019D4A6CE4": {
             "Type": "AWS::IAM::ManagedPolicy",
             "Properties": {
+                "Description": "",
+                "Path": "/",
                 "PolicyDocument": {
                     "Statement": [
                         {
@@ -1263,8 +1265,6 @@
                     ],
                     "Version": "2012-10-17"
                 },
-                "Description": "",
-                "Path": "/",
                 "Roles": [
                     {
                         "Ref": "unauthRoleName"

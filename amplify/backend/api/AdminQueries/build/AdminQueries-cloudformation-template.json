@@ -291,13 +291,13 @@
         "Name": "AdminQueries"
       }
     },
-    "DeploymentAPIGWAdminQueries967dccd9": {
+    "DeploymentAPIGWAdminQueriesf09b32d5": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
+        "Description": "The Development stage deployment of your API.",
         "RestApiId": {
           "Ref": "AdminQueries"
         },
-        "Description": "The Development stage deployment of your API.",
         "StageName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",

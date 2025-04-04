@@ -78,11 +78,9 @@ export default function Header() {
             <div className={`${styles.logo} d-flex flex-row align-items-end`}>
               <Image
                 src='/avalanche-logo.png'
-                layout='fixed'
                 alt='brand-logo'
                 width={imageSize.width}
-                height={imageSize.height}
-              />
+                height={imageSize.height} />
               <h4>
                 Manage<mark className={styles.mark}>My</mark>Debt
               </h4>

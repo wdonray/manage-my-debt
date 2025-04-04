@@ -1,40 +1,40 @@
 export type AmplifyDependentResourcesAttributes = {
-    'auth': {
-        'debtrepayment': {
-            'IdentityPoolId': 'string',
-            'IdentityPoolName': 'string',
-            'HostedUIDomain': 'string',
-            'OAuthMetadata': 'string',
-            'UserPoolId': 'string',
-            'UserPoolArn': 'string',
-            'UserPoolName': 'string',
-            'AppClientIDWeb': 'string',
-            'AppClientID': 'string'
-        },
-        'userPoolGroups': {
-            'adminGroupRole': 'string',
-            'authenticatedGroupRole': 'string',
-            'unauthenticatedGroupRole': 'string'
-        }
+  "api": {
+    "AdminQueries": {
+      "ApiId": "string",
+      "ApiName": "string",
+      "RootUrl": "string"
     },
-    'api': {
-        'debtrepayment': {
-            'GraphQLAPIKeyOutput': 'string',
-            'GraphQLAPIIdOutput': 'string',
-            'GraphQLAPIEndpointOutput': 'string'
-        },
-        'AdminQueries': {
-            'RootUrl': 'string',
-            'ApiName': 'string',
-            'ApiId': 'string'
-        }
-    },
-    'function': {
-        'AdminQueries7614a6f3': {
-            'Name': 'string',
-            'Arn': 'string',
-            'Region': 'string',
-            'LambdaExecutionRole': 'string'
-        }
+    "debtrepayment": {
+      "GraphQLAPIEndpointOutput": "string",
+      "GraphQLAPIIdOutput": "string",
+      "GraphQLAPIKeyOutput": "string"
     }
+  },
+  "auth": {
+    "debtrepayment": {
+      "AppClientID": "string",
+      "AppClientIDWeb": "string",
+      "HostedUIDomain": "string",
+      "IdentityPoolId": "string",
+      "IdentityPoolName": "string",
+      "OAuthMetadata": "string",
+      "UserPoolArn": "string",
+      "UserPoolId": "string",
+      "UserPoolName": "string"
+    },
+    "userPoolGroups": {
+      "adminGroupRole": "string",
+      "authenticatedGroupRole": "string",
+      "unauthenticatedGroupRole": "string"
+    }
+  },
+  "function": {
+    "AdminQueries7614a6f3": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "Name": "string",
+      "Region": "string"
+    }
+  }
 }

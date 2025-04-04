@@ -38,6 +38,35 @@
       "StackName": "amplify-debtrepayment-dev-191407",
       "StackId": "arn:aws:cloudformation:us-east-1:873097943690:stack/amplify-debtrepayment-dev-191407/ba684920-f8d2-11ec-920a-0e9c020fd085",
       "AmplifyAppId": "d18lmerev3dtz0"
+    },
+    "categories": {
+      "function": {
+        "AdminQueries7614a6f3": {},
+        "debtrepayment": {}
+      }
+    }
+  },
+  "managedebt": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-debtrepayment-managedebt-dd0dc-authRole",
+      "UnauthRoleArn": "arn:aws:iam::873097943690:role/amplify-debtrepayment-managedebt-dd0dc-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::873097943690:role/amplify-debtrepayment-managedebt-dd0dc-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-debtrepayment-managedebt-dd0dc-deployment",
+      "UnauthRoleName": "amplify-debtrepayment-managedebt-dd0dc-unauthRole",
+      "StackName": "amplify-debtrepayment-managedebt-dd0dc",
+      "StackId": "arn:aws:cloudformation:us-east-1:873097943690:stack/amplify-debtrepayment-managedebt-dd0dc/5fe912e0-10e9-11f0-afca-0eb8826c64a5",
+      "AmplifyAppId": "d18lmerev3dtz0"
+    },
+    "categories": {
+      "auth": {
+        "debtrepayment": {},
+        "userPoolGroups": {}
+      },
+      "function": {
+        "AdminQueries7614a6f3": {},
+        "debtrepayment": {}
+      }
     }
   }
 }

@@ -1,5 +1,5 @@
 {
-  "Description": "Root Stack for AWS Amplify Console",
+  "Description": "Root Stack for AWS Amplify CLI",
   "AWSTemplateFormatVersion": "2010-09-09",
   "Parameters": {
     "DeploymentBucketName": {
@@ -110,6 +110,53 @@
       "UpdateReplacePolicy": "Retain",
       "DeletionPolicy": "Retain"
     },
+    "DeploymentBucketBlockHTTP": {
+      "Type": "AWS::S3::BucketPolicy",
+      "Properties": {
+        "Bucket": {
+          "Ref": "DeploymentBucketName"
+        },
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "s3:*",
+              "Effect": "Deny",
+              "Principal": "*",
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:s3:::",
+                      {
+                        "Ref": "DeploymentBucketName"
+                      },
+                      "/*"
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:s3:::",
+                      {
+                        "Ref": "DeploymentBucketName"
+                      }
+                    ]
+                  ]
+                }
+              ],
+              "Condition": {
+                "Bool": {
+                  "aws:SecureTransport": false
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
     "AuthRole": {
       "Type": "AWS::IAM::Role",
       "Properties": {
@@ -150,380 +197,6 @@
         "RoleName": {
           "Ref": "UnauthRoleName"
         }
-      }
-    },
-    "authdebtrepayment": {
-      "Type": "AWS::CloudFormation::Stack",
-      "Properties": {
-        "TemplateURL": "https://s3.amazonaws.com/amplify-amplify2707ba08ea044-staging-10319-deployment/amplify-cfn-templates/auth/debtrepayment-cloudformation-template.json",
-        "Parameters": {
-          "identityPoolName": "testAuthIdentityPool",
-          "allowUnauthenticatedIdentities": false,
-          "resourceNameTruncated": "debtref9bae03c",
-          "userPoolName": "debtrepayment",
-          "autoVerifiedAttributes": "email",
-          "mfaConfiguration": "OFF",
-          "mfaTypes": "SMS Text Message",
-          "smsAuthenticationMessage": "Your authentication code is {####}",
-          "smsVerificationMessage": "Your verification code is {####}",
-          "emailVerificationSubject": "Your verification code",
-          "emailVerificationMessage": "Your verification code is {####}",
-          "defaultPasswordPolicy": false,
-          "passwordPolicyMinLength": 8,
-          "passwordPolicyCharacters": "",
-          "requiredAttributes": "email,name",
-          "aliasAttributes": "",
-          "userpoolClientGenerateSecret": false,
-          "userpoolClientRefreshTokenValidity": 30,
-          "userpoolClientWriteAttributes": "",
-          "userpoolClientReadAttributes": "",
-          "userpoolClientLambdaRole": "debtref9bae03c_userpoolclient_lambda_role",
-          "userpoolClientSetAttributes": false,
-          "sharedId": "f9bae03c",
-          "resourceName": "debtrepayment",
-          "authSelections": "identityPoolAndUserPool",
-          "serviceName": "Cognito",
-          "usernameAttributes": "email",
-          "useDefault": "manual",
-          "userPoolGroups": false,
-          "userPoolGroupList": "",
-          "adminQueries": false,
-          "hostedUI": true,
-          "usernameCaseSensitive": false,
-          "useEnabledMfas": true,
-          "authRoleArn": {
-            "Fn::GetAtt": [
-              "AuthRole",
-              "Arn"
-            ]
-          },
-          "unauthRoleArn": {
-            "Fn::GetAtt": [
-              "UnauthRole",
-              "Arn"
-            ]
-          },
-          "breakCircularDependency": true,
-          "dependsOn": "",
-          "triggers": "{}",
-          "adminQueryGroup": "admin",
-          "verificationBucketName": "debtrepaymentverificationbucket",
-          "parentStack": {
-            "Ref": "AWS::StackId"
-          },
-          "permissions": "",
-          "hostedUIDomainName": "manage-my-debt",
-          "authProvidersUserPool": "Facebook,Google",
-          "hostedUIProviderMeta": "[{\"ProviderName\":\"Facebook\",\"authorize_scopes\":\"email,public_profile\",\"AttributeMapping\":{\"email\":\"email\",\"name\":\"name\",\"username\":\"id\"}},{\"ProviderName\":\"Google\",\"authorize_scopes\":\"openid email profile\",\"AttributeMapping\":{\"email\":\"email\",\"name\":\"name\",\"username\":\"sub\"}}]",
-          "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"https://www.manage-my-debt.com/\"],\"LogoutURLs\":[\"https://www.manage-my-debt.com/\"]}",
-          "authProviders": "",
-          "thirdPartyAuth": false,
-          "hostedUIProviderCreds": "[{\"ProviderName\":\"Facebook\",\"client_id\":\"1067555550826909\",\"client_secret\":\"6edaa64c785ed88f50fb86286db6f737\"},{\"ProviderName\":\"Google\",\"client_id\":\"16617727262-em84u69f57gu9ji09i5lotauovgvnmon.apps.googleusercontent.com\",\"client_secret\":\"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\"}]",
-          "env": "staging"
-        }
-      }
-    },
-    "authuserPoolGroups": {
-      "Type": "AWS::CloudFormation::Stack",
-      "Properties": {
-        "TemplateURL": "https://s3.amazonaws.com/amplify-amplify2707ba08ea044-staging-10319-deployment/amplify-cfn-templates/auth/userPoolGroups-cloudformation-template.json",
-        "Parameters": {
-          "AuthRoleArn": {
-            "Fn::GetAtt": [
-              "AuthRole",
-              "Arn"
-            ]
-          },
-          "UnauthRoleArn": {
-            "Fn::GetAtt": [
-              "UnauthRole",
-              "Arn"
-            ]
-          },
-          "authdebtrepaymentUserPoolId": {
-            "Fn::GetAtt": [
-              "authdebtrepayment",
-              "Outputs.UserPoolId"
-            ]
-          },
-          "authdebtrepaymentAppClientIDWeb": {
-            "Fn::GetAtt": [
-              "authdebtrepayment",
-              "Outputs.AppClientIDWeb"
-            ]
-          },
-          "authdebtrepaymentAppClientID": {
-            "Fn::GetAtt": [
-              "authdebtrepayment",
-              "Outputs.AppClientID"
-            ]
-          },
-          "authdebtrepaymentIdentityPoolId": {
-            "Fn::GetAtt": [
-              "authdebtrepayment",
-              "Outputs.IdentityPoolId"
-            ]
-          },
-          "env": "staging"
-        }
-      }
-    },
-    "apidebtrepayment": {
-      "Type": "AWS::CloudFormation::Stack",
-      "Properties": {
-        "TemplateURL": "https://s3.amazonaws.com/amplify-amplify2707ba08ea044-staging-10319-deployment/amplify-cfn-templates/api/cloudformation-template.json",
-        "Parameters": {
-          "AppSyncApiName": "debtrepayment",
-          "DynamoDBBillingMode": "PAY_PER_REQUEST",
-          "DynamoDBEnableServerSideEncryption": false,
-          "AuthCognitoUserPoolId": {
-            "Fn::GetAtt": [
-              "authdebtrepayment",
-              "Outputs.UserPoolId"
-            ]
-          },
-          "authRoleName": {
-            "Ref": "AuthRoleName"
-          },
-          "unauthRoleName": {
-            "Ref": "UnauthRoleName"
-          },
-          "S3DeploymentBucket": "amplify-amplify2707ba08ea044-staging-10319-deployment",
-          "S3DeploymentRootKey": "amplify-appsync-files/32739b3747b3bb76c446b57ae64086b7d34f7822",
-          "env": "staging"
-        }
-      }
-    },
-    "apiAdminQueries": {
-      "Type": "AWS::CloudFormation::Stack",
-      "Properties": {
-        "TemplateURL": "https://s3.amazonaws.com/amplify-amplify2707ba08ea044-staging-10319-deployment/amplify-cfn-templates/api/AdminQueries-cloudformation-template.json",
-        "Parameters": {
-          "authdebtrepaymentUserPoolId": {
-            "Fn::GetAtt": [
-              "authdebtrepayment",
-              "Outputs.UserPoolId"
-            ]
-          },
-          "functionAdminQueries7614a6f3Arn": {
-            "Fn::GetAtt": [
-              "functionAdminQueries7614a6f3",
-              "Outputs.Arn"
-            ]
-          },
-          "functionAdminQueries7614a6f3Name": {
-            "Fn::GetAtt": [
-              "functionAdminQueries7614a6f3",
-              "Outputs.Name"
-            ]
-          },
-          "env": "staging"
-        }
-      }
-    },
-    "functionAdminQueries7614a6f3": {
-      "Type": "AWS::CloudFormation::Stack",
-      "Properties": {
-        "TemplateURL": "https://s3.amazonaws.com/amplify-amplify2707ba08ea044-staging-10319-deployment/amplify-cfn-templates/function/AdminQueries7614a6f3-cloudformation-template.json",
-        "Parameters": {
-          "deploymentBucketName": "amplify-amplify2707ba08ea044-staging-10319-deployment",
-          "s3Key": "amplify-builds/AdminQueries7614a6f3-424a4446756559355858-build.zip",
-          "authdebtrepaymentUserPoolId": {
-            "Fn::GetAtt": [
-              "authdebtrepayment",
-              "Outputs.UserPoolId"
-            ]
-          },
-          "env": "staging"
-        }
-      }
-    },
-    "UpdateRolesWithIDPFunction": {
-      "DependsOn": [
-        "AuthRole",
-        "UnauthRole",
-        "authdebtrepayment"
-      ],
-      "Type": "AWS::Lambda::Function",
-      "Properties": {
-        "Code": {
-          "ZipFile": {
-            "Fn::Join": [
-              "\n",
-              [
-                "const response = require('cfn-response');",
-                "const aws = require('aws-sdk');",
-                "let responseData = {};",
-                "exports.handler = function(event, context) {",
-                "  try {",
-                "    let authRoleName = event.ResourceProperties.authRoleName;",
-                "    let unauthRoleName = event.ResourceProperties.unauthRoleName;",
-                "    let idpId = event.ResourceProperties.idpId;",
-                "    let promises = [];",
-                "    let getPromises = [];",
-                "    let authParamsJson = { 'Version': '2012-10-17','Statement': [{'Effect': 'Allow','Principal': {'Federated': 'cognito-identity.amazonaws.com'},'Action': 'sts:AssumeRoleWithWebIdentity','Condition': {'StringEquals': {'cognito-identity.amazonaws.com:aud': idpId},'ForAnyValue:StringLike': {'cognito-identity.amazonaws.com:amr': 'authenticated'}}}]};",
-                "    let unauthParamsJson = { 'Version': '2012-10-17','Statement': [{'Effect': 'Allow','Principal': {'Federated': 'cognito-identity.amazonaws.com'},'Action': 'sts:AssumeRoleWithWebIdentity','Condition': {'StringEquals': {'cognito-identity.amazonaws.com:aud': idpId},'ForAnyValue:StringLike': {'cognito-identity.amazonaws.com:amr': 'unauthenticated'}}}]};",
-                "    if (event.RequestType == 'Delete') {",
-                "        delete authParamsJson.Statement[0].Condition;",
-                "        delete unauthParamsJson.Statement[0].Condition;",
-                "        let authParams = { PolicyDocument: JSON.stringify(authParamsJson),RoleName: authRoleName};",
-                "        let unauthParams = {PolicyDocument: JSON.stringify(unauthParamsJson),RoleName: unauthRoleName};",
-                "        const iam = new aws.IAM({ apiVersion: '2010-05-08', region: event.ResourceProperties.region});",
-                "        getPromises.push(iam.getRole({RoleName: authParams.RoleName}).promise());",
-                "        getPromises.push(iam.getRole({RoleName: unauthParams.RoleName}).promise());",
-                "        Promise.all(getPromises)",
-                "         .then((res) => {",
-                "        console.log('in res' , res)",
-                "           promises.push(iam.updateAssumeRolePolicy(authParams).promise());",
-                "           promises.push(iam.updateAssumeRolePolicy(unauthParams).promise());",
-                "           return Promise.all(promises)",
-                "             .then((res) => {",
-                "               console.log(\"delete response data\" + JSON.stringify(res));",
-                "               response.send(event, context, response.SUCCESS, {});",
-                "             });",
-                "          })",
-                "           .catch((err) => {",
-                "             console.log(err.stack);",
-                "             responseData = {Error: err};",
-                "             response.send(event, context, response.SUCCESS, responseData);",
-                "             })",
-                "    }",
-                "    if (event.RequestType == 'Update' || event.RequestType == 'Create') {",
-                "       const iam = new aws.IAM({ apiVersion: '2010-05-08', region: event.ResourceProperties.region});",
-                "        let authParams = { PolicyDocument: JSON.stringify(authParamsJson),RoleName: authRoleName};",
-                "        let unauthParams = {PolicyDocument: JSON.stringify(unauthParamsJson),RoleName: unauthRoleName};",
-                "        promises.push(iam.updateAssumeRolePolicy(authParams).promise());",
-                "        promises.push(iam.updateAssumeRolePolicy(unauthParams).promise());",
-                "        Promise.all(promises)",
-                "         .then((res) => {",
-                "            console.log(\"createORupdate\" + res);",
-                "            console.log(\"response data\" + JSON.stringify(res));",
-                "            response.send(event, context, response.SUCCESS, {});",
-                "         });",
-                "    }",
-                "  } catch(err) {",
-                "       console.log(err.stack);",
-                "       responseData = {Error: err};",
-                "       response.send(event, context, response.FAILED, responseData);",
-                "       throw err;",
-                "  }",
-                "};"
-              ]
-            ]
-          }
-        },
-        "Handler": "index.handler",
-        "Runtime": "nodejs14.x",
-        "Timeout": 300,
-        "Role": {
-          "Fn::GetAtt": [
-            "UpdateRolesWithIDPFunctionRole",
-            "Arn"
-          ]
-        }
-      }
-    },
-    "UpdateRolesWithIDPFunctionOutputs": {
-      "Type": "Custom::LambdaCallout",
-      "Properties": {
-        "ServiceToken": {
-          "Fn::GetAtt": [
-            "UpdateRolesWithIDPFunction",
-            "Arn"
-          ]
-        },
-        "region": {
-          "Ref": "AWS::Region"
-        },
-        "idpId": {
-          "Fn::GetAtt": [
-            "authdebtrepayment",
-            "Outputs.IdentityPoolId"
-          ]
-        },
-        "authRoleName": {
-          "Ref": "AuthRole"
-        },
-        "unauthRoleName": {
-          "Ref": "UnauthRole"
-        }
-      }
-    },
-    "UpdateRolesWithIDPFunctionRole": {
-      "Type": "AWS::IAM::Role",
-      "Properties": {
-        "RoleName": {
-          "Fn::Join": [
-            "",
-            [
-              {
-                "Ref": "AuthRole"
-              },
-              "-idp"
-            ]
-          ]
-        },
-        "AssumeRolePolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Principal": {
-                "Service": [
-                  "lambda.amazonaws.com"
-                ]
-              },
-              "Action": [
-                "sts:AssumeRole"
-              ]
-            }
-          ]
-        },
-        "Policies": [
-          {
-            "PolicyName": "UpdateRolesWithIDPFunctionPolicy",
-            "PolicyDocument": {
-              "Version": "2012-10-17",
-              "Statement": [
-                {
-                  "Effect": "Allow",
-                  "Action": [
-                    "logs:CreateLogGroup",
-                    "logs:CreateLogStream",
-                    "logs:PutLogEvents"
-                  ],
-                  "Resource": "arn:aws:logs:*:*:*"
-                },
-                {
-                  "Effect": "Allow",
-                  "Action": [
-                    "iam:UpdateAssumeRolePolicy",
-                    "iam:GetRole"
-                  ],
-                  "Resource": {
-                    "Fn::GetAtt": [
-                      "AuthRole",
-                      "Arn"
-                    ]
-                  }
-                },
-                {
-                  "Effect": "Allow",
-                  "Action": [
-                    "iam:UpdateAssumeRolePolicy",
-                    "iam:GetRole"
-                  ],
-                  "Resource": {
-                    "Fn::GetAtt": [
-                      "UnauthRole",
-                      "Arn"
-                    ]
-                  }
-                }
-              ]
-            }
-          }
-        ]
       }
     }
   }

@@ -1,7 +1,11 @@
-#if( $ctx.source.deniedField )
-  #return($util.toJson(null))
+#if( $ctx.stash.deniedField )
+  #set( $result = {
+  "items":   []
+} )
+  #return($result)
 #end
-#if( $util.isNull($ctx.source.id) )
+#set( $partitionKeyValue = $util.defaultIfNull($ctx.stash.connectionAttributes.get("id"), $ctx.source.id) )
+#if( $util.isNull($partitionKeyValue) )
   #set( $result = {
   "items":   []
 } )
@@ -14,7 +18,7 @@
       "#partitionKey": "userDebtId"
   },
   "expressionValues": {
-      ":partitionKey": $util.dynamodb.toDynamoDB($context.source.id)
+      ":partitionKey": $util.dynamodb.toDynamoDB($partitionKeyValue)
   }
 } )
   #set( $args = $util.defaultIfNull($ctx.stash.transformedArgs, $ctx.args) )

@@ -1,4 +1,3 @@
-
 type Debt @aws_iam @aws_cognito_user_pools {
   id: ID!
   name: String!
@@ -91,6 +90,65 @@ input ModelIDInput {
   size: ModelSizeInput
 }
 
+input ModelSubscriptionStringInput {
+  ne: String
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  contains: String
+  notContains: String
+  between: [String]
+  beginsWith: String
+  in: [String]
+  notIn: [String]
+}
+
+input ModelSubscriptionIntInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+  in: [Int]
+  notIn: [Int]
+}
+
+input ModelSubscriptionFloatInput {
+  ne: Float
+  eq: Float
+  le: Float
+  lt: Float
+  ge: Float
+  gt: Float
+  between: [Float]
+  in: [Float]
+  notIn: [Float]
+}
+
+input ModelSubscriptionBooleanInput {
+  ne: Boolean
+  eq: Boolean
+}
+
+input ModelSubscriptionIDInput {
+  ne: ID
+  eq: ID
+  le: ID
+  lt: ID
+  ge: ID
+  gt: ID
+  contains: ID
+  notContains: ID
+  between: [ID]
+  beginsWith: ID
+  in: [ID]
+  notIn: [ID]
+}
+
 enum ModelAttributeTypes {
   binary
   binarySet
@@ -132,10 +190,14 @@ input ModelDebtFilterInput {
   balance: ModelFloatInput
   apr: ModelFloatInput
   payment: ModelFloatInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
   and: [ModelDebtFilterInput]
   or: [ModelDebtFilterInput]
   not: ModelDebtFilterInput
+  _deleted: ModelBooleanInput
   userDebtId: ModelIDInput
+  owner: ModelStringInput
 }
 
 type Query {
@@ -156,7 +218,11 @@ input ModelDebtConditionInput {
   and: [ModelDebtConditionInput]
   or: [ModelDebtConditionInput]
   not: ModelDebtConditionInput
+  _deleted: ModelBooleanInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
   userDebtId: ModelIDInput
+  owner: ModelStringInput
 }
 
 input CreateDebtInput {
@@ -195,13 +261,28 @@ type Mutation {
   deleteUser(input: DeleteUserInput!, condition: ModelUserConditionInput): User @aws_iam @aws_cognito_user_pools
 }
 
+input ModelSubscriptionDebtFilterInput {
+  id: ModelSubscriptionIDInput
+  name: ModelSubscriptionStringInput
+  type: ModelSubscriptionStringInput
+  balance: ModelSubscriptionFloatInput
+  apr: ModelSubscriptionFloatInput
+  payment: ModelSubscriptionFloatInput
+  createdAt: ModelSubscriptionStringInput
+  updatedAt: ModelSubscriptionStringInput
+  and: [ModelSubscriptionDebtFilterInput]
+  or: [ModelSubscriptionDebtFilterInput]
+  _deleted: ModelBooleanInput
+  owner: ModelStringInput
+}
+
 type Subscription {
-  onCreateDebt(owner: String): Debt @aws_subscribe(mutations: ["createDebt"]) @aws_iam @aws_cognito_user_pools
-  onUpdateDebt(owner: String): Debt @aws_subscribe(mutations: ["updateDebt"]) @aws_iam @aws_cognito_user_pools
-  onDeleteDebt(owner: String): Debt @aws_subscribe(mutations: ["deleteDebt"]) @aws_iam @aws_cognito_user_pools
-  onCreateUser(owner: String): User @aws_subscribe(mutations: ["createUser"]) @aws_iam @aws_cognito_user_pools
-  onUpdateUser(owner: String): User @aws_subscribe(mutations: ["updateUser"]) @aws_iam @aws_cognito_user_pools
-  onDeleteUser(owner: String): User @aws_subscribe(mutations: ["deleteUser"]) @aws_iam @aws_cognito_user_pools
+  onCreateDebt(filter: ModelSubscriptionDebtFilterInput, owner: String): Debt @aws_subscribe(mutations: ["createDebt"]) @aws_iam @aws_cognito_user_pools
+  onUpdateDebt(filter: ModelSubscriptionDebtFilterInput, owner: String): Debt @aws_subscribe(mutations: ["updateDebt"]) @aws_iam @aws_cognito_user_pools
+  onDeleteDebt(filter: ModelSubscriptionDebtFilterInput, owner: String): Debt @aws_subscribe(mutations: ["deleteDebt"]) @aws_iam @aws_cognito_user_pools
+  onCreateUser(filter: ModelSubscriptionUserFilterInput, owner: String): User @aws_subscribe(mutations: ["createUser"]) @aws_iam @aws_cognito_user_pools
+  onUpdateUser(filter: ModelSubscriptionUserFilterInput, owner: String): User @aws_subscribe(mutations: ["updateUser"]) @aws_iam @aws_cognito_user_pools
+  onDeleteUser(filter: ModelSubscriptionUserFilterInput, owner: String): User @aws_subscribe(mutations: ["deleteUser"]) @aws_iam @aws_cognito_user_pools
 }
 
 type ModelUserConnection @aws_iam @aws_cognito_user_pools {
@@ -213,9 +294,13 @@ type ModelUserConnection @aws_iam @aws_cognito_user_pools {
 input ModelUserFilterInput {
   id: ModelIDInput
   name: ModelStringInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
   and: [ModelUserFilterInput]
   or: [ModelUserFilterInput]
   not: ModelUserFilterInput
+  _deleted: ModelBooleanInput
+  owner: ModelStringInput
 }
 
 input ModelUserConditionInput {
@@ -223,6 +308,10 @@ input ModelUserConditionInput {
   and: [ModelUserConditionInput]
   or: [ModelUserConditionInput]
   not: ModelUserConditionInput
+  _deleted: ModelBooleanInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  owner: ModelStringInput
 }
 
 input CreateUserInput {
@@ -242,3 +331,14 @@ input DeleteUserInput {
   _version: Int
 }
 
+input ModelSubscriptionUserFilterInput {
+  id: ModelSubscriptionIDInput
+  name: ModelSubscriptionStringInput
+  createdAt: ModelSubscriptionStringInput
+  updatedAt: ModelSubscriptionStringInput
+  and: [ModelSubscriptionUserFilterInput]
+  or: [ModelSubscriptionUserFilterInput]
+  _deleted: ModelBooleanInput
+  userDebtId: ModelSubscriptionIDInput
+  owner: ModelStringInput
+}

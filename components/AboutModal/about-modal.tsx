@@ -64,12 +64,15 @@ export default function AboutModal() {
                 <Image
                   src='/head-shot.jpg'
                   alt='head-shot'
-                  objectFit='cover'
                   width={headshotSize}
                   height={headshotSize}
                   quality={100}
                   onLoadingComplete={handleImageLoading}
-                />
+                  style={{
+                    maxWidth: '100%',
+                    height: 'auto',
+                    objectFit: 'cover',
+                  }} />
               </div>
             </div>
 
